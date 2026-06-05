@@ -1,689 +1,714 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz Biologie - Inscription</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Biologie - Premium Experience</title>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
+    <style>
+        :root {
+            --bg-dark: #0a0e1a;
+            --panel-bg: rgba(16, 24, 48, 0.85);
+            --accent-gold: #ffeaa7;
+            --accent-cyan: #00d2ff;
+            --accent-blue: #4a69bd;
+            --text-light: #ffffff;
+            --text-muted: #a4b0be;
+            --success: #2ed573;
+            --error: #ff4757;
+        }
 
-<link rel="icon" type="image/x-icon"
-href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-<style>
+        body {
+            background: linear-gradient(rgba(10, 14, 26, 0.8), rgba(10, 14, 26, 0.95)), 
+                        url('https://files.catbox.moe/5u3toy.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-light);
+            padding: 20px;
+        }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-}
+        .container {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            width: 100%;
+            max-width: 550px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            display: block;
+        }
 
-body{
-background:
-linear-gradient(
-rgba(12,36,97,0.7),
-rgba(30,55,153,0.7)
-),
-url('https://files.catbox.moe/5u3toy.jpg');
+        .container::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: conic-gradient(var(--accent-blue), #6a89cc, var(--accent-cyan), #3a1c71, var(--accent-gold), var(--accent-blue));
+            top: -25%;
+            left: -25%;
+            animation: rotate 6s linear infinite;
+            z-index: -2;
+        }
 
-background-size:cover;
-background-position:center;
+        .container::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: var(--panel-bg);
+            border-radius: 21px;
+            z-index: -1;
+            backdrop-filter: blur(10px);
+        }
 
-min-height:100vh;
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
-display:flex;
-justify-content:center;
-align-items:center;
+        .screen {
+            display: none;
+            padding: 40px 35px;
+        }
 
-color:white;
-padding:20px;
-}
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
 
-.container{
-position:relative;
-overflow:hidden;
-z-index:1;
-width:100%;
-max-width:500px;
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-.container::before{
-content:'';
-position:absolute;
-width:150%;
-height:150%;
-background:
-conic-gradient(
-#4a69bd,
-#6a89cc,
-#00d2ff,
-#3a1c71,
-#d76d77,
-#ffaf7b,
-#4a69bd
-);
+        .app-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-top:-25%;
-left:-25%;
+        .logo-circle {
+            width: 90px;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--accent-cyan);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 0 15px var(--accent-cyan);
+        }
 
-animation:rotate 4s linear infinite;
-z-index:-2;
-}
+        .real-logo {
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+        }
 
-.container::after{
-content:'';
-position:absolute;
-inset:4px;
-background:rgba(15,32,67,0.92);
-border-radius:16px;
-z-index:-1;
-}
+        h1 {
+            font-size: 28px;
+            color: var(--accent-gold);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 5px;
+        }
 
-@keyframes rotate{
-from{
-transform:rotate(0deg);
-}
-to{
-transform:rotate(360deg);
-}
-}
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
 
-.registration-form{
-padding:30px;
-}
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
 
-.app-logo{
-text-align:center;
-margin-bottom:30px;
-}
+        .full-width {
+            grid-column: span 2;
+        }
 
-.logo-circle{
-width:100px;
-height:100px;
-background:rgba(15,32,67,0.9);
-border-radius:50%;
-display:flex;
-justify-content:center;
-align-items:center;
-margin:0 auto 20px;
-overflow:hidden;
-}
+        .form-group {
+            margin-bottom: 18px;
+        }
 
-.real-logo{
-width:100px;
-height:100px;
-object-fit:contain;
-}
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
 
-.app-logo h1{
-font-size:28px;
-color:#ffeaa7;
-}
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            font-size: 15px;
+            color: var(--text-light);
+            transition: all 0.3s;
+        }
 
-.form-group{
-margin-bottom:15px;
-}
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+        }
 
-.form-group label{
-display:block;
-margin-bottom:6px;
-font-weight:500;
-}
+        .country-selector {
+            position: relative;
+        }
 
-.form-group input,
-.form-group select{
-width:100%;
-padding:14px;
-border:none;
-border-radius:10px;
-background:rgba(255,255,255,0.9);
-font-size:16px;
-color:#2d3436;
-}
+        .flag-preview {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            pointer-events: none;
+            z-index: 10;
+        }
 
-.form-group input:focus,
-.form-group select:focus{
-outline:none;
-}
+        .flag-preview img {
+            width: 26px;
+            height: 18px;
+            border-radius: 2px;
+            object-fit: cover;
+        }
 
-.country-selector{
-position:relative;
-}
+        .country-selector select {
+            padding-left: 110px;
+        }
 
-.flag-preview{
-position:absolute;
-left:15px;
-top:50%;
-transform:translateY(-50%);
-display:flex;
-align-items:center;
-gap:10px;
-pointer-events:none;
-z-index:10;
-}
+        /* ReCAPTCHA Center Box */
+        .recaptcha-holder {
+            display: flex;
+            justify-content: center;
+            margin: 5px 0 15px 0;
+        }
 
-.flag-preview img{
-width:30px;
-height:20px;
-border-radius:3px;
-object-fit:cover;
-}
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-blue), #6a89cc);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(74, 105, 189, 0.4);
+        }
 
-.country-selector select{
-padding-left:120px;
-}
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 105, 189, 0.6);
+        }
 
-.btn-primary{
-width:100%;
-padding:16px;
-background:
-linear-gradient(
-to right,
-#4a69bd,
-#6a89cc
-);
+        .otp-container {
+            text-align: center;
+        }
+        .otp-input-style {
+            letter-spacing: 8px;
+            text-align: center;
+            font-size: 24px !important;
+            font-weight: bold;
+            color: var(--accent-cyan) !important;
+        }
 
-color:white;
-border:none;
-border-radius:10px;
+        .user-badge {
+            background: rgba(255,255,255,0.05);
+            padding: 12px 20px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
 
-font-size:18px;
-font-weight:600;
+        .user-info-text h3 {
+            color: var(--accent-gold);
+            font-size: 18px;
+        }
 
-cursor:pointer;
+        .quiz-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 20px;
+        }
 
-margin-top:20px;
-}
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
 
-.btn-primary:hover{
-opacity:0.9;
-}
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-cyan);
+            transition: width 0.3s ease;
+        }
 
-#otpBox{
-display:none;
-margin-top:20px;
-}
+        .question-text {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
 
-.instruction{
-margin-top:20px;
-text-align:center;
-color:#dfe6e9;
-font-size:14px;
-}
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
 
-@media(max-width:600px){
+        .option-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: white;
+            text-align: left;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
 
-.country-selector select{
-padding-left:70px;
-}
+        .option-btn:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: var(--accent-cyan);
+            padding-left: 25px;
+        }
 
-.flag-preview span{
-display:none;
-}
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 4px solid var(--accent-gold);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+        }
 
-}
+        .score-num {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--accent-gold);
+        }
 
-</style>
+        @media(max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .country-selector select { padding-left: 65px; }
+            .flag-preview span { display: none; }
+            .screen { padding: 25px 20px; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
-
-<div class="registration-form">
-
-<div class="app-logo">
-
-<div class="logo-circle">
-
-<img
-src="https://files.catbox.moe/dbcm8s.png"
-alt="Logo"
-class="real-logo">
-
-</div>
-
-<h1>Quiz Biologie</h1>
-
-</div>
-
-<form id="registrationForm">
-
-<div class="form-group">
-
-<label>Nom:</label>
-
-<input
-type="text"
-id="playerName"
-placeholder="Votre nom..."
-required>
-
-</div>
-
-<div class="form-group">
-
-<label>Prénom:</label>
-
-<input
-type="text"
-id="firstName"
-placeholder="Votre prénom..."
-required>
-
-</div>
-
-<div class="form-group">
-
-<label>Nom d'utilisateur:</label>
-
-<input
-type="text"
-id="username"
-placeholder="Votre nom d'utilisateur..."
-required>
-
-</div>
-
-<div class="form-group">
-
-<label>Mot de passe:</label>
-
-<input
-type="password"
-id="password"
-placeholder="Mot de passe..."
-minlength="8"
-required>
-
-</div>
-
-<div class="form-group">
-
-<label>Confirmer le mot de passe:</label>
-
-<input
-type="password"
-id="confirmPassword"
-placeholder="Confirmez..."
-minlength="8"
-required>
-
-</div>
-
-<div class="form-group">
-
-<label>Gmail:</label>
-
-<input
-type="email"
-id="email"
-placeholder="exemple@gmail.com"
-required>
-
-</div>
-
-<div class="form-group">
-
-<div class="g-recaptcha"
-data-sitekey="6Lf2iZgsAAAAAJiC9hUNXCZy1jCV0RahC_F5KZzz">
-</div>
-
-</div>
-
-<div class="form-group">
-
-<label>Sélectionnez votre pays</label>
-
-<div class="country-selector">
-
-<div class="flag-preview"
-id="flagPreview">
-
-<img
-src="https://flagcdn.com/w40/fr.png">
-
-<span id="countryName">
-France
-</span>
-
-</div>
-
-<select id="countrySelect">
-
-<option value="fr">France</option>
-<option value="ht">Haïti</option>
-<option value="us">États-Unis</option>
-<option value="ca">Canada</option>
-<option value="be">Belgique</option>
-<option value="ch">Suisse</option>
-<option value="de">Allemagne</option>
-<option value="es">Espagne</option>
-<option value="it">Italie</option>
-<option value="uk">Royaume-Uni</option>
-<option value="br">Brésil</option>
-<option value="jp">Japon</option>
-<option value="au">Australie</option>
-
-</select>
-
-</div>
-
-</div>
-
-<button
-type="submit"
-class="btn-primary">
-
-Continuer ➡️
-
-</button>
-
-</form>
-
-<div id="otpBox">
-
-<input
-type="number"
-id="otpInput"
-placeholder="Entrer OTP">
-
-<button
-class="btn-primary"
-onclick="verifyOTP()">
-
-Vérifier OTP
-
-</button>
-
-</div>
-
-<div class="instruction">
-
-<p>
-Votre progression sera enregistrée.
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-<script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-
-import {
-
-getAuth,
-
-createUserWithEmailAndPassword
-
-}
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-
-import {
-
-getFirestore,
-
-doc,
-
-setDoc
-
-}
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-
-const firebaseConfig = {
-
-apiKey:"AIzaSyCF2I4LEcMA1oJRwa7xthvSOQGSCg6lPjs",
-
-authDomain:"aliquiz-509.firebaseapp.com",
-
-projectId:"aliquiz-509",
-
-storageBucket:"aliquiz-509.firebasestorage.app",
-
-messagingSenderId:"319472495068",
-
-appId:"1:319472495068:web:092e0b9efb14dae8f60719"
-
-};
-
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-
-const db = getFirestore(app);
-
-emailjs.init("oLCYHNW4WA4xpu0u3");
-
-const countrySelect =
-document.getElementById('countrySelect');
-
-const flagPreview =
-document.getElementById('flagPreview');
-
-countrySelect.addEventListener(
-'change',
-function(){
-
-const selectedOption =
-this.options[this.selectedIndex];
-
-flagPreview.querySelector('img').src =
-`https://flagcdn.com/w40/${selectedOption.value}.png`;
-
-flagPreview.querySelector('span').textContent =
-selectedOption.textContent;
-
-}
-);
-
-document.getElementById(
-'registrationForm'
-).addEventListener(
-'submit',
-async function(e){
-
-e.preventDefault();
-
-const playerName =
-document.getElementById(
-'playerName'
-).value;
-
-const firstName =
-document.getElementById(
-'firstName'
-).value;
-
-const username =
-document.getElementById(
-'username'
-).value;
-
-const password =
-document.getElementById(
-'password'
-).value;
-
-const confirmPassword =
-document.getElementById(
-'confirmPassword'
-).value;
-
-const email =
-document.getElementById(
-'email'
-).value;
-
-const country =
-document.getElementById(
-'countrySelect'
-).value;
-
-if(password !== confirmPassword){
-
-alert(
-'Les mots de passe ne correspondent pas'
-);
-
-return;
-
-}
-
-if(password.length < 8){
-
-alert(
-'Minimum 8 caractères'
-);
-
-return;
-
-}
-
-const otp =
-Math.floor(
-100000 + Math.random() * 900000
-);
-
-localStorage.setItem("otp", otp);
-
-localStorage.setItem(
-"userData",
-
-JSON.stringify({
-
-playerName,
-firstName,
-username,
-password,
-email,
-country
-
-})
-
-);
-
-try{
-
-await emailjs.send(
-
-"service_v9zbetq",
-
-"template_pcuqdio",
-
-{
-
-email:email,
-
-otp:otp
-
-}
-
-);
-
-document.getElementById(
-"otpBox"
-).style.display = "block";
-
-alert(
-"OTP envoyé sur Gmail"
-);
-
-}catch(error){
-
-console.log(error);
-
-alert("Erreur OTP");
-
-}
-
-}
-);
-
-window.verifyOTP = async function(){
-
-const otpInput =
-document.getElementById(
-"otpInput"
-).value;
-
-const savedOTP =
-localStorage.getItem("otp");
-
-if(otpInput != savedOTP){
-
-alert("OTP incorrect");
-
-return;
-
-}
-
-const userData =
-JSON.parse(
-localStorage.getItem("userData")
-);
-
-try{
-
-const userCredential =
-
-await createUserWithEmailAndPassword(
-
-auth,
-
-userData.email,
-
-userData.password
-
-);
-
-const user =
-userCredential.user;
-
-await setDoc(
-
-doc(db,"users",user.uid),
-
-{
-
-nom:userData.playerName,
-
-prenom:userData.firstName,
-
-username:userData.username,
-
-email:userData.email,
-
-country:userData.country,
-
-uid:user.uid,
-
-createdAt:new Date()
-
-}
-
-);
-
-window.location.href =
-"dashboard.html";
-
-}catch(error){
-
-console.log(error);
-
-alert(error.code);
-
-}
-
-}
-
-</script>
-
+    <div class="container">
+        
+        <div id="registerScreen" class="screen active">
+            <div class="app-logo">
+                <div class="logo-circle">
+                    <img src="https://files.catbox.moe/dbcm8s.png" alt="Logo" class="real-logo">
+                </div>
+                <h1>Quiz Biologie</h1>
+                <p class="subtitle">Créez votre compte de joueur</p>
+            </div>
+
+            <form id="registrationForm" class="form-grid">
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" id="playerName" placeholder="Nom" required>
+                </div>
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" id="firstName" placeholder="Prénom" required>
+                </div>
+                <div class="form-group full-width">
+                    <label>Nom d'utilisateur</label>
+                    <input type="text" id="username" placeholder="Pseudo unique" required>
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="password" placeholder="Min. 8 car." minlength="8" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirmation</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirmez" minlength="8" required>
+                </div>
+                <div class="form-group full-width">
+                    <label>Adresse Gmail</label>
+                    <input type="email" id="email" placeholder="votre.email@gmail.com" required>
+                </div>
+                <div class="form-group full-width">
+                    <label>Votre Pays</label>
+                    <div class="country-selector">
+                        <div class="flag-preview" id="flagPreview">
+                            <img src="https://flagcdn.com/w40/fr.png" alt="flag">
+                            <span id="countryName">France</span>
+                        </div>
+                        <select id="countrySelect">
+                            <option value="fr">France</option>
+                            <option value="ht">Haïti</option>
+                            <option value="us">États-Unis</option>
+                            <option value="ca">Canada</option>
+                            <option value="be">Belgique</option>
+                            <option value="ch">Suisse</option>
+                            <option value="de">Allemagne</option>
+                            <option value="es">Espagne</option>
+                            <option value="it">Italie</option>
+                            <option value="uk">Royaume-Uni</option>
+                            <option value="br">Brésil</option>
+                            <option value="jp">Japon</option>
+                            <option value="au">Australie</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group full-width recaptcha-holder">
+                    <div class="g-recaptcha" data-sitekey="6Ldq1eMsAAAAAEHXeq6FOrKVI16L76bsmWRiZuHc"></div>
+                </div>
+
+                <button type="submit" class="btn-primary full-width">Continuer ➡️</button>
+            </form>
+        </div>
+
+        <div id="otpScreen" class="screen">
+            <div class="app-logo">
+                <div class="logo-circle">🧬</div>
+                <h1>Code de Sécurité</h1>
+                <p class="subtitle">Entrez le code OTP reçu par e-mail</p>
+            </div>
+            <div class="otp-container">
+                <div class="form-group">
+                    <input type="number" id="otpInput" class="otp-input-style" placeholder="000000" required>
+                </div>
+                <button class="btn-primary" onclick="verifyOTP()">Vérifier le code 🛡️</button>
+            </div>
+        </div>
+
+        <div id="dashboardScreen" class="screen">
+            <div class="user-badge">
+                <div class="user-info-text">
+                    <span style="color: var(--accent-cyan); font-size: 12px; font-weight: bold;">JOUEUR</span>
+                    <h3 id="dashUser">Pseudo</h3>
+                </div>
+                <div id="dashCountry" style="font-size: 24px;">🇫🇷</div>
+            </div>
+
+            <div id="quizIntro">
+                <h2 style="margin-bottom: 10px; color: var(--accent-gold);">Prêt pour le défi ?</h2>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.6;">
+                    Testez vos connaissances en Biologie cellulaire, génétique et anatomie humaine. Répondez correctement aux questions.
+                </p>
+                <button class="btn-primary" onclick="startQuiz()">Lancer le Quiz 🚀</button>
+            </div>
+
+            <div id="quizPlay" style="display: none;">
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <div class="quiz-card">
+                    <p id="questionText" class="question-text">Chargement de la question...</p>
+                    <div id="optionsGrid" class="options-grid"></div>
+                </div>
+            </div>
+
+            <div id="quizResult" style="display: none; text-align: center;">
+                <h2 style="color: var(--accent-cyan);">Quiz Terminé !</h2>
+                <div class="score-circle">
+                    <span class="score-num" id="finalScore">0</span>
+                    <span style="font-size: 12px; color: var(--text-muted);" id="maxScore">/5</span>
+                </div>
+                <p id="resultComment" style="margin-bottom: 20px; font-style: italic;"></p>
+                <button class="btn-primary" onclick="restartQuiz()">Recommencer 🔄</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCF2I4LEcMA1oJRwa7xthvSOQGSCg6lPjs",
+            authDomain: "aliquiz-509.firebaseapp.com",
+            projectId: "aliquiz-509",
+            storageBucket: "aliquiz-509.firebasestorage.app",
+            messagingSenderId: "319472495068",
+            appId: "1:319472495068:web:092e0b9efb14dae8f60719"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        emailjs.init("oLCYHNW4WA4xpu0u3");
+
+        const soundEffect = (type) => {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            if(type === 'success') {
+                osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+                osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                osc.start(); osc.stop(ctx.currentTime + 0.25);
+            } else if(type === 'error') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, ctx.currentTime);
+                gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                osc.start(); osc.stop(ctx.currentTime + 0.2);
+            } else if(type === 'click') {
+                osc.frequency.setValueAtTime(400, ctx.currentTime);
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                osc.start(); osc.stop(ctx.currentTime + 0.05);
+            }
+        };
+
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        const countrySelect = document.getElementById('countrySelect');
+        const flagPreview = document.getElementById('flagPreview');
+        const countryFlags = {
+            fr: "🇫🇷", ht: "🇭🇹", us: "🇺🇸", ca: "🇨🇦", be: "🇧🇪", 
+            ch: "🇨🇭", de: "🇩🇪", es: "🇪🇸", it: "🇮🇹", uk: "🇬🇧", 
+            br: "🇧🇷", jp: "🇯🇵", au: "🇦🇺"
+        };
+        
+        countrySelect.addEventListener('change', function(){
+            const selectedOption = this.options[this.selectedIndex];
+            flagPreview.querySelector('img').src = `https://flagcdn.com/w40/${selectedOption.value}.png`;
+            flagPreview.querySelector('span').textContent = selectedOption.textContent;
+        });
+
+        // Form Submit ak reCAPTCHA Validation
+        document.getElementById('registrationForm').addEventListener('submit', async function(e){
+            e.preventDefault();
+            soundEffect('click');
+
+            // 1. Tcheke si reCAPTCHA a klike
+            const captchaResponse = grecaptcha.getResponse();
+            if (!captchaResponse) {
+                soundEffect('error');
+                alert("S'il vous plaît, cochez la case 'Je ne suis pas un robot' !");
+                return;
+            }
+
+            const playerName = document.getElementById('playerName').value;
+            const firstName = document.getElementById('firstName').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const email = document.getElementById('email').value;
+            const country = countrySelect.value;
+
+            if(password !== confirmPassword){
+                soundEffect('error');
+                alert('Les mots de passe ne correspondent pas !');
+                return;
+            }
+
+            const otp = Math.floor(100000 + Math.random() * 900000);
+            localStorage.setItem("otp", otp);
+            localStorage.setItem("userData", JSON.stringify({
+                playerName, firstName, username, password, email, country
+            }));
+
+            try {
+                await emailjs.send("service_v9zbetq", "template_pcuqdio", {
+                    email: email,
+                    otp: otp
+                });
+                soundEffect('success');
+                switchScreen('otpScreen');
+                alert("Un code OTP a été envoyé sur votre compte Gmail.");
+            } catch(error) {
+                console.log(error);
+                soundEffect('error');
+                alert("Erreur OTP. Réessayez.");
+            }
+        });
+
+        window.verifyOTP = async function() {
+            soundEffect('click');
+            const otpInput = document.getElementById("otpInput").value;
+            const savedOTP = localStorage.getItem("otp");
+
+            if(otpInput != savedOTP) {
+                soundEffect('error');
+                alert("OTP incorrect !");
+                return;
+            }
+
+            const userData = JSON.parse(localStorage.getItem("userData"));
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
+                const user = userCredential.user;
+
+                await setDoc(doc(db, "users", user.uid), {
+                    nom: userData.playerName,
+                    prenom: userData.firstName,
+                    username: userData.username,
+                    email: userData.email,
+                    country: userData.country,
+                    uid: user.uid,
+                    createdAt: new Date()
+                });
+
+                soundEffect('success');
+                setupDashboard(userData);
+            } catch(error) {
+                console.log(error);
+                soundEffect('error');
+                alert(`Erreur Firebase: ${error.message}`);
+            }
+        };
+
+        function setupDashboard(data) {
+            document.getElementById('dashUser').textContent = `${data.firstName} ${data.playerName} (@${data.username})`;
+            document.getElementById('dashCountry').textContent = countryFlags[data.country] || "🌐";
+            switchScreen('dashboardScreen');
+        }
+
+        /* --- SIKYI KIZ (QUIZ SYSTEM) --- */
+        const biologyQuestions = [
+            {
+                q: "Quelle est l'unité de base de tout être vivant ?",
+                o: ["L'atome", "La cellule", "La molécule", "Le tissu"],
+                a: 1
+            },
+            {
+                q: "Où se trouve la majorité de l'information génétique (ADN) dans une cellule eucaryote ?",
+                o: ["Le cytoplasme", "Le noyau", "La membrane plasmique", "Le ribosome"],
+                a: 1
+            },
+            {
+                q: "Quel processus permet aux plantes vertes de fabriquer leur propre matière organique grâce à la lumière ?",
+                o: ["La respiration", "La photosynthèse", "La fermentation", "La mitose"],
+                a: 1
+            },
+            {
+                q: "Combien de chromosomes possède une cellule humaine normale (hors cellules sexuelles) ?",
+                o: ["23 chromosomes", "46 chromosomes", "48 chromosomes", "12 chromosomes"],
+                a: 1
+            },
+            {
+                q: "Quel organite est considéré comme la 'centrale énergétique' de la cellule ?",
+                o: ["L'appareil de Golgi", "Le réticulum endoplasmique", "La mitochondrie", "Le lysosome"],
+                a: 2
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        window.startQuiz = function() {
+            soundEffect('click');
+            document.getElementById('quizIntro').style.display = 'none';
+            document.getElementById('quizResult').style.display = 'none';
+            document.getElementById('quizPlay').style.display = 'block';
+            currentQuestionIndex = 0;
+            score = 0;
+            showQuestion();
+        };
+
+        function showQuestion() {
+            const qData = biologyQuestions[currentQuestionIndex];
+            const progressPercent = (currentQuestionIndex / biologyQuestions.length) * 100;
+            document.getElementById('progressFill').style.width = `${progressPercent}%`;
+
+            document.getElementById('questionText').textContent = qData.q;
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+
+            qData.o.forEach((option, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(idx);
+                optionsGrid.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIdx) {
+            const qData = biologyQuestions[currentQuestionIndex];
+            if(selectedIdx === qData.a) {
+                score++;
+                soundEffect('success');
+            } else {
+                soundEffect('error');
+            }
+
+            currentQuestionIndex++;
+            if(currentQuestionIndex < biologyQuestions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quizPlay').style.display = 'none';
+            document.getElementById('quizResult').style.display = 'block';
+            document.getElementById('progressFill').style.width = `100%`;
+            
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('maxScore').textContent = `/${biologyQuestions.length}`;
+
+            let comment = "";
+            if(score === biologyQuestions.length) comment = "Excellent ! Vous êtes un vrai biologiste ! 🧠🧬";
+            else if(score >= 3) comment = "Très bien ! Bonnes connaissances. 👍";
+            else comment = "Ne découragez pas ! Réessayez pour vous améliorer. 🔬";
+            
+            document.getElementById('resultComment').textContent = comment;
+        }
+
+        window.restartQuiz = function() {
+            window.startQuiz();
+        };
+    </script>
 </body>
 </html>
