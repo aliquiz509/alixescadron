@@ -197,7 +197,6 @@
             padding-left: 110px;
         }
 
-        /* ReCAPTCHA Center Box */
         .recaptcha-holder {
             display: flex;
             justify-content: center;
@@ -397,7 +396,7 @@
                 </div>
 
                 <div class="form-group full-width recaptcha-holder">
-                    <div class="g-recaptcha" data-sitekey="6Ldq1eMsAAAAAEHXeq6FOrKVI16L76bsmWRiZuHc"></div>
+                    <div class="g-recaptcha" data-sitekey="6Lf2iZgsAAAAAJiC9hUNXCZy1jCV0RahC_F5KZzz"></div>
                 </div>
 
                 <button type="submit" class="btn-primary full-width">Continuer ➡️</button>
@@ -523,12 +522,11 @@
             flagPreview.querySelector('span').textContent = selectedOption.textContent;
         });
 
-        // Form Submit ak reCAPTCHA Validation
         document.getElementById('registrationForm').addEventListener('submit', async function(e){
             e.preventDefault();
             soundEffect('click');
 
-            // 1. Tcheke si reCAPTCHA a klike
+            // Captcha Verification
             const captchaResponse = grecaptcha.getResponse();
             if (!captchaResponse) {
                 soundEffect('error');
@@ -655,7 +653,7 @@
             showQuestion();
         };
 
-        function showQuestion() {
+        fn showQuestion() {
             const qData = biologyQuestions[currentQuestionIndex];
             const progressPercent = (currentQuestionIndex / biologyQuestions.length) * 100;
             document.getElementById('progressFill').style.width = `${progressPercent}%`;
@@ -712,3 +710,4 @@
     </script>
 </body>
 </html>
+
