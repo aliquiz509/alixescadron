@@ -170,6 +170,40 @@
             box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
         }
 
+        /* Password Wrapper for Eye Icon */
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-wrapper input {
+            padding-right: 45px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .toggle-password:hover {
+            color: var(--accent-cyan);
+        }
+
+        .toggle-password svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
         .country-selector {
             position: relative;
         }
@@ -229,7 +263,6 @@
             box-shadow: none;
         }
 
-        /* Google Button Style */
         .btn-google {
             width: 100%;
             padding: 14px;
@@ -251,11 +284,6 @@
         .btn-google:hover {
             background: rgba(255, 255, 255, 0.18);
             border-color: var(--accent-cyan);
-        }
-
-        .btn-google img {
-            width: 20px;
-            height: 20px;
         }
 
         .switch-text {
@@ -379,8 +407,13 @@
                 <p class="subtitle">Créez votre compte de joueur</p>
             </div>
 
-            <button class="btn-google context-google-btn">
-                <img src="https://cdnjs.cloudflare.com/ajax/libs/logos/1.0.0/google-icon.svg" alt="Google">
+            <button class="btn-google context-google-btn" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="width:20px; height:20px;">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.5 24c0-1.61-.15-3.16-.42-4.69H24v8.89h12.61c-.54 2.9-2.18 5.37-4.63 7l7.18 5.57C43.37 36.01 46.5 30.64 46.5 24z"/>
+                    <path fill="#FBBC05" d="M10.54 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.98-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.18-5.57c-1.99 1.33-4.55 2.13-8.71 2.13-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                </svg>
                 S'inscrire avec Google
             </button>
 
@@ -401,11 +434,21 @@
                 </div>
                 <div class="form-group">
                     <label>Mot de passe</label>
-                    <input type="password" id="password" placeholder="Min. 8 car." minlength="8" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="Min. 8 car." minlength="8" required>
+                        <button type="button" class="toggle-password">
+                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                        </button>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Confirmation</label>
-                    <input type="password" id="confirmPassword" placeholder="Confirmez" minlength="8" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="Confirmez" minlength="8" required>
+                        <button type="button" class="toggle-password">
+                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                        </button>
+                    </div>
                 </div>
                 <div class="form-group full-width">
                     <label>Adresse Gmail</label>
@@ -457,8 +500,13 @@
                 <p class="subtitle">Connectez-vous à votre compte</p>
             </div>
 
-            <button class="btn-google context-google-btn">
-                <img src="https://cdnjs.cloudflare.com/ajax/libs/logos/1.0.0/google-icon.svg" alt="Google">
+            <button class="btn-google context-google-btn" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="width:20px; height:20px;">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.5 24c0-1.61-.15-3.16-.42-4.69H24v8.89h12.61c-.54 2.9-2.18 5.37-4.63 7l7.18 5.57C43.37 36.01 46.5 30.64 46.5 24z"/>
+                    <path fill="#FBBC05" d="M10.54 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.98-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.18-5.57c-1.99 1.33-4.55 2.13-8.71 2.13-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                </svg>
                 Se connecter avec Google
             </button>
 
@@ -471,7 +519,12 @@
                 </div>
                 <div class="form-group full-width">
                     <label>Mot de passe</label>
-                    <input type="password" id="loginPassword" placeholder="Entrez votre mot de passe" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPassword" placeholder="Entrez votre mot de passe" required>
+                        <button type="button" class="toggle-password">
+                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="form-group full-width recaptcha-holder">
@@ -586,6 +639,21 @@
             document.getElementById(screenId).classList.add('active');
         }
 
+        // --- SISTÈM JÈ (VISIBLE / INVISIBLE) ---
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function() {
+                soundEffect('click');
+                const input = this.parentElement.querySelector('input');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    this.style.color = 'var(--accent-cyan)';
+                } else {
+                    input.type = 'password';
+                    this.style.color = 'var(--text-muted)';
+                }
+            });
+        });
+
         const countrySelect = document.getElementById('countrySelect');
         const flagPreview = document.getElementById('flagPreview');
         const countryFlags = {
@@ -605,7 +673,7 @@
             e.preventDefault();
             soundEffect('click');
 
-            const captchaResponse = grecaptcha.getResponse(0); // Premye captcha
+            const captchaResponse = grecaptcha.getResponse(0);
             if (!captchaResponse) {
                 soundEffect('error');
                 alert("S'il vous plaît, cochez la case 'Je ne suis pas un robot' !");
@@ -653,7 +721,7 @@
             }
         });
 
-        // VERIFICATION OTP AK KREYASYON KONT
+        // VERIFICATION OTP AK REDIRECTION DIRECTE
         window.verifyOTP = async function() {
             soundEffect('click');
             const otpInput = document.getElementById("otpInput").value;
@@ -664,6 +732,10 @@
                 alert("OTP incorrect !");
                 return;
             }
+
+            const otpBtn = document.querySelector("#otpScreen .btn-primary");
+            otpBtn.disabled = true;
+            otpBtn.textContent = "Création du compte... ⏳";
 
             const userData = JSON.parse(localStorage.getItem("userData"));
 
@@ -683,19 +755,23 @@
 
                 await setDoc(doc(db, "users", user.uid), profileData);
                 soundEffect('success');
+                alert("Compte créé avec succès ! 🎉");
+                
                 setupDashboard(profileData);
             } catch(error) {
                 soundEffect('error');
                 alert(`Erreur Firebase: ${error.message}`);
+                otpBtn.disabled = false;
+                otpBtn.textContent = "Vérifier le code 🛡️";
             }
         };
 
-        // 2. KONEKSYON TRADITIONNELLE (LOGIN)
+        // 2. KONEKSYON TRADITIONNELLE AK REDIRECTION
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             soundEffect('click');
 
-            const captchaResponse = grecaptcha.getResponse(1); // Dezyèm captcha
+            const captchaResponse = grecaptcha.getResponse(1);
             if (!captchaResponse) {
                 soundEffect('error');
                 alert("S'il vous plaît, cochez la case 'Je ne suis pas un robot' !");
@@ -713,13 +789,11 @@
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                // Pran enfòmasyon moun nan nan Firestore
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if(userDoc.exists()) {
                     soundEffect('success');
                     setupDashboard(userDoc.data());
                 } else {
-                    // Si kont lan te kreye men pa gen enfòmasyon fòm nan
                     setupDashboard({ prenom: "Joueur", nom: "", username: user.email.split('@')[0], country: "fr" });
                 }
             } catch(error) {
@@ -731,7 +805,7 @@
             }
         });
 
-        // 3. KONEKSYON AK GOOGLE (POUP TOU DE EKRA YO)
+        // 3. KONEKSYON AK GOOGLE + REDIRECTION DASHBOARD OTO
         document.querySelectorAll('.context-google-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
                 soundEffect('click');
@@ -739,18 +813,16 @@
                     const result = await signInWithPopup(auth, googleProvider);
                     const user = result.user;
 
-                    // Tcheke si moun lan te deja gen done nan Firestore
                     const userDoc = await getDoc(doc(db, "users", user.uid));
                     let finalData;
 
                     if(!userDoc.exists()) {
-                        // Si se premye fwa li konekte ak google, nou kreye yon pwofil otomatik
                         finalData = {
                             nom: user.displayName ? user.displayName.split(' ')[1] || "" : "",
                             prenom: user.displayName ? user.displayName.split(' ')[0] || "Joueur" : "Joueur",
                             username: user.email.split('@')[0] + Math.floor(Math.random() * 100),
                             email: user.email,
-                            country: "fr", // Pa default
+                            country: "fr",
                             uid: user.uid,
                             createdAt: new Date()
                         };
@@ -764,7 +836,7 @@
                 } catch(error) {
                     console.error(error);
                     soundEffect('error');
-                    alert("Échec de la connexion avec Google.");
+                    alert("Les popups Google sont bloqués ou l'authentification a échoué.");
                 }
             });
         });
