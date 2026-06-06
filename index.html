@@ -170,7 +170,6 @@
             box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
         }
 
-        /* Password Wrapper for Eye Icon */
         .password-wrapper {
             position: relative;
             display: flex;
@@ -234,7 +233,34 @@
         .recaptcha-holder {
             display: flex;
             justify-content: center;
-            margin: 5px 0 15px 0;
+            margin: 5px 0 5px 0;
+        }
+
+        /* BÈL STIL POU NOTIFIKASYON ENTEGRE YO */
+        .inline-feedback {
+            grid-column: span 2;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px;
+            border-radius: 8px;
+            display: none;
+            margin-bottom: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .inline-feedback.error-mode {
+            display: block;
+            color: var(--error);
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid rgba(255, 71, 87, 0.2);
+        }
+
+        .inline-feedback.success-mode {
+            display: block;
+            color: var(--success);
+            background: rgba(46, 213, 115, 0.1);
+            border: 1px solid rgba(46, 213, 115, 0.2);
         }
 
         .btn-primary {
@@ -480,8 +506,10 @@
                 </div>
 
                 <div class="form-group full-width recaptcha-holder">
-                    <div class="g-recaptcha" id="captchaRegister" data-sitekey="6Lf2iZgsAAAAAJiC9hUNXCZy1jCV0RahC_F5KZzz"></div>
+                    <div class="g-recaptcha" id="captchaRegister" data-sitekey="6Ldq1eMsAAAAAEHXeq6FOrKVI16L76bsmWRIZuHc"></div>
                 </div>
+
+                <div id="registerFeedback" class="inline-feedback"></div>
 
                 <button type="submit" id="submitBtn" class="btn-primary full-width">Continuer ➡️</button>
             </form>
@@ -525,11 +553,16 @@
                             <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
                         </button>
                     </div>
+                    <div style="text-align: right; margin-top: 8px;">
+                        <a id="forgotPasswordBtn" style="color: var(--accent-cyan); font-size: 13px; text-decoration: none; cursor: pointer; font-weight: 500;">Mot de passe oublié ?</a>
+                    </div>
                 </div>
 
                 <div class="form-group full-width recaptcha-holder">
-                    <div class="g-recaptcha" id="captchaLogin" data-sitekey="6Lf2iZgsAAAAAJiC9hUNXCZy1jCV0RahC_F5KZzz"></div>
+                    <div class="g-recaptcha" id="captchaLogin" data-sitekey="6Ldq1eMsAAAAAEHXeq6FOrKVI16L76bsmWRIZuHc"></div>
                 </div>
+
+                <div id="loginFeedback" class="inline-feedback"></div>
 
                 <button type="submit" id="loginSubmitBtn" class="btn-primary full-width">Se connecter 🔐</button>
             </form>
@@ -549,6 +582,7 @@
                 <div class="form-group">
                     <input type="number" id="otpInput" class="otp-input-style" placeholder="000000" required>
                 </div>
+                <div id="otpFeedback" class="inline-feedback"></div>
                 <button class="btn-primary" onclick="verifyOTP()">Vérifier le code 🛡️</button>
             </div>
         </div>
@@ -597,7 +631,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -615,6 +649,18 @@
         const googleProvider = new GoogleAuthProvider();
         
         emailjs.init("oLCYHNW4WA4xpu0u3");
+
+        // Fonksyon jenerik pou afiche mesaj bèl anba reCAPTCHA oswa fòm yo
+        function showFeedback(elementId, message, isSuccess = false) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.className = isSuccess ? "inline-feedback success-mode" : "inline-feedback error-mode";
+            
+            // Si se pa yon siksè fatal, nou ka kache mesaj la otomatik apre 6 segonn
+            if(!isSuccess && elementId !== 'otpFeedback') {
+                setTimeout(() => { el.className = "inline-feedback"; }, 6000);
+            }
+        }
 
         const soundEffect = (type) => {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -635,11 +681,12 @@
 
         window.switchScreen = function(screenId) {
             soundEffect('click');
+            // Netwaye ansyen feedback lè n ap chanje paj
+            document.querySelectorAll('.inline-feedback').forEach(el => el.className = "inline-feedback");
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
         }
 
-        // --- SISTÈM JÈ (VISIBLE / INVISIBLE) ---
         document.querySelectorAll('.toggle-password').forEach(button => {
             button.addEventListener('click', function() {
                 soundEffect('click');
@@ -676,7 +723,7 @@
             const captchaResponse = grecaptcha.getResponse(0);
             if (!captchaResponse) {
                 soundEffect('error');
-                alert("S'il vous plaît, cochez la case 'Je ne suis pas un robot' !");
+                showFeedback('registerFeedback', "⚠️ S'il vous plaît, cochez la case 'Je ne suis pas un robot' !");
                 return;
             }
 
@@ -690,7 +737,7 @@
 
             if(password !== confirmPassword){
                 soundEffect('error');
-                alert('Les mots de passe ne correspondent pas !');
+                showFeedback('registerFeedback', "❌ Les mots de passe ne correspondent pas !");
                 return;
             }
 
@@ -711,25 +758,25 @@
                 });
                 soundEffect('success');
                 switchScreen('otpScreen');
-                alert("Un code OTP a été envoyé sur votre compte Gmail.");
+                showFeedback('otpFeedback', "📩 Un code OTP a été envoyé sur votre compte Gmail.", true);
             } catch(error) {
                 soundEffect('error');
-                alert("Erreur OTP. Réessayez.");
+                showFeedback('registerFeedback', "❌ Erreur d'envoi OTP. Veuillez réessayer.");
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = "Continuer ➡️";
             }
         });
 
-        // VERIFICATION OTP AK REDIRECTION DIRECTE
+        // VERIFICATION OTP
         window.verifyOTP = async function() {
             soundEffect('click');
             const otpInput = document.getElementById("otpInput").value;
             const savedOTP = localStorage.getItem("otp");
 
-            if(otpInput != savedOTP) {
+            if(!otpInput || otpInput != savedOTP) {
                 soundEffect('error');
-                alert("OTP incorrect !");
+                showFeedback('otpFeedback', "❌ Code OTP incorrect !");
                 return;
             }
 
@@ -750,23 +797,27 @@
                     email: userData.email,
                     country: userData.country,
                     uid: user.uid,
-                    createdAt: new Date()
+                    createdAt: new Date().toISOString()
                 };
 
                 await setDoc(doc(db, "users", user.uid), profileData);
+                
                 soundEffect('success');
-                alert("Compte créé avec succès ! 🎉");
+                localStorage.removeItem("otp");
+                localStorage.removeItem("userData");
                 
                 setupDashboard(profileData);
+
             } catch(error) {
+                console.error("Erreur Firebase:", error);
                 soundEffect('error');
-                alert(`Erreur Firebase: ${error.message}`);
+                showFeedback('otpFeedback', `❌ Erreur: ${error.message}`);
                 otpBtn.disabled = false;
                 otpBtn.textContent = "Vérifier le code 🛡️";
             }
         };
 
-        // 2. KONEKSYON TRADITIONNELLE AK REDIRECTION
+        // 2. KONEKSYON TRADITIONNELLE
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             soundEffect('click');
@@ -774,7 +825,7 @@
             const captchaResponse = grecaptcha.getResponse(1);
             if (!captchaResponse) {
                 soundEffect('error');
-                alert("S'il vous plaît, cochez la case 'Je ne suis pas un robot' !");
+                showFeedback('loginFeedback', "⚠️ S'il vous plaît, cochez la case 'Je ne suis pas un robot' !");
                 return;
             }
 
@@ -798,17 +849,18 @@
                 }
             } catch(error) {
                 soundEffect('error');
-                alert("Email ou mot de passe incorrect !");
+                showFeedback('loginFeedback', "❌ Email ou mot de passe incorrect !");
             } finally {
                 loginSubmitBtn.disabled = false;
                 loginSubmitBtn.textContent = "Se connecter 🔐";
             }
         });
 
-        // 3. KONEKSYON AK GOOGLE + REDIRECTION DASHBOARD OTO
+        // 3. KONEKSYON GOOGLE
         document.querySelectorAll('.context-google-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
                 soundEffect('click');
+                const activeFeedbackId = document.getElementById('registerScreen').classList.contains('active') ? 'registerFeedback' : 'loginFeedback';
                 try {
                     const result = await signInWithPopup(auth, googleProvider);
                     const user = result.user;
@@ -824,7 +876,7 @@
                             email: user.email,
                             country: "fr",
                             uid: user.uid,
-                            createdAt: new Date()
+                            createdAt: new Date().toISOString()
                         };
                         await setDoc(doc(db, "users", user.uid), finalData);
                     } else {
@@ -836,15 +888,39 @@
                 } catch(error) {
                     console.error(error);
                     soundEffect('error');
-                    alert("Les popups Google sont bloqués ou l'authentification a échoué.");
+                    showFeedback(activeFeedbackId, "❌ L'authentification Google a échoué ou popup bloqué.");
                 }
             });
         });
 
+        // MOT DE PASSE OUBLIÉ (LIEN REKIPERASYON FIREBASE)
+        document.getElementById('forgotPasswordBtn').addEventListener('click', async function() {
+            soundEffect('click');
+            const email = document.getElementById('loginEmail').value;
+
+            if (!email) {
+                soundEffect('error');
+                showFeedback('loginFeedback', "⚠️ Veuillez entrer votre adresse email dans le champ ci-dessus d'abord !");
+                return;
+            }
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                soundEffect('success');
+                showFeedback('loginFeedback', "📩 E-mail de réinitialisation envoyé ! Vérifiez vos spams.", true);
+            } catch (error) {
+                soundEffect('error');
+                showFeedback('loginFeedback', `❌ Erreur: ${error.message}`);
+            }
+        });
+
         function setupDashboard(data) {
-            document.getElementById('dashUser').textContent = `${data.prenom} ${data.nom} (@${data.username})`;
+            if (!data) return;
+            document.getElementById('dashUser').textContent = `${data.prenom || ''} ${data.nom || ''} (@${data.username || 'joueur'})`;
             document.getElementById('dashCountry').textContent = countryFlags[data.country] || "🌐";
-            switchScreen('dashboardScreen');
+            
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('dashboardScreen').classList.add('active');
         }
 
         /* --- SIKYI KIZ (QUIZ SYSTEM) --- */
@@ -905,4 +981,3 @@
     </script>
 </body>
 </html>
-
