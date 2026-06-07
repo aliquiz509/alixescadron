@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aliquiz - Messenger Chat</title>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💬</text></svg>">
+    <style>
+        :root {
+            --bg-dark: #0a0e1a;
+            --panel-bg: rgba(16, 24, 48, 0.95);
+            --accent-cyan: #00d2ff;
+            --accent-blue: #4a69bd;
+            --text-light: #ffffff;
+            --text-muted: #a4b0be;
+            --success: #2ed573;
+            --error: #ff4757;
+            --accent-gold: #ffeaa7;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background: linear-gradient(rgba(10, 14, 26, 0.9), rgba(10, 14, 26, 0.98)), url('https://files.catbox.moe/5u3toy.jpg');
+            background-size: cover; background-position: center; background-attachment: fixed;
+            height: 100vh; color: var(--text-light); display: flex; flex-direction: column; padding: 10px;
+        }
+
+        .back-btn { text-decoration: none; color: var(--text-muted); font-size: 14px; margin-bottom: 10px; display: inline-block; }
+
+        .chat-container {
+            flex-grow: 1; max-width: 1200px; width: 100%; margin: 0 auto;
+            display: grid; grid-template-columns: 340px 1fr; gap: 15px; height: calc(100vh - 50px);
+        }
+
+        .left-panel { display: flex; flex-direction: column; gap: 15px; height: 100%; }
+        .ui-card {
+            background: var(--panel-bg); border-radius: 16px; padding: 15px;
+            border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column;
+        }
+
+        .search-box { flex-shrink: 0; }
+        .requests-box { max-height: 150px; overflow-y: auto; }
+        .friends-box { flex-grow: 1; overflow-y: auto; }
+
+        .chat-main {
+            background: var(--panel-bg); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);
+            display: flex; flex-direction: column; height: 100%; overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2);
+        }
+
+        .chat-header-info { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .chat-header-info:hover { color: var(--accent-cyan); }
+        .chat-header-info img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-cyan); }
+
+        .chat-messages { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        
+        /* Message Bubbles Style */
+        .msg-wrapper { display: flex; flex-direction: column; max-width: 70%; position: relative; }
+        .msg-wrapper.sent { align-self: flex-end; align-items: flex-end; }
+        .msg-wrapper.received { align-self: flex-start; align-items: flex-start; }
+
+        .msg { padding: 11px 15px; border-radius: 18px; font-size: 14.5px; line-height: 1.4; position: relative; group; }
+        .msg-wrapper.sent .msg { background: var(--accent-blue); color: white; border-bottom-right-radius: 4px; }
+        .msg-wrapper.received .msg { background: rgba(255,255,255,0.08); color: white; border-bottom-left-radius: 4px; }
+
+        .delete-btn {
+            background: none; border: none; color: var(--error); font-size: 11px; cursor: pointer; 
+            margin-top: 3px; display: none; text-decoration: underline;
+        }
+        .msg-wrapper.sent:hover .delete-btn { display: block; }
+
+        .chat-input-row { padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 10px; background: rgba(0,0,0,0.1); }
+
+        input {
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; color: white; outline: none; padding-left: 20px;
+        }
+
+        .btn-action {
+            padding: 10px 18px; background: var(--accent-blue); color: white;
+            border: none; border-radius: 20px; font-weight: bold; cursor: pointer; white-space: nowrap; transition: 0.2s;
+        }
+        .btn-action:hover { opacity: 0.9; transform: scale(1.02); }
+        .btn-success { background: var(--success); }
+        .btn-error { background: var(--error); }
+
+        .friend-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px; border-radius: 12px; background: rgba(255,255,255,0.02); margin-top: 8px; cursor: pointer; transition: 0.2s;
+        }
+        .friend-item:hover, .friend-item.active { background: rgba(255,255,255,0.08); border-left: 4px solid var(--accent-cyan); }
+        .friend-item img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; background: #1e293b; }
+
+        .alert-msg { padding: 10px; border-radius: 8px; margin-top: 8px; font-size: 13px; text-align: center; display: none; animation: fadeIn 0.3s; }
+        .alert-msg.error { background: rgba(255, 71, 87, 0.15); border: 1px solid var(--error); color: #ff6b81; }
+        .alert-msg.success { background: rgba(46, 213, 115, 0.15); border: 1px solid var(--success); color: #2ed573; }
+
+        /* PROFILE MODAL OVERLAY */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-content {
+            background: #0f172a; border: 1px solid var(--accent-cyan); padding: 25px; border-radius: 16px;
+            width: 90%; max-width: 400px; text-align: center; position: relative; box-shadow: 0 0 20px rgba(0,210,255,0.2);
+        }
+        .close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
+        .modal-avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--accent-gold); margin-bottom: 15px; object-fit: cover; }
+    </style>
+</head>
+<body>
+
+    <div><a href="dashboard.html" class="back-btn">⬅️ Tounen nan Dashboard</a></div>
+
+    <div class="chat-container">
+        
+        <!-- PANÈL GÒCH -->
+        <div class="left-panel">
+            <div class="ui-card search-box">
+                <h4>🔍 Chache yon pseudo</h4>
+                <div style="display: flex; gap: 5px; margin-top: 5px;">
+                    <input type="text" id="searchFriendInput" placeholder="Saisir pseudo...">
+                    <button class="btn-action" onclick="searchAndSendRequest()">Voye ✉️</button>
+                </div>
+                <div id="searchAlert" class="alert-msg"></div>
+            </div>
+
+            <div class="ui-card requests-box">
+                <h5 style="color: var(--accent-cyan);">📩 Demand Resevwa</h5>
+                <div id="friendRequestsList" style="margin-top: 5px;"></div>
+            </div>
+
+            <div class="ui-card friends-box">
+                <h5 style="color: var(--success); margin-bottom: 5px;">💬 Diskisyon (Messenger)</h5>
+                <div id="myFriendsList"></div>
+            </div>
+        </div>
+
+        <!-- PANÈL DWAT (MESSENGER BOX) -->
+        <div class="chat-main">
+            <div class="chat-header" id="chatHeaderArea" style="display: none;">
+                <div class="chat-header-info" onclick="openProfileModal()">
+                    <img id="chatHeaderAvatar" src="" alt="Avatar">
+                    <div>
+                        <div id="chatHeaderName" style="font-weight: bold;">...</div>
+                        <div id="chatHeaderStatus" style="font-size: 11px; color: var(--success);">An liy 🟢</div>
+                    </div>
+                </div>
+                <span style="font-size: 12px; color: var(--text-muted);">Klike sou pwofil la pou wè detay</span>
+            </div>
+            
+            <div class="chat-messages" id="chatMessageFlow">
+                <p style="text-align: center; color: var(--text-muted); margin-top: 80px; font-size: 15px;">Chwazi yon zanmi nan lis la pou w kòmanse koze! 👋</p>
+            </div>
+
+            <div class="chat-input-row" id="chatInputArea" style="display: none;">
+                <input type="text" id="chatMsgInputField" placeholder="Ekri yon mesaj...">
+                <button class="btn-action" onclick="sendDirectMessage()">Voye</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL PWOFIL ZANMI + TRANSFÈ COINS -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeProfileModal()">✕</button>
+            <img id="modalAvatar" class="modal-avatar" src="" alt="Avatar">
+            <h3 id="modalFullName">...</h3>
+            <p id="modalUsername" style="color: var(--accent-cyan); font-size: 14px; margin-bottom: 15px;">@username</p>
+            
+            <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 10px; text-align: left; margin-bottom: 20px; font-size: 14px;">
+                <p style="margin-bottom: 6px;">🪙 AliCoins: <strong id="modalCoins" style="color: var(--accent-gold);">0</strong> AC</p>
+                <p>🎮 Jwèt Joue: <strong id="modalGames" style="color: var(--accent-cyan);">0</strong></p>
+            </div>
+
+            <h4 style="color: var(--accent-gold); font-size: 14px; margin-bottom: 8px;">🎁 Voye AliCoins bay zanmi sa a</h4>
+            <div style="display: flex; gap: 5px;">
+                <input type="number" id="sendCoinsAmount" placeholder="Kantite AC..." min="1" style="border-radius: 8px; padding: 8px;">
+                <button class="btn-action btn-success" style="border-radius: 8px;" onclick="transferAliCoins()">Voye 🪙</button>
+            </div>
+            <div id="modalAlert" class="alert-msg"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, updateDoc, getDoc, collection, query, where, getDocs, addDoc, onSnapshot, orderBy, arrayUnion, deleteDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCF2I4LEcMA1oJRwa7xthvSOQGSCg6lPjs",
+            authDomain: "aliquiz-509.firebaseapp.com",
+            projectId: "aliquiz-509",
+            storageBucket: "aliquiz-509.firebasestorage.app",
+            messagingSenderId: "319472495068",
+            appId: "1:319472495068:web:092e0b9efb14dae8f60719"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let currentQuizUser = JSON.parse(localStorage.getItem("currentQuizUser"));
+        if (!currentQuizUser) { window.location.href = 'index.html'; }
+
+        let activeChatFriendUID = null;
+        let activeFriendData = null; // Pou sere detay zanmi ki louvri a
+        let unsubChat = null;
+
+        function showNotification(targetId, message, type = 'error') {
+            const alertBox = document.getElementById(targetId);
+            alertBox.textContent = message;
+            alertBox.className = `alert-msg ${type}`;
+            alertBox.style.display = 'block';
+            if (type === 'success') setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
+        }
+
+        // VOYE DEMAND ZANMI
+        window.searchAndSendRequest = async function() {
+            const input = document.getElementById('searchFriendInput');
+            const targetUsername = input.value.trim();
+            if(!targetUsername || targetUsername === currentQuizUser.username) return;
+
+            const q = query(collection(db, "users"), where("username", "==", targetUsername));
+            const querySnapshot = await getDocs(q);
+
+            if(querySnapshot.empty) {
+                showNotification('searchAlert', "Nou pa jwenn okenn jwè ak pseudo sa a.", 'error');
+                return;
+            }
+
+            let targetUID = querySnapshot.docs[0].id;
+            const requestId = `${currentQuizUser.uid}_${targetUID}`;
+            
+            await setDoc(doc(db, "friendRequests", requestId), {
+                senderId: currentQuizUser.uid,
+                senderUsername: currentQuizUser.username,
+                receiverId: targetUID,
+                status: "pending"
+            });
+
+            showNotification('searchAlert', "Demand zanmi an voye byen pwòp! 🎉", 'success');
+            input.value = '';
+        }
+
+        // KOUTE DEMAND ZANMI K AP ANTRE YO
+        function listenToIncomingRequests() {
+            const q = query(collection(db, "friendRequests"), where("receiverId", "==", currentQuizUser.uid), where("status", "==", "pending"));
+            onSnapshot(q, (snapshot) => {
+                const reqBox = document.getElementById('friendRequestsList');
+                reqBox.innerHTML = snapshot.empty ? '<p style="font-size:11px; color:var(--text-muted);">Okenn demand.</p>' : '';
+                snapshot.forEach((docSnap) => {
+                    const reqData = docSnap.data();
+                    const div = document.createElement('div');
+                    div.style = "display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:8px; border-radius:8px; margin-top:5px; font-size:12px;";
+                    div.innerHTML = `
+                        <span>@${reqData.senderUsername}</span>
+                        <div style="display:flex; gap:4px;">
+                            <button class="btn-action btn-success" style="padding:3px 6px; font-size:10px;" onclick="respondRequest('${docSnap.id}', 'accept', '${reqData.senderId}')">✓</button>
+                            <button class="btn-action btn-error" style="padding:3px 6px; font-size:10px;" onclick="respondRequest('${docSnap.id}', 'reject')">✕</button>
+                        </div>
+                    `;
+                    reqBox.appendChild(div);
+                });
+            });
+        }
+
+        window.respondRequest = async function(reqId, action, senderId) {
+            if(action === 'reject') {
+                await deleteDoc(doc(db, "friendRequests", reqId));
+                return;
+            }
+            await deleteDoc(doc(db, "friendRequests", reqId));
+            await updateDoc(doc(db, "users", currentQuizUser.uid), { friends: arrayUnion(senderId) });
+            await updateDoc(doc(db, "users", senderId), { friends: arrayUnion(currentQuizUser.uid) });
+        }
+
+        // KOUTE LIS ZANMI (MESSENGER LIST STYLE)
+        function listenToMyFriends() {
+            onSnapshot(doc(db, "users", currentQuizUser.uid), async (docSnap) => {
+                const friendsBox = document.getElementById('myFriendsList');
+                friendsBox.innerHTML = '';
+                const data = docSnap.data();
+                
+                if(!data.friends || data.friends.length === 0) {
+                    friendsBox.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; margin-top:20px;">Ou poko gen zanmi.</p>';
+                    return;
+                }
+
+                for(let fUID of data.friends) {
+                    const fDoc = await getDoc(doc(db, "users", fUID));
+                    if(fDoc.exists()) {
+                        const fData = fDoc.data();
+                        const defPic = "https://files.catbox.moe/dbcm8s.png";
+                        const div = document.createElement('div');
+                        div.className = `friend-item ${activeChatFriendUID === fUID ? 'active' : ''}`;
+                        div.innerHTML = `
+                            <img src="${fData.profilePic || defPic}" alt="Avatar">
+                            <div>
+                                <div style="font-weight:600; font-size:14px;">${fData.prenom} ${fData.nom}</div>
+                                <div style="font-size:11px; color:var(--text-muted);">@${fData.username}</div>
+                            </div>
+                        `;
+                        div.onclick = () => startPrivateChat(fUID, fData);
+                        friendsBox.appendChild(div);
+                    }
+                }
+            });
+        }
+
+        // LOUVRI CHAT MESSENGER A
+        function startPrivateChat(friendUID, friendData) {
+            activeChatFriendUID = friendUID;
+            activeFriendData = friendData;
+
+            document.getElementById('chatHeaderArea').style.display = 'flex';
+            document.getElementById('chatInputArea').style.display = 'flex';
+            
+            document.getElementById('chatHeaderName').textContent = `${friendData.prenom} ${friendData.nom}`;
+            document.getElementById('chatHeaderAvatar').src = friendData.profilePic || "https://files.catbox.moe/dbcm8s.png";
+
+            if(unsubChat) unsubChat();
+
+            const chatId = currentQuizUser.uid < friendUID ? `${currentQuizUser.uid}_${friendUID}` : `${friendUID}_${currentQuizUser.uid}`;
+            const qMessages = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
+            
+            unsubChat = onSnapshot(qMessages, (snapshot) => {
+                const flow = document.getElementById('chatMessageFlow');
+                flow.innerHTML = '';
+                
+                snapshot.forEach((msgDoc) => {
+                    const msg = msgDoc.data();
+                    const isMe = msg.senderId === currentQuizUser.uid;
+                    
+                    const wrap = document.createElement('div');
+                    wrap.className = `msg-wrapper ${isMe ? 'sent' : 'received'}`;
+                    
+                    wrap.innerHTML = `
+                        <div class="msg">${msg.text}</div>
+                        ${isMe ? `<button class="delete-btn" onclick="deleteMessage('${chatId}', '${msgDoc.id}')">Supprimer</button>` : ''}
+                    `;
+                    flow.appendChild(wrap);
+                });
+                flow.scrollTop = flow.scrollHeight;
+            });
+        }
+
+        // VOYE MESAJ
+        window.sendDirectMessage = async function() {
+            const input = document.getElementById('chatMsgInputField');
+            const txt = input.value.trim();
+            if(!activeChatFriendUID || txt === "") return;
+
+            const chatId = currentQuizUser.uid < activeChatFriendUID ? `${currentQuizUser.uid}_${activeChatFriendUID}` : `${activeChatFriendUID}_${currentQuizUser.uid}`;
+            
+            await setDoc(doc(db, "chats", chatId), { users: [currentQuizUser.uid, activeChatFriendUID], lastMessage: txt, lastUpdated: new Date() }, { merge: true });
+            await addDoc(collection(db, "chats", chatId, "messages"), { senderId: currentQuizUser.uid, text: txt, timestamp: new Date() });
+
+            input.value = '';
+        }
+
+        // SIPRIME MESAJ
+        window.deleteMessage = async function(chatId, messageId) {
+            if(confirm("Èske ou vle efase mesaj sa a pou tout moun?")) {
+                await deleteDoc(doc(db, "chats", chatId, "messages", messageId));
+            }
+        }
+
+        // LOUVRI MODAL PWOFIL LÈW KLIKE SOU HEADER LA
+        window.openProfileModal = async function() {
+            if(!activeChatFriendUID) return;
+            // Refreshe enfòmasyon yo an dirèk depi nan Firebase
+            const fDoc = await getDoc(doc(db, "users", activeChatFriendUID));
+            if(fDoc.exists()) {
+                const fData = fDoc.data();
+                document.getElementById('modalFullName').textContent = `${fData.prenom} ${fData.nom}`;
+                document.getElementById('modalUsername').textContent = `@${fData.username}`;
+                document.getElementById('modalAvatar').src = fData.profilePic || "https://files.catbox.moe/dbcm8s.png";
+                document.getElementById('modalCoins').textContent = fData.coins || 0;
+                document.getElementById('modalGames').textContent = fData.totalGames || 0;
+                document.getElementById('profileModal').style.display = 'flex';
+            }
+        }
+
+        window.closeProfileModal = function() {
+            document.getElementById('profileModal').style.display = 'none';
+            document.getElementById('modalAlert').style.display = 'none';
+        }
+
+        // TRANSFÈ COINS BAY ZANMI AN
+        window.transferAliCoins = async function() {
+            const amountInput = document.getElementById('sendCoinsAmount');
+            const amount = parseInt(amountInput.value);
+            if(isNaN(amount) || amount <= 0) return;
+
+            // 1. Tcheke si mwen gen kòb sa a
+            const myDoc = await getDoc(doc(db, "users", currentQuizUser.uid));
+            const myCoins = myDoc.data().coins || 0;
+
+            if(myCoins < amount) {
+                showNotification('modalAlert', "Ou pa gen ase AliCoins pou transfè sa a! 🪙", 'error');
+                return;
+            }
+
+            // 2. Retire nan menm, mete nan men zanmi an
+            await updateDoc(doc(db, "users", currentQuizUser.uid), { coins: myCoins - amount });
+            
+            const friendDoc = await getDoc(doc(db, "users", activeChatFriendUID));
+            const friendCoins = friendDoc.data().coins || 0;
+            await updateDoc(doc(db, "users", activeChatFriendUID), { coins: friendCoins + amount });
+
+            showNotification('modalAlert', `Ou voye ${amount} AC bay zanmi w lan ak siksè! 🎉`, 'success');
+            amountInput.value = '';
+            
+            // Mete kantite a ajou nan modal la tou prezan
+            document.getElementById('modalCoins').textContent = friendCoins + amount;
+        }
+
+        listenToIncomingRequests();
+        listenToMyFriends();
+    </script>
+</body>
+</html>
