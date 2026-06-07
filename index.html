@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aliquiz</title>
+    <title>Aliquiz - Connexion</title>
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
     <style>
         :root {
@@ -331,59 +331,6 @@
             color: var(--accent-cyan) !important;
         }
 
-        .user-badge {
-            background: rgba(255,255,255,0.05);
-            padding: 12px 20px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 25px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .user-info-text h3 { color: var(--accent-gold); font-size: 18px; }
-        .quiz-card {
-            background: rgba(255,255,255,0.03);
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
-            margin-bottom: 20px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 3px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-
-        .progress-fill { height: 100%; width: 0%; background: var(--accent-cyan); transition: width 0.3s ease; }
-        .question-text { font-size: 18px; font-weight: 500; margin-bottom: 20px; line-height: 1.5; }
-        .options-grid { display: flex; flex-direction: column; gap: 12px; }
-
-        .option-btn {
-            width: 100%;
-            padding: 14px 20px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            color: white;
-            text-align: left;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .option-btn:hover { background: rgba(255,255,255,0.12); border-color: var(--accent-cyan); padding-left: 25px; }
-        .score-circle {
-            width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--accent-gold);
-            display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 20px auto;
-        }
-        .score-num { font-size: 36px; font-weight: bold; color: var(--accent-gold); }
-
         @media(max-width: 600px) {
             .form-grid { grid-template-columns: 1fr; }
             .full-width { grid-column: span 1; }
@@ -558,44 +505,6 @@
             </div>
         </div>
 
-        <div id="dashboardScreen" class="screen">
-            <div class="user-badge">
-                <div class="user-info-text">
-                    <span style="color: var(--accent-cyan); font-size: 12px; font-weight: bold;">JOUEUR</span>
-                    <h3 id="dashUser">Pseudo</h3>
-                </div>
-                <div id="dashCountry" style="font-size: 24px;">🇫🇷</div>
-            </div>
-
-            <div id="quizIntro">
-                <h2 style="margin-bottom: 10px; color: var(--accent-gold);">Prêt pour le défi ?</h2>
-                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.6;">
-                    Testez vos connaissances en Biologie cellulaire, génétique et anatomie humaine. Répondez correctement aux questions.
-                </p>
-                <button class="btn-primary" onclick="startQuiz()">Lancer le Quiz 🚀</button>
-            </div>
-
-            <div id="quizPlay" style="display: none;">
-                <div class="progress-bar">
-                    <div id="progressFill" class="progress-fill"></div>
-                </div>
-                <div class="quiz-card">
-                    <p id="questionText" class="question-text">Chargement de la question...</p>
-                    <div id="optionsGrid" class="options-grid"></div>
-                </div>
-            </div>
-
-            <div id="quizResult" style="display: none; text-align: center;">
-                <h2 style="color: var(--accent-cyan);">Quiz Terminé !</h2>
-                <div class="score-circle">
-                    <span class="score-num" id="finalScore">0</span>
-                    <span style="font-size: 12px; color: var(--text-muted);" id="maxScore">/5</span>
-                </div>
-                <p id="resultComment" style="margin-bottom: 20px; font-style: italic;"></p>
-                <button class="btn-primary" onclick="restartQuiz()">Recommencer 🔄</button>
-            </div>
-        </div>
-
     </div>
 
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -660,11 +569,6 @@
 
         const countrySelect = document.getElementById('countrySelect');
         const flagPreview = document.getElementById('flagPreview');
-        const countryFlags = {
-            fr: "🇫🇷", ht: "🇭🇹", us: "🇺🇸", ca: "🇨🇦", be: "🇧🇪", 
-            ch: "🇨🇭", de: "🇩🇪", es: "🇪🇸", it: "🇮🇹", uk: "🇬🇧", 
-            br: "🇧🇷", jp: "🇯🇵", au: "🇦🇺"
-        };
         
         countrySelect.addEventListener('change', function(){
             const selectedOption = this.options[this.selectedIndex];
@@ -724,7 +628,7 @@
             }
         });
 
-        // VERIFICATION OTP AK REDIRECTION DIRECTE
+        // VERIFICATION OTP AK REDIRECTION SOU DASHBOARD
         window.verifyOTP = async function() {
             soundEffect('click');
             const otpInput = document.getElementById("otpInput").value;
@@ -758,9 +662,10 @@
 
                 await setDoc(doc(db, "users", user.uid), profileData);
                 soundEffect('success');
-                alert("Compte créé avec succès ! 🎉");
                 
-                setupDashboard(profileData);
+                // Sove enfòmasyon yo nan localStorage pou Dashboard la ka itilize yo
+                localStorage.setItem("currentQuizUser", JSON.stringify(profileData));
+                window.location.href = 'dashboard.html';
             } catch(error) {
                 soundEffect('error');
                 alert(`Erreur Firebase: ${error.message}`);
@@ -834,12 +739,16 @@
                 const user = userCredential.user;
 
                 const userDoc = await getDoc(doc(db, "users", user.uid));
+                let sessionData;
                 if(userDoc.exists()) {
-                    soundEffect('success');
-                    setupDashboard(userDoc.data());
+                    sessionData = userDoc.data();
                 } else {
-                    setupDashboard({ prenom: "Joueur", nom: "", username: user.email.split('@')[0], country: "fr" });
+                    sessionData = { prenom: "Joueur", nom: "", username: user.email.split('@')[0], country: "fr" };
                 }
+                
+                soundEffect('success');
+                localStorage.setItem("currentQuizUser", JSON.stringify(sessionData));
+                window.location.href = 'dashboard.html';
             } catch(error) {
                 soundEffect('error');
                 alert("Email ou mot de passe incorrect !");
@@ -849,7 +758,7 @@
             }
         });
 
-        // 3. KONEKSYON AK GOOGLE + REDIRECTION DASHBOARD OTO
+        // 3. KONEKSYON AK GOOGLE + REDIRECTION
         document.querySelectorAll('.context-google-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
                 soundEffect('click');
@@ -876,7 +785,8 @@
                     }
 
                     soundEffect('success');
-                    setupDashboard(finalData);
+                    localStorage.setItem("currentQuizUser", JSON.stringify(finalData));
+                    window.location.href = 'dashboard.html';
                 } catch(error) {
                     console.error(error);
                     soundEffect('error');
@@ -884,68 +794,6 @@
                 }
             });
         });
-
-        function setupDashboard(data) {
-            document.getElementById('dashUser').textContent = `${data.prenom} ${data.nom} (@${data.username})`;
-            document.getElementById('dashCountry').textContent = countryFlags[data.country] || "🌐";
-            switchScreen('dashboardScreen');
-        }
-
-        /* --- SIKYI KIZ (QUIZ SYSTEM) --- */
-        const biologyQuestions = [
-            { q: "Quelle est l'unité de base de tout être vivant ?", o: ["L'atome", "La cellule", "La molécule", "Le tissu"], a: 1 },
-            { q: "Où se trouve la majorité de l'information génétique (ADN) dans une cellule eucaryote ?", o: ["Le cytoplasme", "Le noyau", "La membrane plasmique", "Le ribosome"], a: 1 },
-            { q: "Quel processus permet aux plantes vertes de fabriquer leur propre matière organique grâce à la lumière ?", o: ["La respiration", "La photosynthèse", "La fermentation", "La mitose"], a: 1 },
-            { q: "Combien de chromosomes possède une cellule humaine normale (hors cellules sexuelles) ?", o: ["23 chromosomes", "46 chromosomes", "48 chromosomes", "12 chromosomes"], a: 1 },
-            { q: "Quel organite est considéré comme la 'centrale énergétique' de la cellule ?", o: ["L'appareil de Golgi", "Le réticulum endoplasmique", "La mitochondrie", "Le lysosome"], a: 2 }
-        ];
-
-        let currentQuestionIndex = 0;
-        let score = 0;
-
-        window.startQuiz = function() {
-            soundEffect('click');
-            document.getElementById('quizIntro').style.style.display = 'none';
-            document.getElementById('quizResult').style.display = 'none';
-            document.getElementById('quizPlay').style.display = 'block';
-            currentQuestionIndex = 0; score = 0;
-            showQuestion();
-        };
-
-        function showQuestion() {
-            const qData = biologyQuestions[currentQuestionIndex];
-            const progressPercent = (currentQuestionIndex / biologyQuestions.length) * 100;
-            document.getElementById('progressFill').style.width = `${progressPercent}%`;
-            document.getElementById('questionText').textContent = qData.q;
-            const optionsGrid = document.getElementById('optionsGrid');
-            optionsGrid.innerHTML = '';
-            qData.o.forEach((option, idx) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.textContent = option;
-                btn.onclick = () => checkAnswer(idx);
-                optionsGrid.appendChild(btn);
-            });
-        }
-
-        function checkAnswer(selectedIdx) {
-            const qData = biologyQuestions[currentQuestionIndex];
-            if(selectedIdx === qData.a) { score++; soundEffect('success'); } else { soundEffect('error'); }
-            currentQuestionIndex++;
-            if(currentQuestionIndex < biologyQuestions.length) { showQuestion(); } else { showResults(); }
-        }
-
-        function showResults() {
-            document.getElementById('quizPlay').style.display = 'none';
-            document.getElementById('quizResult').style.display = 'block';
-            document.getElementById('progressFill').style.width = `100%`;
-            document.getElementById('finalScore').textContent = score;
-            document.getElementById('maxScore').textContent = `/${biologyQuestions.length}`;
-            let comment = score === biologyQuestions.length ? "Excellent ! Vous êtes un vrai biologiste ! 🧠🧬" : score >= 3 ? "Très bien ! Bonnes connaissances. 👍" : "Ne découragez pas ! Réessayez pour vous améliorer. 🔬";
-            document.getElementById('resultComment').textContent = comment;
-        }
-
-        window.restartQuiz = function() { window.startQuiz(); };
     </script>
 </body>
 </html>
