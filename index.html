@@ -170,7 +170,6 @@
             box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
         }
 
-        /* Password Wrapper for Eye Icon */
         .password-wrapper {
             position: relative;
             display: flex;
@@ -542,8 +541,8 @@
         <div id="otpScreen" class="screen">
             <div class="app-logo">
                 <div class="logo-circle">
-    <img src="https://files.catbox.moe/dbcm8s.png" alt="Logo" class="real-logo">
-</div>
+                    <img src="https://files.catbox.moe/dbcm8s.png" alt="Logo" class="real-logo">
+                </div>
                 <h1>Code de Sécurité</h1>
                 <p class="subtitle">Entrez le code OTP reçu par e-mail</p>
             </div>
@@ -551,7 +550,11 @@
                 <div class="form-group">
                     <input type="number" id="otpInput" class="otp-input-style" placeholder="000000" required>
                 </div>
-                <button class="btn-primary" onclick="verifyOTP()">Vérifier le code 🛡️</button>
+                <button class="btn-primary" style="margin-bottom: 15px;" onclick="verifyOTP()">Vérifier le code 🛡️</button>
+                
+                <div class="switch-text" style="margin-top: 10px;">
+                    Vous n'avez pas reçu le code ? <a id="resendOtpBtn" onclick="resendOTP()">Renvoyer le code</a>
+                </div>
             </div>
         </div>
 
@@ -641,7 +644,6 @@
             document.getElementById(screenId).classList.add('active');
         }
 
-        // --- SISTÈM JÈ (VISIBLE / INVISIBLE) ---
         document.querySelectorAll('.toggle-password').forEach(button => {
             button.addEventListener('click', function() {
                 soundEffect('click');
@@ -713,7 +715,6 @@
                 });
                 soundEffect('success');
                 switchScreen('otpScreen');
-                alert("Un code OTP a été envoyé sur votre compte Gmail.");
             } catch(error) {
                 soundEffect('error');
                 alert("Erreur OTP. Réessayez.");
@@ -765,6 +766,47 @@
                 alert(`Erreur Firebase: ${error.message}`);
                 otpBtn.disabled = false;
                 otpBtn.textContent = "Vérifier le code 🛡️";
+            }
+        };
+
+        // FONKSYON POU RENVOYE KÒD OTP A
+        window.resendOTP = async function() {
+            soundEffect('click');
+            const resendBtn = document.getElementById('resendOtpBtn');
+            const userData = JSON.parse(localStorage.getItem("userData"));
+
+            if(!userData || !userData.email) {
+                alert("Erreur: Données utilisateur introuvables.");
+                return;
+            }
+
+            resendBtn.style.pointerEvents = 'none';
+            resendBtn.style.color = 'var(--text-muted)';
+            resendBtn.textContent = "Renvoi en cours... ⏳";
+
+            const newOtp = Math.floor(100000 + Math.random() * 900000);
+            localStorage.setItem("otp", newOtp);
+
+            try {
+                await emailjs.send("service_v9zbetq", "template_pcuqdio", {
+                    email: userData.email,
+                    otp: newOtp
+                });
+                soundEffect('success');
+                resendBtn.textContent = "Code renvoyé avec succès !";
+                resendBtn.style.color = 'var(--success)';
+                
+                setTimeout(() => {
+                    resendBtn.style.pointerEvents = 'auto';
+                    resendBtn.style.color = 'var(--accent-cyan)';
+                    resendBtn.textContent = "Renvoyer le code";
+                }, 5000);
+
+            } catch(error) {
+                soundEffect('error');
+                resendBtn.textContent = "Échec du renvoi. Réessayez.";
+                resendBtn.style.color = 'var(--error)';
+                resendBtn.style.pointerEvents = 'auto';
             }
         };
 
@@ -863,7 +905,7 @@
 
         window.startQuiz = function() {
             soundEffect('click');
-            document.getElementById('quizIntro').style.display = 'none';
+            document.getElementById('quizIntro').style.style.display = 'none';
             document.getElementById('quizResult').style.display = 'none';
             document.getElementById('quizPlay').style.display = 'block';
             currentQuestionIndex = 0; score = 0;
@@ -907,4 +949,3 @@
     </script>
 </body>
 </html>
-
