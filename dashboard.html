@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aliquiz - Dashboard</title>
+    <title>Aliquiz-dashboad</title>
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
     <style>
         :root {
@@ -36,6 +36,7 @@
             color: var(--text-light);
             display: flex;
             overflow-x: hidden;
+            transition: background 0.5s ease;
         }
 
         /* --- SIDEBAR STYLE --- */
@@ -53,9 +54,7 @@
             border-right: 1px solid rgba(255,255,255,0.05);
         }
 
-        .sidebar.hidden {
-            transform: translateX(-260px);
-        }
+        .sidebar.hidden { transform: translateX(-260px); }
 
         .sidebar-header {
             padding: 20px;
@@ -114,9 +113,7 @@
             color: var(--accent-cyan);
         }
 
-        .menu-items li.active {
-            border-left: 4px solid var(--accent-cyan);
-        }
+        .menu-items li.active { border-left: 4px solid var(--accent-cyan); }
 
         /* --- MAIN CONTENT AREA --- */
         .main-content {
@@ -127,11 +124,8 @@
             min-height: 100vh;
         }
 
-        .main-content.expanded {
-            margin-left: 0;
-        }
+        .main-content.expanded { margin-left: 0; }
 
-        /* Top Navbar */
         .top-navbar {
             display: flex;
             justify-content: space-between;
@@ -181,16 +175,13 @@
             animation: fadeIn 0.4s ease-in-out;
         }
 
-        .tab-view.active {
-            display: block;
-        }
+        .tab-view.active { display: block; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Cards and UI Blocks */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -203,112 +194,7 @@
             padding: 25px;
             border: 1px solid rgba(255,255,255,0.05);
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-
-        /* --- QUIZ & TIMER & LIFELINES --- */
-        .timer-box {
-            width: 100%;
-            height: 6px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 3px;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-        .timer-bar {
-            height: 100%;
-            width: 100%;
-            background: var(--error);
-            transition: width 1s linear;
-        }
-
-        .lifelines-container {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .lifeline-btn {
-            flex: 1;
-            padding: 10px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-        }
-        .lifeline-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .options-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .option-item {
-            width: 100%;
-            padding: 14px 20px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 12px;
-            color: white;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .option-item:hover {
-            background: rgba(255,255,255,0.08);
-            border-color: var(--accent-cyan);
-        }
-
-        /* --- FLASHCARDS STYLE --- */
-        .flashcard-wrapper {
-            perspective: 1000px;
-            width: 100%;
-            max-width: 400px;
-            height: 250px;
-            margin: 30px auto;
-            cursor: pointer;
-        }
-        .flashcard {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-        }
-        .flashcard.flipped {
-            transform: rotateY(180deg);
-        }
-        .card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 20px;
-            display: flex;
-            align-content: center;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 500;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        .card-front {
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            border: 2px solid var(--accent-cyan);
-            color: var(--accent-cyan);
-        }
-        .card-back {
-            background: linear-gradient(135deg, #1e1b4b, #311042);
-            border: 2px solid var(--accent-gold);
-            color: var(--accent-gold);
-            transform: rotateY(180deg);
+            margin-bottom: 20px;
         }
 
         /* --- SOCIAL CHAT SYSTEM --- */
@@ -346,30 +232,13 @@
             border-radius: 12px;
             font-size: 14px;
         }
-        .msg.sent {
-            background: var(--accent-blue);
-            align-self: flex-end;
-        }
-        .msg.received {
-            background: rgba(255,255,255,0.1);
-            align-self: flex-start;
-        }
-        .chat-input-row {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
+        .msg.sent { background: var(--accent-blue); align-self: flex-end; }
+        .msg.received { background: rgba(255,255,255,0.1); align-self: flex-start; }
+        .chat-input-row { display: flex; gap: 10px; margin-top: 10px; }
 
         /* --- FORMS AND INPUTS --- */
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
         .form-group input {
             width: 100%;
             padding: 12px;
@@ -387,37 +256,46 @@
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s;
         }
-        .btn-danger {
-            background: var(--error);
-        }
+        .btn-action:hover { transform: translateY(-2px); }
 
-        /* --- BADGES SYSTEM --- */
-        .badges-grid {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
+        /* --- NOTIFICATION BLOCKS (INDEX-STYLE) --- */
+        .alert-msg {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
             margin-top: 15px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
         }
-        .badge-icon {
-            width: 60px;
+        .alert-msg.error { background: rgba(255, 71, 87, 0.15); border: 1px solid var(--error); color: #ff6b81; }
+        .alert-msg.success { background: rgba(46, 213, 115, 0.15); border: 1px solid var(--success); color: #2ed573; }
+
+        /* --- THEME BOXES FOR SHOP --- */
+        .theme-card {
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            background: rgba(255,255,255,0.02);
+        }
+        .theme-preview {
             height: 60px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            border: 2px dashed rgba(255,255,255,0.1);
-        }
-        .badge-icon.unlocked {
-            border-style: solid;
-            border-color: var(--accent-gold);
-            background: rgba(255, 234, 167, 0.1);
-            box-shadow: 0 0 10px rgba(255, 234, 167, 0.3);
+            border-radius: 8px;
+            margin-bottom: 10px;
         }
 
-        /* --- RESPONSIVE WORK --- */
+        .badges-grid { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px; }
+        .badge-icon {
+            width: 60px; height: 60px; background: rgba(255,255,255,0.05); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px dashed rgba(255,255,255,0.1);
+        }
+        .badge-icon.unlocked { border-style: solid; border-color: var(--accent-gold); background: rgba(255, 234, 167, 0.1); box-shadow: 0 0 10px rgba(255, 234, 167, 0.3); }
+
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-260px); }
             .sidebar.active { transform: translateX(0); }
@@ -465,60 +343,41 @@
         </header>
 
         <section id="homeTab" class="tab-view active">
+            <h2 style="margin-bottom: 20px; color: var(--accent-gold);">Kisa nou pral fè jodi a? 🤔</h2>
             <div class="card-grid">
                 
-                <div class="ui-card" id="quizIntroPanel">
-                    <h3 style="color: var(--accent-gold); margin-bottom: 10px;">🎮 Mode Quiz Arena</h3>
-                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Defye revèy la sou 5 kesyon byoloji kraz-zo. Genyen pyès monnen vityèl!</p>
-                    <button class="btn-action" onclick="startQuizArena()">Lancer le Quiz 🚀</button>
+                <div class="ui-card" style="text-align: center;">
+                    <span style="font-size: 40px;">🎮</span>
+                    <h3 style="margin: 10px 0;">Mode Arena</h3>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Defye revèy la sou kesyon byoloji epi genyen AliCoins.</p>
+                    <button class="btn-action" style="width: 100%;" onclick="window.location.href='quiz.html'">Lancer le Quiz 🚀</button>
                 </div>
 
-                <div class="ui-card">
-                    <h3 style="color: var(--accent-cyan); margin-bottom: 10px;">📖 Espace d'Étude (Flashcards)</h3>
-                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 10px;">Klike sou kat la pou wè repons lan epi aprann rapid.</p>
-                    
-                    <div class="flashcard-wrapper" onclick="this.querySelector('.flashcard').classList.toggle('flipped')">
-                        <div class="flashcard">
-                            <div class="card-face card-front" id="flashFront">Chargement du concept...</div>
-                            <div class="card-face card-back" id="flashBack">Chargement de la définition...</div>
-                        </div>
-                    </div>
-                    <button class="btn-action" style="width: 100%;" onclick="nextFlashcard()">Prochain Concept ➡️</button>
+                <div class="ui-card" style="text-align: center;">
+                    <span style="font-size: 40px;">📖</span>
+                    <h3 style="margin: 10px 0;">Étudier les Notes</h3>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Aprann leson byoloji yo byen fasil anvan ou al konbat.</p>
+                    <button class="btn-action" style="width: 100%; background: linear-gradient(135deg, #10b981, #059669);" onclick="window.location.href='note.html'">Étudier 📚</button>
                 </div>
-            </div>
 
-            <div class="ui-card" id="quizPlayPanel" style="display: none; margin-top: 30px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span id="questionCounter" style="color: var(--accent-cyan); font-weight: bold;">Question 1/5</span>
-                    <span id="timerText" style="color: var(--error); font-weight: bold;">15s</span>
+                <div class="ui-card" style="text-align: center;">
+                    <span style="font-size: 40px;">🃏</span>
+                    <h3 style="margin: 10px 0;">Flashcards</h3>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Sèvi ak kat memwa pou tès rapid sou definisyon yo.</p>
+                    <button class="btn-action" style="width: 100%; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="window.location.href='flashcard.html'">Ouvrir Flashcards ✨</button>
                 </div>
-                <div class="timer-box"><div id="timerBar" class="timer-bar"></div></div>
-                
-                <h3 id="targetQuestionText" style="margin: 20px 0;">Kisa yon selil ye?</h3>
-                <div class="options-list" id="targetOptionsList"></div>
 
-                <div class="lifelines-container">
-                    <button class="lifeline-btn" id="life50Btn" onclick="useLifeline50()">🃏 Joker 50/50</button>
-                    <button class="lifeline-btn" id="lifeTimeBtn" onclick="useLifelineTime()">⏱️ +10 Secondes</button>
-                </div>
-            </div>
-
-            <div class="ui-card" id="quizResultPanel" style="display: none; text-align: center; margin-top: 30px;">
-                <h2 style="color: var(--success);">Quiz Terminé !</h2>
-                <h1 style="font-size: 48px; margin: 15px 0; color: var(--accent-gold);" id="displayFinalScore">0 / 5</h1>
-                <p id="displayQuizReward" style="color: var(--accent-cyan); font-weight: bold; margin-bottom: 20px;">+0 AliCoins ganyé!</p>
-                <button class="btn-action" onclick="resetToHomeTabs()">Retour à l'accueil</button>
             </div>
         </section>
-
 
         <section id="friendsTab" class="tab-view">
             <div class="ui-card">
                 <h3>👥 Rechercher de nouveaux amis</h3>
                 <div class="chat-input-row" style="margin-bottom: 20px;">
-                    <input type="text" id="searchFriendInput" placeholder="Entrez le pseudo d'un joueur..." style="flex-grow:1; padding:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white;">
+                    <input type="text" id="searchFriendInput" placeholder="Entrez le pseudo d'un joueur...">
                     <button class="btn-action" onclick="searchUserFriend()">Chercher 🔍</button>
                 </div>
+                <div id="friendsAlert" class="alert-msg"></div>
                 <div id="searchFriendResult" style="padding: 10px 0;"></div>
 
                 <h3 style="margin-top: 20px;">💬 Messagerie privée</h3>
@@ -531,14 +390,13 @@
                             <p style="text-align: center; color: var(--text-muted); font-size: 13px;">Sélectionnez un ami pour discuter.</p>
                         </div>
                         <div class="chat-input-row">
-                            <input type="text" id="chatMsgInputField" placeholder="Écrire un message..." style="flex-grow:1; padding:10px; background:rgba(255,255,255,0.05); border:none; color:white; border-radius:8px;">
+                            <input type="text" id="chatMsgInputField" placeholder="Écrire un message...">
                             <button class="btn-action" onclick="sendDirectMessage()">Envoyer</button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-
 
         <section id="profileTab" class="tab-view">
             <div class="card-grid">
@@ -550,7 +408,6 @@
                     <p id="profUsername" style="color: var(--accent-cyan);">@...</p>
                     <p id="profCountry" style="font-size: 24px; margin-top: 10px;">🌐</p>
                 </div>
-
                 <div class="ui-card">
                     <h3>📊 Statistiques de progression</h3>
                     <div style="margin-top: 15px; display:flex; flex-direction:column; gap:12px;">
@@ -558,38 +415,39 @@
                         <p>🎯 Taux de réussite: <strong id="statSuccessRate" style="color: var(--success);">0%</strong></p>
                         <p>🏆 Rang Actuel: <strong id="statRankTitle" style="color: var(--accent-gold);">Débutant en Biologie</strong></p>
                     </div>
-
-                    <h3 style="margin-top: 25px;">🎖️ Trophées & Badges</h3>
+                    <h3 style="margin-top: 25px;">🎖️ Trophées</h3>
                     <div class="badges-grid">
-                        <div class="badge-icon" id="badge1" title="Scientifique En Herbe (Faire un score parfait)">🌱</div>
-                        <div class="badge-icon" id="badge2" title="Gros Joueur (Jouer plus de 5 parties)">🔥</div>
-                        <div class="badge-icon" id="badge3" title="Riche (Accumuler plus de 500 AliCoins)">👑</div>
+                        <div class="badge-icon" id="badge1" title="Score Parfait">🌱</div>
+                        <div class="badge-icon" id="badge2" title="Gros Joueur">🔥</div>
+                        <div class="badge-icon" id="badge3" title="Fortuné">👑</div>
                     </div>
                 </div>
             </div>
         </section>
-
 
         <section id="shopTab" class="tab-view">
             <div class="ui-card">
-                <h2>🛒 Boutique de récompenses AliShop</h2>
-                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px;">Utilisez vos AliCoins (AC) pour acheter des avantages exclusifs.</p>
+                <h2>🛒 AliShop - Choisissez votre Thème Visuel</h2>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px;">Achetez et changez le fond d'écran à tout moment avec vos AliCoins.</p>
                 
                 <div class="card-grid">
-                    <div class="ui-card" style="background: rgba(255,255,255,0.02);">
-                        <h4>🎨 Fond Premium Cosmique</h4>
-                        <p style="font-size: 12px; color: var(--text-muted); margin: 8px 0;">Débloquez un magnifique thème de fond pour votre espace.</p>
-                        <button class="btn-action" style="width: 100%; font-size: 13px;" onclick="buyShopItem('theme', 200)">Acheter pour 200 AC</button>
+                    <div class="theme-card">
+                        <div class="theme-preview" style="background: linear-gradient(rgba(10,14,26,0.85), rgba(10,14,26,0.98)), url('https://files.catbox.moe/5u3toy.jpg'); background-size: cover;"></div>
+                        <h4>🌌 Thème Espace Par Défaut</h4>
+                        <p style="font-size: 12px; color: var(--text-muted); margin: 5px 0 15px;">Le thème classique de biologie spatiale.</p>
+                        <button class="btn-action" style="width: 100%;" onclick="applyTheme('default')">Appliquer Gratuit</button>
                     </div>
-                    <div class="ui-card" style="background: rgba(255,255,255,0.02);">
-                        <h4>🧠 Pack Anatomie Avancée</h4>
-                        <p style="font-size: 12px; color: var(--text-muted); margin: 8px 0;">Ajoutez 20 nouvelles questions complexes sur le corps humain.</p>
-                        <button class="btn-action" style="width: 100%; font-size: 13px;" onclick="buyShopItem('pack', 350)">Acheter pour 350 AC</button>
+
+                    <div class="theme-card">
+                        <div class="theme-preview" style="background: linear-gradient(rgba(21,11,41,0.9), rgba(15,5,31,0.95)), url('https://files.catbox.moe/dbcm8s.png'); background-size: cover;"></div>
+                        <h4>🔮 Thème Cyber-Biologie</h4>
+                        <p style="font-size: 12px; color: var(--text-muted); margin: 5px 0 15px;">Un style néon violet futuriste ultra immersif.</p>
+                        <button class="btn-action" style="width: 100%;" id="btnThemeCyber" onclick="buyOrApplyTheme('cyber', 150)">Acheter pour 150 AC</button>
                     </div>
                 </div>
+                <div id="shopAlert" class="alert-msg"></div>
             </div>
         </section>
-
 
         <section id="settingsTab" class="tab-view">
             <div class="ui-card" style="max-width: 500px; margin: 0 auto;">
@@ -601,13 +459,14 @@
                     </div>
                     <div class="form-group">
                         <label>URL d'une photo de profil</label>
-                        <input type="url" id="setParamPic" placeholder="https://lien-image.com/photo.jpg">
+                        <input type="url" id="setParamPic">
                     </div>
                     <div class="form-group">
-                        <label>Nouveau mot de passe (Laissez vide si inchangé)</label>
+                        <label>Nouveau mot de passe (Optionnel)</label>
                         <input type="password" id="setParamPass" minlength="8">
                     </div>
-                    <button type="submit" class="btn-action" style="width: 100%;">Enregistrer les modifications 💾</button>
+                    <button type="submit" class="btn-action" style="width: 100%;">Enregistrer 💾</button>
+                    <div id="settingsAlert" class="alert-msg"></div>
                 </form>
             </div>
         </section>
@@ -617,7 +476,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
         import { getAuth, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-        import { getFirestore, doc, updateDoc, getDoc, setDoc, collection, query, where, getDocs, addDoc, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+        import { getFirestore, doc, updateDoc, getDoc, collection, query, where, getDocs, addDoc, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCF2I4LEcMA1oJRwa7xthvSOQGSCg6lPjs",
@@ -632,41 +491,32 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Sekirite: Tcheke si moun nan gen sesyon
         let currentQuizUser = JSON.parse(localStorage.getItem("currentQuizUser"));
-        if (!currentQuizUser) {
-            window.location.href = 'index.html';
-        }
+        if (!currentQuizUser) { window.location.href = 'index.html'; }
 
-        // --- GLOBAL VARIABLES FOR QUIZ & APP ---
         let aliCoins = 150;
         let totalGames = 0;
         let totalPerfectScores = 0;
+        let purchasedThemes = ['default'];
         let activeChatFriendUID = null;
         let unsubChat = null;
 
-        const flashcardsData = [
-            { f: "Mitochondrie", b: "L'organite responsable de la production d'énergie (ATP) cellulaire." },
-            { f: "Mitose", b: "Division cellulaire permettant d'obtenir deux cellules filles identiques." },
-            { f: "Adénine", b: "Base azotée qui s'apparie toujours avec la Thymine dans l'ADN." },
-            { f: "Hémoglobine", b: "Protéine des globules rouges servant au transport de l'oxygène." }
-        ];
-        let currentFlashIndex = 0;
+        // TI BWAT NOTIFIKASYON MENM JAN AK INDEX.HTML LA
+        function showNotification(targetId, message, type = 'error') {
+            const alertBox = document.getElementById(targetId);
+            if (!alertBox) return;
+            alertBox.textContent = message;
+            alertBox.className = `alert-msg ${type}`;
+            alertBox.style.display = 'block';
+            if (type === 'success') {
+                setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
+            }
+        }
 
-        const quizQuestions = [
-            { q: "Quelle structure trie et emballe les protéines dans la cellule ?", o: ["Lysosome", "Appareil de Golgi", "Ribosome", "Noyau"], a: 1 },
-            { q: "Quel acide nucléique est généralement simple brin ?", o: ["ADN", "ARN", "Protéine", "Lipide"], a: 1 },
-            { q: "Combien de cavités possède le cœur humain ?", o: ["2 cavités", "3 cavités", "4 cavités", "6 cavités"], a: 2 },
-            { q: "Quelle molécule stocke l'énergie chimique cellulaire ?", o: ["ADN", "Glucose", "ATP", "Eau"], a: 2 },
-            { q: "Qui est considéré comme le père de la génétique moderne ?", o: ["Charles Darwin", "Gregor Mendel", "Louis Pasteur", "Watson"], a: 1 }
-        ];
-        let quizIdx = 0;
-        let quizScore = 0;
-        let timerInterval = null;
-        let timeLeft = 15;
-        let currentQuestionOptions = [];
+        function hideAllNotifications() {
+            document.querySelectorAll('.alert-msg').forEach(el => el.style.display = 'none');
+        }
 
-        // --- INITIALISATION INFOS UTILISATEUR ---
         function loadUserSessionUI() {
             document.getElementById('sideProfileName').textContent = `${currentQuizUser.prenom} ${currentQuizUser.nom}`;
             document.getElementById('sideProfileUser').textContent = `@${currentQuizUser.username}`;
@@ -680,17 +530,18 @@
                 document.getElementById('setParamPic').value = currentQuizUser.profilePic;
             }
             
-            const flags = { fr: "🇫🇷", ht: "🇭🇹", us: "🇺🇸", ca: "🇨🇦", ht: "🇭🇹" };
+            const flags = { fr: "🇫🇷", ht: "🇭🇹", us: "🇺🇸", ca: "🇨🇦" };
             document.getElementById('profCountry').textContent = flags[currentQuizUser.country] || "🌐";
             
-            // Chaje nòt elatriye depi Firestore si yo egziste
             getDoc(doc(db, "users", currentQuizUser.uid)).then(snapshot => {
                 if(snapshot.exists()) {
                     const data = snapshot.data();
                     aliCoins = data.coins || 150;
                     totalGames = data.totalGames || 0;
                     totalPerfectScores = data.totalPerfectScores || 0;
+                    purchasedThemes = data.purchasedThemes || ['default'];
                     updateDashboardStats();
+                    checkThemeButtons();
                 }
             });
         }
@@ -699,203 +550,91 @@
         function updateDashboardStats() {
             document.getElementById('aliCoinsCount').textContent = aliCoins;
             document.getElementById('statGamesPlayed').textContent = totalGames;
-            
             let rate = totalGames > 0 ? Math.round((totalPerfectScores / totalGames) * 100) : 0;
             document.getElementById('statSuccessRate').textContent = `${rate}%`;
             
             if (totalGames >= 5) document.getElementById('badge2').classList.add('unlocked');
             if (totalPerfectScores > 0) document.getElementById('badge1').classList.add('unlocked');
             if (aliCoins >= 500) document.getElementById('badge3').classList.add('unlocked');
-            
-            let rank = "Débutant";
-            if (totalGames >= 3) rank = "Amateur Averti";
-            if (totalGames >= 7 && rate > 50) rank = "Expert Biologiste 🧠";
-            document.getElementById('statRankTitle').textContent = rank;
         }
 
-        // --- RESPONSIVE SIDEBAR TOGGLE ---
+        function checkThemeButtons() {
+            if(purchasedThemes.includes('cyber')) {
+                document.getElementById('btnThemeCyber').textContent = "Appliquer";
+                document.getElementById('btnThemeCyber').style.background = "var(--success)";
+            }
+        }
+
         window.toggleSidebar = function() {
-            const sidebar = document.getElementById('sidebar');
-            const main = document.getElementById('mainContent');
-            sidebar.classList.toggle('hidden');
-            sidebar.classList.toggle('active');
-            main.classList.toggle('expanded');
+            document.getElementById('sidebar').classList.toggle('hidden');
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('mainContent').classList.toggle('expanded');
         }
 
-        // --- SISTÈM TAB NAVIGASYON ---
         window.switchTab = function(tabId, element) {
+            hideAllNotifications();
             document.querySelectorAll('.tab-view').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.menu-items li').forEach(li => li.classList.remove('active'));
-            
             document.getElementById(tabId).classList.add('active');
             if(element) element.classList.add('active');
-            if(window.innerWidth <= 768) toggleSidebar(); // Kache sidebar sou mobil apre klik
+            if(window.innerWidth <= 768) toggleSidebar();
         }
 
-        // --- FLASHCARDS LOGIC ---
-        window.nextFlashcard = function() {
-            currentFlashIndex = (currentFlashIndex + 1) % flashcardsData.length;
-            document.querySelector('.flashcard').classList.remove('flipped');
-            setTimeout(() => {
-                document.getElementById('flashFront').textContent = flashcardsData[currentFlashIndex].f;
-                document.getElementById('flashBack').textContent = flashcardsData[currentFlashIndex].b;
-            }, 200);
-        }
-        nextFlashcard();
-
-        // --- QUIZ GAME ENGINE AK TIMER & LIFELINES ---
-        window.startQuizArena = function() {
-            document.getElementById('quizIntroPanel').style.display = 'none';
-            document.getElementById('quizPlayPanel').style.display = 'block';
-            document.getElementById('quizResultPanel').style.display = 'none';
-            quizIdx = 0; quizScore = 0;
-            document.getElementById('life50Btn').disabled = false;
-            document.getElementById('lifeTimeBtn').disabled = false;
-            renderQuizQuestion();
-        }
-
-        function renderQuizQuestion() {
-            clearInterval(timerInterval);
-            if(quizIdx >= quizQuestions.length) {
-                endQuizArena();
+        // --- THEME SHOP LOGIC ---
+        window.buyOrApplyTheme = async function(themeId, price) {
+            hideAllNotifications();
+            if(purchasedThemes.includes(themeId)) {
+                applyTheme(themeId);
+                showNotification('shopAlert', "Thème appliqué avec succès !", 'success');
                 return;
             }
-
-            timeLeft = 15;
-            document.getElementById('timerText').textContent = `${timeLeft}s`;
-            document.getElementById('timerBar').style.width = '100%';
-
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('timerText').textContent = `${timeLeft}s`;
-                document.getElementById('timerBar').style.width = `${(timeLeft/15)*100}%`;
-                if(timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    quizIdx++;
-                    renderQuizQuestion(); // Pase nan pwochen kesyon si tan an fini
-                }
-            }, 1000);
-
-            const data = quizQuestions[quizIdx];
-            document.getElementById('questionCounter').textContent = `Question ${quizIdx + 1}/${quizQuestions.length}`;
-            document.getElementById('targetQuestionText').textContent = data.q;
-            
-            const list = document.getElementById('targetOptionsList');
-            list.innerHTML = '';
-            
-            currentQuestionOptions = [];
-            data.o.forEach((opt, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-item';
-                btn.textContent = opt;
-                btn.onclick = () => selectQuizAnswer(index);
-                list.appendChild(btn);
-                currentQuestionOptions.push(btn);
-            });
-        }
-
-        function selectQuizAnswer(idx) {
-            clearInterval(timerInterval);
-            const data = quizQuestions[quizIdx];
-            if(idx === data.a) {
-                quizScore++;
-            }
-            quizIdx++;
-            renderQuizQuestion();
-        }
-
-        window.useLifeline50 = function() {
-            const data = quizQuestions[quizIdx];
-            let count = 0;
-            currentQuestionOptions.forEach((btn, index) => {
-                if(index !== data.a && count < 2) {
-                    btn.style.opacity = '0.2';
-                    btn.disabled = true;
-                    count++;
-                }
-            });
-            document.getElementById('life50Btn').disabled = true;
-        }
-
-        window.useLifelineTime = function() {
-            timeLeft += 10;
-            document.getElementById('timerText').textContent = `${timeLeft}s`;
-            document.getElementById('lifeTimeBtn').disabled = true;
-        }
-
-        async function endQuizArena() {
-            document.getElementById('quizPlayPanel').style.display = 'none';
-            document.getElementById('quizResultPanel').style.display = 'block';
-            document.getElementById('displayFinalScore').textContent = `${quizScore} / ${quizQuestions.length}`;
-            
-            let reward = quizScore * 20; // 20 AliCoins pa bon repons
-            if(quizScore === quizQuestions.length) {
-                reward += 50; // Bonis nòt pafè
-                totalPerfectScores++;
-            }
-            aliCoins += reward;
-            totalGames++;
-
-            document.getElementById('displayQuizReward').textContent = `+${reward} AliCoins accumulés!`;
-            updateDashboardStats();
-
-            // Sove chanjman yo nan Firestore
-            await updateDoc(doc(db, "users", currentQuizUser.uid), {
-                coins: aliCoins,
-                totalGames: totalGames,
-                totalPerfectScores: totalPerfectScores
-            });
-        }
-
-        window.resetToHomeTabs = function() {
-            document.getElementById('quizIntroPanel').style.display = 'block';
-            document.getElementById('quizResultPanel').style.display = 'none';
-        }
-
-        // --- ALISHOP (SHOPPING) ---
-        window.buyShopItem = async function(type, price) {
             if(aliCoins < price) {
-                alert("Vous n'avez pas assez d'AliCoins! 🪙");
+                showNotification('shopAlert', "Vous n'avez pas assez d'AliCoins! 🪙", 'error');
                 return;
             }
             aliCoins -= price;
+            purchasedThemes.push(themeId);
             updateDashboardStats();
-            alert("Achat réussi avec succès ! 🎉");
+            checkThemeButtons();
+            applyTheme(themeId);
+            showNotification('shopAlert', "Thème acheté et appliqué ! 🎉", 'success');
 
-            await updateDoc(doc(db, "users", currentQuizUser.uid), { coins: aliCoins });
+            await updateDoc(doc(db, "users", currentQuizUser.uid), { coins: aliCoins, purchasedThemes: purchasedThemes });
         }
 
-        // --- PARAMÈTRES (MODIFIKASYON PROFILE) ---
+        window.applyTheme = function(themeId) {
+            if(themeId === 'default') {
+                document.body.style.background = "linear-gradient(rgba(10, 14, 26, 0.85), rgba(10, 14, 26, 0.98)), url('https://files.catbox.moe/5u3toy.jpg') center/cover fixed";
+            } else if(themeId === 'cyber') {
+                document.body.style.background = "linear-gradient(rgba(21, 11, 41, 0.9), rgba(15, 5, 31, 0.95)), url('https://files.catbox.moe/dbcm8s.png') center/cover fixed";
+            }
+        }
+
+        // --- PARAMÈTRES PROFILE ---
         document.getElementById('updateProfileForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            hideAllNotifications();
             const newUsername = document.getElementById('setParamUser').value;
             const newPic = document.getElementById('setParamPic').value;
             const newPass = document.getElementById('setParamPass').value;
 
             try {
-                const userRef = doc(db, "users", currentQuizUser.uid);
-                await updateDoc(userRef, {
-                    username: newUsername,
-                    profilePic: newPic
-                });
-
+                await updateDoc(doc(db, "users", currentQuizUser.uid), { username: newUsername, profilePic: newPic });
                 currentQuizUser.username = newUsername;
                 currentQuizUser.profilePic = newPic;
                 localStorage.setItem("currentQuizUser", JSON.stringify(currentQuizUser));
                 loadUserSessionUI();
 
-                if(newPass.trim() !== "") {
-                    await updatePassword(auth.currentUser, newPass);
-                }
-
-                alert("Profil mis à jour avec succès! 💾");
+                if(newPass.trim() !== "") { await updatePassword(auth.currentUser, newPass); }
+                showNotification('settingsAlert', "Profil mis à jour avec succès! 💾", 'success');
             } catch(err) {
-                alert("Erreur lors de la modification: " + err.message);
+                showNotification('settingsAlert', `Erreur: ${err.message}`, 'error');
             }
         });
 
-        // --- RECHÈCH ZANMI AK CHAT SISTÈM AN TAN REYÈL ---
+        // --- CHERCHER ZANMI ---
         window.searchUserFriend = async function() {
+            hideAllNotifications();
             const queryName = document.getElementById('searchFriendInput').value;
             const q = query(collection(db, "users"), where("username", "==", queryName));
             const querySnapshot = await getDocs(q);
@@ -903,49 +642,30 @@
             box.innerHTML = '';
 
             if(querySnapshot.empty) {
-                box.innerHTML = `<p style="color:var(--error);">Aucun joueur trouvé avec ce pseudo.</p>`;
+                showNotification('friendsAlert', "Aucun joueur trouvé avec ce pseudo.", 'error');
                 return;
             }
 
             querySnapshot.forEach((userDoc) => {
                 const uData = userDoc.data();
                 if(uData.uid === currentQuizUser.uid) return;
-                
                 const div = document.createElement('div');
-                div.style = "display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;";
-                div.innerHTML = `
-                    <span>👤 ${uData.prenom} (@${uData.username})</span>
-                    <button class="btn-action" style="padding:6px 12px; font-size:12px;" id="btnChat-${uData.uid}">Discuter 💬</button>
-                `;
+                div.style = "display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-top:10px;";
+                div.innerHTML = `<span>👤 ${uData.prenom} (@${uData.username})</span><button class="btn-action" style="padding:6px 12px; font-size:12px;" id="btnChat-${uData.uid}">Discuter 💬</button>`;
                 box.appendChild(div);
-
                 document.getElementById(`btnChat-${uData.uid}`).onclick = () => startPrivateChat(uData);
             });
         }
 
         function startPrivateChat(friendData) {
             activeChatFriendUID = friendData.uid;
-            
-            const sidebarFriends = document.getElementById('activeChatFriends');
-            sidebarFriends.innerHTML = `
-                <div style="padding:10px; background:var(--accent-blue); border-radius:8px; cursor:pointer; font-weight:bold;">
-                    🟢 @${friendData.username}
-                </div>
-            `;
-
-            if(unsubChat) unsubChat(); // Fèmen ansyen ekoutè si te gen yonn
-
-            // Louvri chanm chat la ant de UID sa yo (Lojik senp alfabetik pou id chanm lan)
+            document.getElementById('activeChatFriends').innerHTML = `<div style="padding:10px; background:var(--accent-blue); border-radius:8px; font-weight:bold;">🟢 @${friendData.username}</div>`;
+            if(unsubChat) unsubChat();
             const chatId = currentQuizUser.uid < friendData.uid ? `${currentQuizUser.uid}_${friendData.uid}` : `${friendData.uid}_${currentQuizUser.uid}`;
-            
             const qMessages = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
-            
             unsubChat = onSnapshot(qMessages, (snapshot) => {
                 const flow = document.getElementById('chatMessageFlow');
                 flow.innerHTML = '';
-                if(snapshot.empty) {
-                    flow.innerHTML = `<p style="text-align:center; color:var(--text-muted);">Aucun message. Envoyez le premier mot!</p>`;
-                }
                 snapshot.forEach((msgDoc) => {
                     const msg = msgDoc.data();
                     const mDiv = document.createElement('div');
@@ -953,7 +673,7 @@
                     mDiv.textContent = msg.text;
                     flow.appendChild(mDiv);
                 });
-                flow.scrollTop = flow.scrollHeight; // Scroll anba nèt otomatikman
+                flow.scrollTop = flow.scrollHeight;
             });
         }
 
@@ -961,23 +681,13 @@
             const input = document.getElementById('chatMsgInputField');
             const txt = input.value.trim();
             if(!activeChatFriendUID || txt === "") return;
-
             const chatId = currentQuizUser.uid < activeChatFriendUID ? `${currentQuizUser.uid}_${activeChatFriendUID}` : `${activeChatFriendUID}_${currentQuizUser.uid}`;
-            
-            await addDoc(collection(db, "chats", chatId, "messages"), {
-                senderId: currentQuizUser.uid,
-                text: txt,
-                timestamp: new Date()
-            });
+            await addDoc(collection(db, "chats", chatId, "messages"), { senderId: currentQuizUser.uid, text: txt, timestamp: new Date() });
             input.value = '';
         }
 
-        // --- SE DEKONEKTE ---
         window.logout = function() {
-            signOut(auth).then(() => {
-                localStorage.removeItem("currentQuizUser");
-                window.location.href = 'index.html';
-            });
+            signOut(auth).then(() => { localStorage.removeItem("currentQuizUser"); window.location.href = 'index.html'; });
         }
     </script>
 </body>
