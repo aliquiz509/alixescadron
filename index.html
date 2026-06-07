@@ -331,6 +331,29 @@
             color: var(--accent-cyan) !important;
         }
 
+        /* STIL POU TI BWAT NOTIFIKASYON YO */
+        .alert-msg {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .alert-msg.error {
+            background: rgba(255, 71, 87, 0.15);
+            border: 1px solid var(--error);
+            color: #ff6b81;
+        }
+        .alert-msg.success {
+            background: rgba(46, 213, 115, 0.15);
+            border: 1px solid var(--success);
+            color: #2ed573;
+        }
+
         @media(max-width: 600px) {
             .form-grid { grid-template-columns: 1fr; }
             .full-width { grid-column: span 1; }
@@ -430,6 +453,8 @@
                 </div>
 
                 <button type="submit" id="submitBtn" class="btn-primary full-width">Continuer ➡️</button>
+                
+                <div id="registerAlert" class="alert-msg"></div>
             </form>
 
             <div class="switch-text">
@@ -478,6 +503,8 @@
                 </div>
 
                 <button type="submit" id="loginSubmitBtn" class="btn-primary full-width">Se connecter 🔐</button>
+                
+                <div id="loginAlert" class="alert-msg"></div>
             </form>
 
             <div class="switch-text">
@@ -499,6 +526,8 @@
                 </div>
                 <button class="btn-primary" style="margin-bottom: 15px;" onclick="verifyOTP()">Vérifier le code 🛡️</button>
                 
+                <div id="otpAlert" class="alert-msg"></div>
+
                 <div class="switch-text" style="margin-top: 10px;">
                     Vous n'avez pas reçu le code ? <a id="resendOtpBtn" onclick="resendOTP()">Renvoyer le code</a>
                 </div>
@@ -530,6 +559,21 @@
         
         emailjs.init("oLCYHNW4WA4xpu0u3");
 
+        // FONKSYON POU AFICHE NOTIFIKASYON DESIGN ANBA BOUTON YO
+        function showNotification(targetId, message, type = 'error') {
+            const alertBox = document.getElementById(targetId);
+            if (!alertBox) return;
+            
+            alertBox.textContent = message;
+            alertBox.className = `alert-msg ${type}`;
+            alertBox.style.display = 'block';
+        }
+
+        // Kache notifikasyon yo lè n ap chanje ekran
+        function hideAllNotifications() {
+            document.querySelectorAll('.alert-msg').forEach(el => el.style.display = 'none');
+        }
+
         const soundEffect = (type) => {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
             const osc = ctx.createOscillator();
@@ -549,6 +593,7 @@
 
         window.switchScreen = function(screenId) {
             soundEffect('click');
+            hideAllNotifications();
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
         }
@@ -580,11 +625,12 @@
         document.getElementById('registrationForm').addEventListener('submit', async function(e){
             e.preventDefault();
             soundEffect('click');
+            hideAllNotifications();
 
             const captchaResponse = grecaptcha.getResponse(0);
             if (!captchaResponse) {
                 soundEffect('error');
-                alert("S'il vous plaît, cochez la case 'Je ne suis pas un robot' !");
+                showNotification('registerAlert', "S'il vous plaît, cochez la case 'Je ne suis pas un robot' !", 'error');
                 return;
             }
 
@@ -598,7 +644,7 @@
 
             if(password !== confirmPassword){
                 soundEffect('error');
-                alert('Les mots de passe ne correspondent pas !');
+                showNotification('registerAlert', 'Les mots de passe ne correspondent pas !', 'error');
                 return;
             }
 
@@ -621,7 +667,7 @@
                 switchScreen('otpScreen');
             } catch(error) {
                 soundEffect('error');
-                alert("Erreur OTP. Réessayez.");
+                showNotification('registerAlert', "Erreur d'envoi OTP. Réessayez.", 'error');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = "Continuer ➡️";
@@ -631,12 +677,13 @@
         // VERIFICATION OTP AK REDIRECTION SOU DASHBOARD
         window.verifyOTP = async function() {
             soundEffect('click');
+            hideAllNotifications();
             const otpInput = document.getElementById("otpInput").value;
             const savedOTP = localStorage.getItem("otp");
 
             if(otpInput != savedOTP) {
                 soundEffect('error');
-                alert("OTP incorrect !");
+                showNotification('otpAlert', "Le code OTP est incorrect !", 'error');
                 return;
             }
 
@@ -663,25 +710,26 @@
                 await setDoc(doc(db, "users", user.uid), profileData);
                 soundEffect('success');
                 
-                // Sove enfòmasyon yo nan localStorage pou Dashboard la ka itilize yo
                 localStorage.setItem("currentQuizUser", JSON.stringify(profileData));
                 window.location.href = 'dashboard.html';
             } catch(error) {
                 soundEffect('error');
-                alert(`Erreur Firebase: ${error.message}`);
                 otpBtn.disabled = false;
                 otpBtn.textContent = "Vérifier le code 🛡️";
+                switchScreen('registerScreen');
+                showNotification('registerAlert', `Erreur: ${error.message}`, 'error');
             }
         };
 
         // FONKSYON POU RENVOYE KÒD OTP A
         window.resendOTP = async function() {
             soundEffect('click');
+            hideAllNotifications();
             const resendBtn = document.getElementById('resendOtpBtn');
             const userData = JSON.parse(localStorage.getItem("userData"));
 
             if(!userData || !userData.email) {
-                alert("Erreur: Données utilisateur introuvables.");
+                showNotification('otpAlert', "Données utilisateur introuvables.", 'error');
                 return;
             }
 
@@ -698,7 +746,8 @@
                     otp: newOtp
                 });
                 soundEffect('success');
-                resendBtn.textContent = "Code renvoyé avec succès !";
+                showNotification('otpAlert', "Un nouveau code a été renvoyé !", 'success');
+                resendBtn.textContent = "Code renvoyé !";
                 resendBtn.style.color = 'var(--success)';
                 
                 setTimeout(() => {
@@ -709,9 +758,10 @@
 
             } catch(error) {
                 soundEffect('error');
-                resendBtn.textContent = "Échec du renvoi. Réessayez.";
-                resendBtn.style.color = 'var(--error)';
+                resendBtn.textContent = "Renvoyer le code";
+                resendBtn.style.color = 'var(--accent-cyan)';
                 resendBtn.style.pointerEvents = 'auto';
+                showNotification('otpAlert', "Échec du renvoi. Réessayez.", 'error');
             }
         };
 
@@ -719,11 +769,12 @@
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             soundEffect('click');
+            hideAllNotifications();
 
             const captchaResponse = grecaptcha.getResponse(1);
             if (!captchaResponse) {
                 soundEffect('error');
-                alert("S'il vous plaît, cochez la case 'Je ne suis pas un robot' !");
+                showNotification('loginAlert', "S'il vous plaît, cochez la case 'Je ne suis pas un robot' !", 'error');
                 return;
             }
 
@@ -751,7 +802,7 @@
                 window.location.href = 'dashboard.html';
             } catch(error) {
                 soundEffect('error');
-                alert("Email ou mot de passe incorrect !");
+                showNotification('loginAlert', "Email ou mot de passe incorrect !", 'error');
             } finally {
                 loginSubmitBtn.disabled = false;
                 loginSubmitBtn.textContent = "Se connecter 🔐";
@@ -762,6 +813,7 @@
         document.querySelectorAll('.context-google-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
                 soundEffect('click');
+                hideAllNotifications();
                 try {
                     const result = await signInWithPopup(auth, googleProvider);
                     const user = result.user;
@@ -790,7 +842,9 @@
                 } catch(error) {
                     console.error(error);
                     soundEffect('error');
-                    alert("Les popups Google sont bloqués ou l'authentification a échoué.");
+                    // Montre erè Google la sou ekran ki aktif la
+                    const activeScreen = document.getElementById('registerScreen').classList.contains('active') ? 'registerAlert' : 'loginAlert';
+                    showNotification(activeScreen, "L'authentification Google a échoué ou le reCAPTCHA a expiré.", 'error');
                 }
             });
         });
