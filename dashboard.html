@@ -8,7 +8,8 @@
     <style>
         :root {
             --bg-dark: #0a0e1a;
-            --panel-bg: rgba(16, 24, 48, 0.85);
+            --panel-bg: rgba(16, 24, 48, 0.9);
+            --sidebar-bg: #0f172a;
             --accent-gold: #ffeaa7;
             --accent-cyan: #00d2ff;
             --accent-blue: #4a69bd;
@@ -26,283 +27,958 @@
         }
 
         body {
-            background: linear-gradient(rgba(10, 14, 26, 0.8), rgba(10, 14, 26, 0.95)), 
+            background: linear-gradient(rgba(10, 14, 26, 0.85), rgba(10, 14, 26, 0.98)), 
                         url('https://files.catbox.moe/5u3toy.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             color: var(--text-light);
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR STYLE --- */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .sidebar.hidden {
+            transform: translateX(-260px);
+        }
+
+        .sidebar-header {
             padding: 20px;
-        }
-
-        .container {
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            width: 100%;
-            max-width: 550px;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            padding: 40px 35px;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            width: 150%;
-            height: 150%;
-            background: conic-gradient(var(--accent-blue), #6a89cc, var(--accent-cyan), #3a1c71, var(--accent-gold), var(--accent-blue));
-            top: -25%;
-            left: -25%;
-            animation: rotate 6s linear infinite;
-            z-index: -2;
-        }
-
-        .container::after {
-            content: '';
-            position: absolute;
-            inset: 3px;
-            background: var(--panel-bg);
-            border-radius: 21px;
-            z-index: -1;
-            backdrop-filter: blur(10px);
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .user-badge {
-            background: rgba(255,255,255,0.05);
-            padding: 12px 20px;
-            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 25px;
-            border: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .user-info-text h3 { color: var(--accent-gold); font-size: 18px; }
-        
-        .quiz-card {
-            background: rgba(255,255,255,0.03);
-            border-radius: 16px;
+        .sidebar-profile {
             padding: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
-            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .progress-bar {
+        .profile-img-container {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            border: 2px solid var(--accent-cyan);
+            overflow: hidden;
+            background: #1e293b;
+        }
+
+        .profile-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .menu-items {
+            list-style: none;
+            padding: 15px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-grow: 1;
+        }
+
+        .menu-items li {
+            padding: 14px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .menu-items li:hover, .menu-items li.active {
+            background: rgba(255,255,255,0.05);
+            color: var(--accent-cyan);
+        }
+
+        .menu-items li.active {
+            border-left: 4px solid var(--accent-cyan);
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: 260px;
+            flex-grow: 1;
+            padding: 30px;
+            transition: all 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        /* Top Navbar */
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: var(--panel-bg);
+            padding: 15px 25px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .menu-toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .top-logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-logo-area img {
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+        }
+
+        .coins-display {
+            background: rgba(255, 234, 167, 0.1);
+            border: 1px solid var(--accent-gold);
+            padding: 6px 14px;
+            border-radius: 20px;
+            color: var(--accent-gold);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* --- DYNAMIC TABS VIEW --- */
+        .tab-view {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .tab-view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards and UI Blocks */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .ui-card {
+            background: var(--panel-bg);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        /* --- QUIZ & TIMER & LIFELINES --- */
+        .timer-box {
             width: 100%;
             height: 6px;
             background: rgba(255,255,255,0.1);
             border-radius: 3px;
-            margin-bottom: 20px;
+            margin: 15px 0;
             overflow: hidden;
         }
-
-        .progress-fill { height: 100%; width: 0%; background: var(--accent-cyan); transition: width 0.3s ease; }
-        .question-text { font-size: 18px; font-weight: 500; margin-bottom: 20px; line-height: 1.5; }
-        .options-grid { display: flex; flex-direction: column; gap: 12px; }
-
-        .option-btn {
+        .timer-bar {
+            height: 100%;
             width: 100%;
-            padding: 14px 20px;
+            background: var(--error);
+            transition: width 1s linear;
+        }
+
+        .lifelines-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .lifeline-btn {
+            flex: 1;
+            padding: 10px;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .lifeline-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .option-item {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
             color: white;
             text-align: left;
-            font-size: 15px;
             cursor: pointer;
             transition: all 0.2s;
         }
-
-        .option-btn:hover { background: rgba(255,255,255,0.12); border-color: var(--accent-cyan); padding-left: 25px; }
-        
-        .score-circle {
-            width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--accent-gold);
-            display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 20px auto;
+        .option-item:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--accent-cyan);
         }
-        .score-num { font-size: 36px; font-weight: bold; color: var(--accent-gold); }
 
-        .btn-primary {
+        /* --- FLASHCARDS STYLE --- */
+        .flashcard-wrapper {
+            perspective: 1000px;
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, var(--accent-blue), #6a89cc);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
+            max-width: 400px;
+            height: 250px;
+            margin: 30px auto;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(74, 105, 189, 0.4);
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .card-front {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 2px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+        .card-back {
+            background: linear-gradient(135deg, #1e1b4b, #311042);
+            border: 2px solid var(--accent-gold);
+            color: var(--accent-gold);
+            transform: rotateY(180deg);
+        }
+
+        /* --- SOCIAL CHAT SYSTEM --- */
+        .chat-layout {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 15px;
+            height: 400px;
+            margin-top: 15px;
+        }
+        .friends-list-box {
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .chat-box-area {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .msg {
+            max-width: 70%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+        .msg.sent {
+            background: var(--accent-blue);
+            align-self: flex-end;
+        }
+        .msg.received {
+            background: rgba(255,255,255,0.1);
+            align-self: flex-start;
+        }
+        .chat-input-row {
+            display: flex;
+            gap: 10px;
             margin-top: 10px;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(74, 105, 189, 0.6);
+        /* --- FORMS AND INPUTS --- */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .btn-action {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--accent-blue), #6a89cc);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-danger {
+            background: var(--error);
         }
 
-        .logout-btn {
-            background: none;
-            border: none;
-            color: var(--error);
-            font-size: 13px;
-            cursor: pointer;
-            font-weight: bold;
-            text-decoration: underline;
+        /* --- BADGES SYSTEM --- */
+        .badges-grid {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
             margin-top: 15px;
-            display: block;
-            text-align: center;
-            width: 100%;
+        }
+        .badge-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 2px dashed rgba(255,255,255,0.1);
+        }
+        .badge-icon.unlocked {
+            border-style: solid;
+            border-color: var(--accent-gold);
+            background: rgba(255, 234, 167, 0.1);
+            box-shadow: 0 0 10px rgba(255, 234, 167, 0.3);
+        }
+
+        /* --- RESPONSIVE WORK --- */
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-260px); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 15px; }
+            .chat-layout { grid-template-columns: 1fr; }
+            .friends-list-box { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="user-badge">
-            <div class="user-info-text">
-                <span style="color: var(--accent-cyan); font-size: 12px; font-weight: bold;">JOUEUR</span>
-                <h3 id="dashUser">Chargement...</h3>
-            </div>
-            <div id="dashCountry" style="font-size: 24px;">🌐</div>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2 style="color: var(--accent-cyan); font-size: 20px;">🧬 Aliquiz</h2>
+            <button class="menu-toggle-btn" onclick="toggleSidebar()">✕</button>
         </div>
-
-        <div id="quizIntro">
-            <h2 style="margin-bottom: 10px; color: var(--accent-gold);">Prêt pour le défi ?</h2>
-            <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px; line-height: 1.6;">
-                Testez vos connaissances en Biologie cellulaire, génétique et anatomie humaine. Répondez correctement aux questions.
-            </p>
-            <button class="btn-primary" onclick="startQuiz()">Lancer le Quiz 🚀</button>
-            <button class="logout-btn" onclick="logout()">Se déconnecter 🚪</button>
-        </div>
-
-        <div id="quizPlay" style="display: none;">
-            <div class="progress-bar">
-                <div id="progressFill" class="progress-fill"></div>
+        <div class="sidebar-profile">
+            <div class="profile-img-container">
+                <img id="sideProfilePic" src="https://files.catbox.moe/dbcm8s.png" alt="Avatar">
             </div>
-            <div class="quiz-card">
-                <p id="questionText" class="question-text">Chargement de la question...</p>
-                <div id="optionsGrid" class="options-grid"></div>
-            </div>
+            <h4 id="sideProfileName">Chargement...</h4>
+            <p id="sideProfileUser" style="font-size: 12px; color: var(--text-muted);">@username</p>
         </div>
+        <ul class="menu-items">
+            <li class="active" onclick="switchTab('homeTab', this)">🏠 Accueil / Jeu</li>
+            <li onclick="switchTab('friendsTab', this)">👥 Nouvo Zanmi</li>
+            <li onclick="switchTab('profileTab', this)">📊 Mon Profil</li>
+            <li onclick="switchTab('shopTab', this)">🛒 AliShop</li>
+            <li onclick="switchTab('settingsTab', this)">⚙️ Paramètres</li>
+            <li onclick="logout()" style="color: var(--error); margin-top: auto;">🚪 Déconnexion</li>
+        </ul>
+    </nav>
 
-        <div id="quizResult" style="display: none; text-align: center;">
-            <h2 style="color: var(--accent-cyan);">Quiz Terminé !</h2>
-            <div class="score-circle">
-                <span class="score-num" id="finalScore">0</span>
-                <span style="font-size: 12px; color: var(--text-muted);" id="maxScore">/5</span>
+    <main class="main-content" id="mainContent">
+        
+        <header class="top-navbar">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button class="menu-toggle-btn" onclick="toggleSidebar()">☰</button>
+                <div class="top-logo-area">
+                    <img src="https://files.catbox.moe/dbcm8s.png" alt="Logo">
+                    <span style="font-weight: bold; letter-spacing: 1px;">ALIQUIZ</span>
+                </div>
             </div>
-            <p id="resultComment" style="margin-bottom: 20px; font-style: italic;"></p>
-            <button class="btn-primary" onclick="restartQuiz()">Recommencer 🔄</button>
-        </div>
-    </div>
+            <div class="coins-display">🪙 <span id="aliCoinsCount">150</span> AC</div>
+        </header>
 
-    <script>
-        // Tcheke si moun nan gen dwa la
-        const userData = JSON.parse(localStorage.getItem("currentQuizUser"));
-        if (!userData) {
+        <section id="homeTab" class="tab-view active">
+            <div class="card-grid">
+                
+                <div class="ui-card" id="quizIntroPanel">
+                    <h3 style="color: var(--accent-gold); margin-bottom: 10px;">🎮 Mode Quiz Arena</h3>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Defye revèy la sou 5 kesyon byoloji kraz-zo. Genyen pyès monnen vityèl!</p>
+                    <button class="btn-action" onclick="startQuizArena()">Lancer le Quiz 🚀</button>
+                </div>
+
+                <div class="ui-card">
+                    <h3 style="color: var(--accent-cyan); margin-bottom: 10px;">📖 Espace d'Étude (Flashcards)</h3>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 10px;">Klike sou kat la pou wè repons lan epi aprann rapid.</p>
+                    
+                    <div class="flashcard-wrapper" onclick="this.querySelector('.flashcard').classList.toggle('flipped')">
+                        <div class="flashcard">
+                            <div class="card-face card-front" id="flashFront">Chargement du concept...</div>
+                            <div class="card-face card-back" id="flashBack">Chargement de la définition...</div>
+                        </div>
+                    </div>
+                    <button class="btn-action" style="width: 100%;" onclick="nextFlashcard()">Prochain Concept ➡️</button>
+                </div>
+            </div>
+
+            <div class="ui-card" id="quizPlayPanel" style="display: none; margin-top: 30px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span id="questionCounter" style="color: var(--accent-cyan); font-weight: bold;">Question 1/5</span>
+                    <span id="timerText" style="color: var(--error); font-weight: bold;">15s</span>
+                </div>
+                <div class="timer-box"><div id="timerBar" class="timer-bar"></div></div>
+                
+                <h3 id="targetQuestionText" style="margin: 20px 0;">Kisa yon selil ye?</h3>
+                <div class="options-list" id="targetOptionsList"></div>
+
+                <div class="lifelines-container">
+                    <button class="lifeline-btn" id="life50Btn" onclick="useLifeline50()">🃏 Joker 50/50</button>
+                    <button class="lifeline-btn" id="lifeTimeBtn" onclick="useLifelineTime()">⏱️ +10 Secondes</button>
+                </div>
+            </div>
+
+            <div class="ui-card" id="quizResultPanel" style="display: none; text-align: center; margin-top: 30px;">
+                <h2 style="color: var(--success);">Quiz Terminé !</h2>
+                <h1 style="font-size: 48px; margin: 15px 0; color: var(--accent-gold);" id="displayFinalScore">0 / 5</h1>
+                <p id="displayQuizReward" style="color: var(--accent-cyan); font-weight: bold; margin-bottom: 20px;">+0 AliCoins ganyé!</p>
+                <button class="btn-action" onclick="resetToHomeTabs()">Retour à l'accueil</button>
+            </div>
+        </section>
+
+
+        <section id="friendsTab" class="tab-view">
+            <div class="ui-card">
+                <h3>👥 Rechercher de nouveaux amis</h3>
+                <div class="chat-input-row" style="margin-bottom: 20px;">
+                    <input type="text" id="searchFriendInput" placeholder="Entrez le pseudo d'un joueur..." style="flex-grow:1; padding:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white;">
+                    <button class="btn-action" onclick="searchUserFriend()">Chercher 🔍</button>
+                </div>
+                <div id="searchFriendResult" style="padding: 10px 0;"></div>
+
+                <h3 style="margin-top: 20px;">💬 Messagerie privée</h3>
+                <div class="chat-layout">
+                    <div class="friends-list-box" id="activeChatFriends">
+                        <p style="font-size: 12px; color:var(--text-muted); text-align:center;">Aucune discussion active.</p>
+                    </div>
+                    <div class="chat-box-area">
+                        <div class="chat-messages" id="chatMessageFlow">
+                            <p style="text-align: center; color: var(--text-muted); font-size: 13px;">Sélectionnez un ami pour discuter.</p>
+                        </div>
+                        <div class="chat-input-row">
+                            <input type="text" id="chatMsgInputField" placeholder="Écrire un message..." style="flex-grow:1; padding:10px; background:rgba(255,255,255,0.05); border:none; color:white; border-radius:8px;">
+                            <button class="btn-action" onclick="sendDirectMessage()">Envoyer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="profileTab" class="tab-view">
+            <div class="card-grid">
+                <div class="ui-card" style="text-align: center;">
+                    <div class="profile-img-container" style="width: 110px; height: 110px; border-width: 3px;">
+                        <img id="mainProfilePic" src="https://files.catbox.moe/dbcm8s.png" alt="Avatar">
+                    </div>
+                    <h2 id="profFullName">...</h2>
+                    <p id="profUsername" style="color: var(--accent-cyan);">@...</p>
+                    <p id="profCountry" style="font-size: 24px; margin-top: 10px;">🌐</p>
+                </div>
+
+                <div class="ui-card">
+                    <h3>📊 Statistiques de progression</h3>
+                    <div style="margin-top: 15px; display:flex; flex-direction:column; gap:12px;">
+                        <p>🎮 Parties jouées: <strong id="statGamesPlayed" style="color: var(--accent-cyan);">0</strong></p>
+                        <p>🎯 Taux de réussite: <strong id="statSuccessRate" style="color: var(--success);">0%</strong></p>
+                        <p>🏆 Rang Actuel: <strong id="statRankTitle" style="color: var(--accent-gold);">Débutant en Biologie</strong></p>
+                    </div>
+
+                    <h3 style="margin-top: 25px;">🎖️ Trophées & Badges</h3>
+                    <div class="badges-grid">
+                        <div class="badge-icon" id="badge1" title="Scientifique En Herbe (Faire un score parfait)">🌱</div>
+                        <div class="badge-icon" id="badge2" title="Gros Joueur (Jouer plus de 5 parties)">🔥</div>
+                        <div class="badge-icon" id="badge3" title="Riche (Accumuler plus de 500 AliCoins)">👑</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="shopTab" class="tab-view">
+            <div class="ui-card">
+                <h2>🛒 Boutique de récompenses AliShop</h2>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px;">Utilisez vos AliCoins (AC) pour acheter des avantages exclusifs.</p>
+                
+                <div class="card-grid">
+                    <div class="ui-card" style="background: rgba(255,255,255,0.02);">
+                        <h4>🎨 Fond Premium Cosmique</h4>
+                        <p style="font-size: 12px; color: var(--text-muted); margin: 8px 0;">Débloquez un magnifique thème de fond pour votre espace.</p>
+                        <button class="btn-action" style="width: 100%; font-size: 13px;" onclick="buyShopItem('theme', 200)">Acheter pour 200 AC</button>
+                    </div>
+                    <div class="ui-card" style="background: rgba(255,255,255,0.02);">
+                        <h4>🧠 Pack Anatomie Avancée</h4>
+                        <p style="font-size: 12px; color: var(--text-muted); margin: 8px 0;">Ajoutez 20 nouvelles questions complexes sur le corps humain.</p>
+                        <button class="btn-action" style="width: 100%; font-size: 13px;" onclick="buyShopItem('pack', 350)">Acheter pour 350 AC</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="settingsTab" class="tab-view">
+            <div class="ui-card" style="max-width: 500px; margin: 0 auto;">
+                <h3>⚙️ Éditer les informations du compte</h3>
+                <form id="updateProfileForm" style="margin-top: 20px;">
+                    <div class="form-group">
+                        <label>Nom d'utilisateur</label>
+                        <input type="text" id="setParamUser" required>
+                    </div>
+                    <div class="form-group">
+                        <label>URL d'une photo de profil</label>
+                        <input type="url" id="setParamPic" placeholder="https://lien-image.com/photo.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>Nouveau mot de passe (Laissez vide si inchangé)</label>
+                        <input type="password" id="setParamPass" minlength="8">
+                    </div>
+                    <button type="submit" class="btn-action" style="width: 100%;">Enregistrer les modifications 💾</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+        import { getAuth, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+        import { getFirestore, doc, updateDoc, getDoc, setDoc, collection, query, where, getDocs, addDoc, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCF2I4LEcMA1oJRwa7xthvSOQGSCg6lPjs",
+            authDomain: "aliquiz-509.firebaseapp.com",
+            projectId: "aliquiz-509",
+            storageBucket: "aliquiz-509.firebasestorage.app",
+            messagingSenderId: "319472495068",
+            appId: "1:319472495068:web:092e0b9efb14dae8f60719"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Sekirite: Tcheke si moun nan gen sesyon
+        let currentQuizUser = JSON.parse(localStorage.getItem("currentQuizUser"));
+        if (!currentQuizUser) {
             window.location.href = 'index.html';
         }
 
-        const countryFlags = {
-            fr: "🇫🇷", ht: "🇭🇹", us: "🇺🇸", ca: "🇨🇦", be: "🇧🇪", 
-            ch: "🇨🇭", de: "🇩🇪", es: "🇪🇸", it: "🇮🇹", uk: "🇬🇧", 
-            br: "🇧🇷", jp: "🇯🇵", au: "🇦🇺"
-        };
+        // --- GLOBAL VARIABLES FOR QUIZ & APP ---
+        let aliCoins = 150;
+        let totalGames = 0;
+        let totalPerfectScores = 0;
+        let activeChatFriendUID = null;
+        let unsubChat = null;
 
-        // Afiche Enfòmasyon yo nan Badj la
-        document.getElementById('dashUser').textContent = `${userData.prenom} ${userData.nom} (@${userData.username})`;
-        document.getElementById('dashCountry').textContent = countryFlags[userData.country] || "🌐";
-
-        const soundEffect = (type) => {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.connect(gain); gain.connect(ctx.destination);
-            if(type === 'success') {
-                osc.frequency.setValueAtTime(523.25, ctx.currentTime); osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.3, ctx.currentTime); osc.start(); osc.stop(ctx.currentTime + 0.25);
-            } else if(type === 'error') {
-                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, ctx.currentTime);
-                gain.gain.setValueAtTime(0.2, ctx.currentTime); osc.start(); osc.stop(ctx.currentTime + 0.2);
-            } else if(type === 'click') {
-                osc.frequency.setValueAtTime(400, ctx.currentTime); gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                osc.start(); osc.stop(ctx.currentTime + 0.05);
-            }
-        };
-
-        /* --- SIKYI KIZ (QUIZ SYSTEM) --- */
-        const biologyQuestions = [
-            { q: "Quelle est l'unité de base de tout être vivant ?", o: ["L'atome", "La cellule", "La molécule", "Le tissu"], a: 1 },
-            { q: "Où se trouve la majorité de l'information génétique (ADN) dans une cellule eucaryote ?", o: ["Le cytoplasme", "Le noyau", "La membrane plasmique", "Le ribosome"], a: 1 },
-            { q: "Quel processus permet aux plantes vertes de fabriquer leur propre matière organique grâce à la lumière ?", o: ["La respiration", "La photosynthèse", "La fermentation", "La mitose"], a: 1 },
-            { q: "Combien de chromosomes possède une cellule humaine normale (hors cellules sexuelles) ?", o: ["23 chromosomes", "46 chromosomes", "48 chromosomes", "12 chromosomes"], a: 1 },
-            { q: "Quel organite est considéré comme la 'centrale énergétique' de la cellule ?", o: ["L'appareil de Golgi", "Le réticulum endoplasmique", "La mitochondrie", "Le lysosome"], a: 2 }
+        const flashcardsData = [
+            { f: "Mitochondrie", b: "L'organite responsable de la production d'énergie (ATP) cellulaire." },
+            { f: "Mitose", b: "Division cellulaire permettant d'obtenir deux cellules filles identiques." },
+            { f: "Adénine", b: "Base azotée qui s'apparie toujours avec la Thymine dans l'ADN." },
+            { f: "Hémoglobine", b: "Protéine des globules rouges servant au transport de l'oxygène." }
         ];
+        let currentFlashIndex = 0;
 
-        let currentQuestionIndex = 0;
-        let score = 0;
+        const quizQuestions = [
+            { q: "Quelle structure trie et emballe les protéines dans la cellule ?", o: ["Lysosome", "Appareil de Golgi", "Ribosome", "Noyau"], a: 1 },
+            { q: "Quel acide nucléique est généralement simple brin ?", o: ["ADN", "ARN", "Protéine", "Lipide"], a: 1 },
+            { q: "Combien de cavités possède le cœur humain ?", o: ["2 cavités", "3 cavités", "4 cavités", "6 cavités"], a: 2 },
+            { q: "Quelle molécule stocke l'énergie chimique cellulaire ?", o: ["ADN", "Glucose", "ATP", "Eau"], a: 2 },
+            { q: "Qui est considéré comme le père de la génétique moderne ?", o: ["Charles Darwin", "Gregor Mendel", "Louis Pasteur", "Watson"], a: 1 }
+        ];
+        let quizIdx = 0;
+        let quizScore = 0;
+        let timerInterval = null;
+        let timeLeft = 15;
+        let currentQuestionOptions = [];
 
-        window.startQuiz = function() {
-            soundEffect('click');
-            document.getElementById('quizIntro').style.display = 'none';
-            document.getElementById('quizResult').style.display = 'none';
-            document.getElementById('quizPlay').style.display = 'block';
-            currentQuestionIndex = 0; score = 0;
-            showQuestion();
-        };
+        // --- INITIALISATION INFOS UTILISATEUR ---
+        function loadUserSessionUI() {
+            document.getElementById('sideProfileName').textContent = `${currentQuizUser.prenom} ${currentQuizUser.nom}`;
+            document.getElementById('sideProfileUser').textContent = `@${currentQuizUser.username}`;
+            document.getElementById('profFullName').textContent = `${currentQuizUser.prenom} ${currentQuizUser.nom}`;
+            document.getElementById('profUsername').textContent = `@${currentQuizUser.username}`;
+            document.getElementById('setParamUser').value = currentQuizUser.username;
+            
+            if (currentQuizUser.profilePic) {
+                document.getElementById('sideProfilePic').src = currentQuizUser.profilePic;
+                document.getElementById('mainProfilePic').src = currentQuizUser.profilePic;
+                document.getElementById('setParamPic').value = currentQuizUser.profilePic;
+            }
+            
+            const flags = { fr: "🇫🇷", ht: "🇭🇹", us: "🇺🇸", ca: "🇨🇦", ht: "🇭🇹" };
+            document.getElementById('profCountry').textContent = flags[currentQuizUser.country] || "🌐";
+            
+            // Chaje nòt elatriye depi Firestore si yo egziste
+            getDoc(doc(db, "users", currentQuizUser.uid)).then(snapshot => {
+                if(snapshot.exists()) {
+                    const data = snapshot.data();
+                    aliCoins = data.coins || 150;
+                    totalGames = data.totalGames || 0;
+                    totalPerfectScores = data.totalPerfectScores || 0;
+                    updateDashboardStats();
+                }
+            });
+        }
+        loadUserSessionUI();
 
-        function showQuestion() {
-            const qData = biologyQuestions[currentQuestionIndex];
-            const progressPercent = (currentQuestionIndex / biologyQuestions.length) * 100;
-            document.getElementById('progressFill').style.width = `${progressPercent}%`;
-            document.getElementById('questionText').textContent = qData.q;
-            const optionsGrid = document.getElementById('optionsGrid');
-            optionsGrid.innerHTML = '';
-            qData.o.forEach((option, idx) => {
+        function updateDashboardStats() {
+            document.getElementById('aliCoinsCount').textContent = aliCoins;
+            document.getElementById('statGamesPlayed').textContent = totalGames;
+            
+            let rate = totalGames > 0 ? Math.round((totalPerfectScores / totalGames) * 100) : 0;
+            document.getElementById('statSuccessRate').textContent = `${rate}%`;
+            
+            if (totalGames >= 5) document.getElementById('badge2').classList.add('unlocked');
+            if (totalPerfectScores > 0) document.getElementById('badge1').classList.add('unlocked');
+            if (aliCoins >= 500) document.getElementById('badge3').classList.add('unlocked');
+            
+            let rank = "Débutant";
+            if (totalGames >= 3) rank = "Amateur Averti";
+            if (totalGames >= 7 && rate > 50) rank = "Expert Biologiste 🧠";
+            document.getElementById('statRankTitle').textContent = rank;
+        }
+
+        // --- RESPONSIVE SIDEBAR TOGGLE ---
+        window.toggleSidebar = function() {
+            const sidebar = document.getElementById('sidebar');
+            const main = document.getElementById('mainContent');
+            sidebar.classList.toggle('hidden');
+            sidebar.classList.toggle('active');
+            main.classList.toggle('expanded');
+        }
+
+        // --- SISTÈM TAB NAVIGASYON ---
+        window.switchTab = function(tabId, element) {
+            document.querySelectorAll('.tab-view').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.menu-items li').forEach(li => li.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            if(element) element.classList.add('active');
+            if(window.innerWidth <= 768) toggleSidebar(); // Kache sidebar sou mobil apre klik
+        }
+
+        // --- FLASHCARDS LOGIC ---
+        window.nextFlashcard = function() {
+            currentFlashIndex = (currentFlashIndex + 1) % flashcardsData.length;
+            document.querySelector('.flashcard').classList.remove('flipped');
+            setTimeout(() => {
+                document.getElementById('flashFront').textContent = flashcardsData[currentFlashIndex].f;
+                document.getElementById('flashBack').textContent = flashcardsData[currentFlashIndex].b;
+            }, 200);
+        }
+        nextFlashcard();
+
+        // --- QUIZ GAME ENGINE AK TIMER & LIFELINES ---
+        window.startQuizArena = function() {
+            document.getElementById('quizIntroPanel').style.display = 'none';
+            document.getElementById('quizPlayPanel').style.display = 'block';
+            document.getElementById('quizResultPanel').style.display = 'none';
+            quizIdx = 0; quizScore = 0;
+            document.getElementById('life50Btn').disabled = false;
+            document.getElementById('lifeTimeBtn').disabled = false;
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            clearInterval(timerInterval);
+            if(quizIdx >= quizQuestions.length) {
+                endQuizArena();
+                return;
+            }
+
+            timeLeft = 15;
+            document.getElementById('timerText').textContent = `${timeLeft}s`;
+            document.getElementById('timerBar').style.width = '100%';
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timerText').textContent = `${timeLeft}s`;
+                document.getElementById('timerBar').style.width = `${(timeLeft/15)*100}%`;
+                if(timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    quizIdx++;
+                    renderQuizQuestion(); // Pase nan pwochen kesyon si tan an fini
+                }
+            }, 1000);
+
+            const data = quizQuestions[quizIdx];
+            document.getElementById('questionCounter').textContent = `Question ${quizIdx + 1}/${quizQuestions.length}`;
+            document.getElementById('targetQuestionText').textContent = data.q;
+            
+            const list = document.getElementById('targetOptionsList');
+            list.innerHTML = '';
+            
+            currentQuestionOptions = [];
+            data.o.forEach((opt, index) => {
                 const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.textContent = option;
-                btn.onclick = () => checkAnswer(idx);
-                optionsGrid.appendChild(btn);
+                btn.className = 'option-item';
+                btn.textContent = opt;
+                btn.onclick = () => selectQuizAnswer(index);
+                list.appendChild(btn);
+                currentQuestionOptions.push(btn);
             });
         }
 
-        function checkAnswer(selectedIdx) {
-            const qData = biologyQuestions[currentQuestionIndex];
-            if(selectedIdx === qData.a) { score++; soundEffect('success'); } else { soundEffect('error'); }
-            currentQuestionIndex++;
-            if(currentQuestionIndex < biologyQuestions.length) { showQuestion(); } else { showResults(); }
+        function selectQuizAnswer(idx) {
+            clearInterval(timerInterval);
+            const data = quizQuestions[quizIdx];
+            if(idx === data.a) {
+                quizScore++;
+            }
+            quizIdx++;
+            renderQuizQuestion();
         }
 
-        function showResults() {
-            document.getElementById('quizPlay').style.display = 'none';
-            document.getElementById('quizResult').style.display = 'block';
-            document.getElementById('progressFill').style.width = `100%`;
-            document.getElementById('finalScore').textContent = score;
-            document.getElementById('maxScore').textContent = `/${biologyQuestions.length}`;
-            let comment = score === biologyQuestions.length ? "Excellent ! Vous êtes un vrai biologiste ! 🧠🧬" : score >= 3 ? "Très bien ! Bonnes connaissances. 👍" : "Ne découragez pas ! Réessayez pour vous améliorer. 🔬";
-            document.getElementById('resultComment').textContent = comment;
+        window.useLifeline50 = function() {
+            const data = quizQuestions[quizIdx];
+            let count = 0;
+            currentQuestionOptions.forEach((btn, index) => {
+                if(index !== data.a && count < 2) {
+                    btn.style.opacity = '0.2';
+                    btn.disabled = true;
+                    count++;
+                }
+            });
+            document.getElementById('life50Btn').disabled = true;
         }
 
-        window.restartQuiz = function() { window.startQuiz(); };
+        window.useLifelineTime = function() {
+            timeLeft += 10;
+            document.getElementById('timerText').textContent = `${timeLeft}s`;
+            document.getElementById('lifeTimeBtn').disabled = true;
+        }
 
+        async function endQuizArena() {
+            document.getElementById('quizPlayPanel').style.display = 'none';
+            document.getElementById('quizResultPanel').style.display = 'block';
+            document.getElementById('displayFinalScore').textContent = `${quizScore} / ${quizQuestions.length}`;
+            
+            let reward = quizScore * 20; // 20 AliCoins pa bon repons
+            if(quizScore === quizQuestions.length) {
+                reward += 50; // Bonis nòt pafè
+                totalPerfectScores++;
+            }
+            aliCoins += reward;
+            totalGames++;
+
+            document.getElementById('displayQuizReward').textContent = `+${reward} AliCoins accumulés!`;
+            updateDashboardStats();
+
+            // Sove chanjman yo nan Firestore
+            await updateDoc(doc(db, "users", currentQuizUser.uid), {
+                coins: aliCoins,
+                totalGames: totalGames,
+                totalPerfectScores: totalPerfectScores
+            });
+        }
+
+        window.resetToHomeTabs = function() {
+            document.getElementById('quizIntroPanel').style.display = 'block';
+            document.getElementById('quizResultPanel').style.display = 'none';
+        }
+
+        // --- ALISHOP (SHOPPING) ---
+        window.buyShopItem = async function(type, price) {
+            if(aliCoins < price) {
+                alert("Vous n'avez pas assez d'AliCoins! 🪙");
+                return;
+            }
+            aliCoins -= price;
+            updateDashboardStats();
+            alert("Achat réussi avec succès ! 🎉");
+
+            await updateDoc(doc(db, "users", currentQuizUser.uid), { coins: aliCoins });
+        }
+
+        // --- PARAMÈTRES (MODIFIKASYON PROFILE) ---
+        document.getElementById('updateProfileForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const newUsername = document.getElementById('setParamUser').value;
+            const newPic = document.getElementById('setParamPic').value;
+            const newPass = document.getElementById('setParamPass').value;
+
+            try {
+                const userRef = doc(db, "users", currentQuizUser.uid);
+                await updateDoc(userRef, {
+                    username: newUsername,
+                    profilePic: newPic
+                });
+
+                currentQuizUser.username = newUsername;
+                currentQuizUser.profilePic = newPic;
+                localStorage.setItem("currentQuizUser", JSON.stringify(currentQuizUser));
+                loadUserSessionUI();
+
+                if(newPass.trim() !== "") {
+                    await updatePassword(auth.currentUser, newPass);
+                }
+
+                alert("Profil mis à jour avec succès! 💾");
+            } catch(err) {
+                alert("Erreur lors de la modification: " + err.message);
+            }
+        });
+
+        // --- RECHÈCH ZANMI AK CHAT SISTÈM AN TAN REYÈL ---
+        window.searchUserFriend = async function() {
+            const queryName = document.getElementById('searchFriendInput').value;
+            const q = query(collection(db, "users"), where("username", "==", queryName));
+            const querySnapshot = await getDocs(q);
+            const box = document.getElementById('searchFriendResult');
+            box.innerHTML = '';
+
+            if(querySnapshot.empty) {
+                box.innerHTML = `<p style="color:var(--error);">Aucun joueur trouvé avec ce pseudo.</p>`;
+                return;
+            }
+
+            querySnapshot.forEach((userDoc) => {
+                const uData = userDoc.data();
+                if(uData.uid === currentQuizUser.uid) return;
+                
+                const div = document.createElement('div');
+                div.style = "display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;";
+                div.innerHTML = `
+                    <span>👤 ${uData.prenom} (@${uData.username})</span>
+                    <button class="btn-action" style="padding:6px 12px; font-size:12px;" id="btnChat-${uData.uid}">Discuter 💬</button>
+                `;
+                box.appendChild(div);
+
+                document.getElementById(`btnChat-${uData.uid}`).onclick = () => startPrivateChat(uData);
+            });
+        }
+
+        function startPrivateChat(friendData) {
+            activeChatFriendUID = friendData.uid;
+            
+            const sidebarFriends = document.getElementById('activeChatFriends');
+            sidebarFriends.innerHTML = `
+                <div style="padding:10px; background:var(--accent-blue); border-radius:8px; cursor:pointer; font-weight:bold;">
+                    🟢 @${friendData.username}
+                </div>
+            `;
+
+            if(unsubChat) unsubChat(); // Fèmen ansyen ekoutè si te gen yonn
+
+            // Louvri chanm chat la ant de UID sa yo (Lojik senp alfabetik pou id chanm lan)
+            const chatId = currentQuizUser.uid < friendData.uid ? `${currentQuizUser.uid}_${friendData.uid}` : `${friendData.uid}_${currentQuizUser.uid}`;
+            
+            const qMessages = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
+            
+            unsubChat = onSnapshot(qMessages, (snapshot) => {
+                const flow = document.getElementById('chatMessageFlow');
+                flow.innerHTML = '';
+                if(snapshot.empty) {
+                    flow.innerHTML = `<p style="text-align:center; color:var(--text-muted);">Aucun message. Envoyez le premier mot!</p>`;
+                }
+                snapshot.forEach((msgDoc) => {
+                    const msg = msgDoc.data();
+                    const mDiv = document.createElement('div');
+                    mDiv.className = `msg ${msg.senderId === currentQuizUser.uid ? 'sent' : 'received'}`;
+                    mDiv.textContent = msg.text;
+                    flow.appendChild(mDiv);
+                });
+                flow.scrollTop = flow.scrollHeight; // Scroll anba nèt otomatikman
+            });
+        }
+
+        window.sendDirectMessage = async function() {
+            const input = document.getElementById('chatMsgInputField');
+            const txt = input.value.trim();
+            if(!activeChatFriendUID || txt === "") return;
+
+            const chatId = currentQuizUser.uid < activeChatFriendUID ? `${currentQuizUser.uid}_${activeChatFriendUID}` : `${activeChatFriendUID}_${currentQuizUser.uid}`;
+            
+            await addDoc(collection(db, "chats", chatId, "messages"), {
+                senderId: currentQuizUser.uid,
+                text: txt,
+                timestamp: new Date()
+            });
+            input.value = '';
+        }
+
+        // --- SE DEKONEKTE ---
         window.logout = function() {
-            soundEffect('click');
-            localStorage.removeItem("currentQuizUser");
-            window.location.href = 'index.html';
-        };
+            signOut(auth).then(() => {
+                localStorage.removeItem("currentQuizUser");
+                window.location.href = 'index.html';
+            });
+        }
     </script>
 </body>
 </html>
