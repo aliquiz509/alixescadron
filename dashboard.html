@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aliquiz-dashboad</title>
+    <title>Aliquiz - Dashboard</title>
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
     <style>
         :root {
@@ -19,294 +19,68 @@
             --error: #ff4757;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
 
         body {
-            background: linear-gradient(rgba(10, 14, 26, 0.85), rgba(10, 14, 26, 0.98)), 
-                        url('https://files.catbox.moe/5u3toy.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
-            color: var(--text-light);
-            display: flex;
-            overflow-x: hidden;
-            transition: background 0.5s ease;
+            background: linear-gradient(rgba(10, 14, 26, 0.85), rgba(10, 14, 26, 0.98)), url('https://files.catbox.moe/5u3toy.jpg');
+            background-size: cover; background-position: center; background-attachment: fixed;
+            min-height: 100vh; color: var(--text-light); display: flex; overflow-x: hidden;
         }
 
-        /* --- SIDEBAR STYLE --- */
         .sidebar {
-            width: 260px;
-            background: var(--sidebar-bg);
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 999;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid rgba(255,255,255,0.05);
+            width: 260px; background: var(--sidebar-bg); height: 100vh; position: fixed; top: 0; left: 0; z-index: 999;
+            display: flex; flex-direction: column; border-right: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
         }
-
         .sidebar.hidden { transform: translateX(-260px); }
 
-        .sidebar-header {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
+        .sidebar-header { padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-profile { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .profile-img-container { width: 70px; height: 70px; border-radius: 50%; margin: 0 auto 10px; border: 2px solid var(--accent-cyan); overflow: hidden; background: #1e293b; }
+        .profile-img-container img { width: 100%; height: 100%; object-fit: cover; }
 
-        .sidebar-profile {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .profile-img-container {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            margin: 0 auto 10px;
-            border: 2px solid var(--accent-cyan);
-            overflow: hidden;
-            background: #1e293b;
-        }
-
-        .profile-img-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .menu-items {
-            list-style: none;
-            padding: 15px 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            flex-grow: 1;
-        }
-
-        .menu-items li {
-            padding: 14px 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text-muted);
-            transition: all 0.2s;
-        }
-
-        .menu-items li:hover, .menu-items li.active {
-            background: rgba(255,255,255,0.05);
-            color: var(--accent-cyan);
-        }
-
+        .menu-items { list-style: none; padding: 15px 10px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
+        .menu-items li { padding: 14px 15px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--text-muted); transition: 0.2s; }
+        .menu-items li:hover, .menu-items li.active { background: rgba(255,255,255,0.05); color: var(--accent-cyan); }
         .menu-items li.active { border-left: 4px solid var(--accent-cyan); }
 
-        /* --- MAIN CONTENT AREA --- */
-        .main-content {
-            margin-left: 260px;
-            flex-grow: 1;
-            padding: 30px;
-            transition: all 0.3s ease;
-            min-height: 100vh;
-        }
-
+        .main-content { margin-left: 260px; flex-grow: 1; padding: 30px; transition: 0.3s; min-height: 100vh; }
         .main-content.expanded { margin-left: 0; }
 
-        .top-navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            background: var(--panel-bg);
-            padding: 15px 25px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
+        .top-navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: var(--panel-bg); padding: 15px 25px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); }
+        .menu-toggle-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+        .coins-display { background: rgba(255, 234, 167, 0.1); border: 1px solid var(--accent-gold); padding: 6px 14px; border-radius: 20px; color: var(--accent-gold); font-weight: bold; }
 
-        .menu-toggle-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .top-logo-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .top-logo-area img {
-            width: 35px;
-            height: 35px;
-            object-fit: contain;
-        }
-
-        .coins-display {
-            background: rgba(255, 234, 167, 0.1);
-            border: 1px solid var(--accent-gold);
-            padding: 6px 14px;
-            border-radius: 20px;
-            color: var(--accent-gold);
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* --- DYNAMIC TABS VIEW --- */
-        .tab-view {
-            display: none;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-
+        .tab-view { display: none; animation: fadeIn 0.4s; }
         .tab-view.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .ui-card { background: var(--panel-bg); border-radius: 20px; padding: 25px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px; }
 
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .ui-card {
-            background: var(--panel-bg);
-            border-radius: 20px;
-            padding: 25px;
-            border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
-        }
-
-        /* --- SOCIAL CHAT SYSTEM --- */
-        .chat-layout {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 15px;
-            height: 400px;
-            margin-top: 15px;
-        }
-        .friends-list-box {
-            background: rgba(0,0,0,0.2);
-            border-radius: 12px;
-            padding: 10px;
-            overflow-y: auto;
-        }
-        .chat-box-area {
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            padding: 15px;
-        }
-        .chat-messages {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .msg {
-            max-width: 70%;
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 14px;
-        }
-        .msg.sent { background: var(--accent-blue); align-self: flex-end; }
-        .msg.received { background: rgba(255,255,255,0.1); align-self: flex-start; }
-        .chat-input-row { display: flex; gap: 10px; margin-top: 10px; }
-
-        /* --- FORMS AND INPUTS --- */
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            color: white;
-        }
-        
-        .btn-action {
-            padding: 12px 20px;
-            background: linear-gradient(135deg, var(--accent-blue), #6a89cc);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+        .btn-action { padding: 12px 20px; background: linear-gradient(135deg, var(--accent-blue), #6a89cc); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
         .btn-action:hover { transform: translateY(-2px); }
 
-        /* --- NOTIFICATION BLOCKS (INDEX-STYLE) --- */
-        .alert-msg {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            margin-top: 15px;
-            font-size: 14px;
-            font-weight: 500;
-            text-align: center;
-            display: none;
-            animation: fadeIn 0.3s ease-in-out;
-        }
+        .alert-msg { padding: 12px; border-radius: 10px; margin-top: 15px; font-size: 14px; text-align: center; display: none; }
         .alert-msg.error { background: rgba(255, 71, 87, 0.15); border: 1px solid var(--error); color: #ff6b81; }
         .alert-msg.success { background: rgba(46, 213, 115, 0.15); border: 1px solid var(--success); color: #2ed573; }
 
-        /* --- THEME BOXES FOR SHOP --- */
-        .theme-card {
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-            background: rgba(255,255,255,0.02);
-        }
-        .theme-preview {
-            height: 60px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
+        .theme-card { border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; text-align: center; background: rgba(255,255,255,0.02); }
+        .theme-preview { height: 60px; border-radius: 8px; margin-bottom: 10px; }
 
         .badges-grid { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px; }
-        .badge-icon {
-            width: 60px; height: 60px; background: rgba(255,255,255,0.05); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px dashed rgba(255,255,255,0.1);
-        }
-        .badge-icon.unlocked { border-style: solid; border-color: var(--accent-gold); background: rgba(255, 234, 167, 0.1); box-shadow: 0 0 10px rgba(255, 234, 167, 0.3); }
+        .badge-icon { width: 60px; height: 60px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px dashed rgba(255,255,255,0.1); }
+        .badge-icon.unlocked { border-style: solid; border-color: var(--accent-gold); background: rgba(255, 234, 167, 0.1); }
 
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-260px); }
-            .sidebar.active { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 15px; }
-            .chat-layout { grid-template-columns: 1fr; }
-            .friends-list-box { display: none; }
-        }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+        .form-group input { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) { .sidebar { transform: translateX(-260px); } .sidebar.active { transform: translateX(0); } .main-content { margin-left: 0; padding: 15px; } }
     </style>
 </head>
 <body>
 
+    <!-- SIDEBAR -->
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2 style="color: var(--accent-cyan); font-size: 20px;">🧬 Aliquiz</h2>
@@ -321,7 +95,7 @@
         </div>
         <ul class="menu-items">
             <li class="active" onclick="switchTab('homeTab', this)">🏠 Accueil / Jeu</li>
-            <li onclick="switchTab('friendsTab', this)">👥 Nouvo Zanmi</li>
+            <li onclick="window.location.href='chat.html'">💬 Discussion Messenger</li>
             <li onclick="switchTab('profileTab', this)">📊 Mon Profil</li>
             <li onclick="switchTab('shopTab', this)">🛒 AliShop</li>
             <li onclick="switchTab('settingsTab', this)">⚙️ Paramètres</li>
@@ -329,119 +103,71 @@
         </ul>
     </nav>
 
+    <!-- MAIN CONTENT -->
     <main class="main-content" id="mainContent">
-        
         <header class="top-navbar">
             <div style="display: flex; align-items: center; gap: 15px;">
                 <button class="menu-toggle-btn" onclick="toggleSidebar()">☰</button>
-                <div class="top-logo-area">
-                    <img src="https://files.catbox.moe/dbcm8s.png" alt="Logo">
-                    <span style="font-weight: bold; letter-spacing: 1px;">ALIQUIZ</span>
-                </div>
+                <span style="font-weight: bold;">PANNEAU DE CONFIGURATION ALIQUIZ</span>
             </div>
-            <div class="coins-display">🪙 <span id="aliCoinsCount">150</span> AC</div>
+            <div class="coins-display">🪙 <span id="aliCoinsCount">0</span> AC</div>
         </header>
 
+        <!-- ACCUEIL -->
         <section id="homeTab" class="tab-view active">
-            <h2 style="margin-bottom: 20px; color: var(--accent-gold);">Kisa nou pral fè jodi a? 🤔</h2>
             <div class="card-grid">
-                
                 <div class="ui-card" style="text-align: center;">
                     <span style="font-size: 40px;">🎮</span>
-                    <h3 style="margin: 10px 0;">Mode Arena</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Defye revèy la sou kesyon byoloji epi genyen AliCoins.</p>
+                    <h3>Mode Arène</h3><br>
                     <button class="btn-action" style="width: 100%;" onclick="window.location.href='quiz.html'">Lancer le Quiz 🚀</button>
                 </div>
-
                 <div class="ui-card" style="text-align: center;">
                     <span style="font-size: 40px;">📖</span>
-                    <h3 style="margin: 10px 0;">Étudier les Notes</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Aprann leson byoloji yo byen fasil anvan ou al konbat.</p>
-                    <button class="btn-action" style="width: 100%; background: linear-gradient(135deg, #10b981, #059669);" onclick="window.location.href='note.html'">Étudier 📚</button>
+                    <h3>Étudier les Notes</h3><br>
+                    <button class="btn-action" style="width: 100%; background: #10b981;" onclick="window.location.href='note.html'">Étudier 📚</button>
                 </div>
-
                 <div class="ui-card" style="text-align: center;">
                     <span style="font-size: 40px;">🃏</span>
-                    <h3 style="margin: 10px 0;">Flashcards</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Sèvi ak kat memwa pou tès rapid sou definisyon yo.</p>
-                    <button class="btn-action" style="width: 100%; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="window.location.href='flashcard.html'">Ouvrir Flashcards ✨</button>
-                </div>
-
-            </div>
-        </section>
-
-        <section id="friendsTab" class="tab-view">
-            <div class="ui-card">
-                <h3>👥 Rechercher de nouveaux amis</h3>
-                <div class="chat-input-row" style="margin-bottom: 20px;">
-                    <input type="text" id="searchFriendInput" placeholder="Entrez le pseudo d'un joueur...">
-                    <button class="btn-action" onclick="searchUserFriend()">Chercher 🔍</button>
-                </div>
-                <div id="friendsAlert" class="alert-msg"></div>
-                <div id="searchFriendResult" style="padding: 10px 0;"></div>
-
-                <h3 style="margin-top: 20px;">💬 Messagerie privée</h3>
-                <div class="chat-layout">
-                    <div class="friends-list-box" id="activeChatFriends">
-                        <p style="font-size: 12px; color:var(--text-muted); text-align:center;">Aucune discussion active.</p>
-                    </div>
-                    <div class="chat-box-area">
-                        <div class="chat-messages" id="chatMessageFlow">
-                            <p style="text-align: center; color: var(--text-muted); font-size: 13px;">Sélectionnez un ami pour discuter.</p>
-                        </div>
-                        <div class="chat-input-row">
-                            <input type="text" id="chatMsgInputField" placeholder="Écrire un message...">
-                            <button class="btn-action" onclick="sendDirectMessage()">Envoyer</button>
-                        </div>
-                    </div>
+                    <h3>Flashcards</h3><br>
+                    <button class="btn-action" style="width: 100%; background: #f59e0b;" onclick="window.location.href='flashcard.html'">Ouvrir Flashcards ✨</button>
                 </div>
             </div>
         </section>
 
+        <!-- PROFIL -->
         <section id="profileTab" class="tab-view">
             <div class="card-grid">
                 <div class="ui-card" style="text-align: center;">
-                    <div class="profile-img-container" style="width: 110px; height: 110px; border-width: 3px;">
+                    <div class="profile-img-container" style="width: 100px; height: 100px;">
                         <img id="mainProfilePic" src="https://files.catbox.moe/dbcm8s.png" alt="Avatar">
                     </div>
                     <h2 id="profFullName">...</h2>
                     <p id="profUsername" style="color: var(--accent-cyan);">@...</p>
-                    <p id="profCountry" style="font-size: 24px; margin-top: 10px;">🌐</p>
                 </div>
                 <div class="ui-card">
-                    <h3>📊 Statistiques de progression</h3>
-                    <div style="margin-top: 15px; display:flex; flex-direction:column; gap:12px;">
-                        <p>🎮 Parties jouées: <strong id="statGamesPlayed" style="color: var(--accent-cyan);">0</strong></p>
-                        <p>🎯 Taux de réussite: <strong id="statSuccessRate" style="color: var(--success);">0%</strong></p>
-                        <p>🏆 Rang Actuel: <strong id="statRankTitle" style="color: var(--accent-gold);">Débutant en Biologie</strong></p>
-                    </div>
-                    <h3 style="margin-top: 25px;">🎖️ Trophées</h3>
+                    <h3>📊 Statistiques</h3>
+                    <p style="margin-top: 10px;">Parties jouées: <strong id="statGamesPlayed" style="color: var(--accent-cyan);">0</strong></p>
                     <div class="badges-grid">
-                        <div class="badge-icon" id="badge1" title="Score Parfait">🌱</div>
-                        <div class="badge-icon" id="badge2" title="Gros Joueur">🔥</div>
-                        <div class="badge-icon" id="badge3" title="Fortuné">👑</div>
+                        <div class="badge-icon" id="badge1">🌱</div>
+                        <div class="badge-icon" id="badge2">🔥</div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- ALISHOP -->
         <section id="shopTab" class="tab-view">
             <div class="ui-card">
-                <h2>🛒 AliShop - Choisissez votre Thème Visuel</h2>
-                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px;">Achetez et changez le fond d'écran à tout moment avec vos AliCoins.</p>
-                
+                <h2>🛒 AliShop - Thèmes Visuels</h2><br>
                 <div class="card-grid">
                     <div class="theme-card">
-                        <div class="theme-preview" style="background: linear-gradient(rgba(10,14,26,0.85), rgba(10,14,26,0.98)), url('https://files.catbox.moe/5u3toy.jpg'); background-size: cover;"></div>
-                        <h4>🌌 Thème Espace Par Défaut</h4>
-                        <p style="font-size: 12px; color: var(--text-muted); margin: 5px 0 15px;">Le thème classique de biologie spatiale.</p>
-                        <button class="btn-action" style="width: 100%;" onclick="applyTheme('default')">Appliquer Gratuit</button>
+                        <div class="theme-preview" style="background: #0a0e1a;"></div>
+                        <h4>🌌 Espace par défaut</h4><br>
+                        <button class="btn-action" style="width: 100%;" onclick="applyTheme('default')">Appliquer</button>
                     </div>
-
                     <div class="theme-card">
-                        <div class="theme-preview" style="background: linear-gradient(rgba(21,11,41,0.9), rgba(15,5,31,0.95)), url('https://files.catbox.moe/dbcm8s.png'); background-size: cover;"></div>
-                        <h4>🔮 Thème Cyber-Biologie</h4>
-                        <p style="font-size: 12px; color: var(--text-muted); margin: 5px 0 15px;">Un style néon violet futuriste ultra immersif.</p>
+                        <div class="theme-preview" style="background: #150b29;"></div>
+                        <h4>🔮 Cyber-Biologie</h4><br>
                         <button class="btn-action" style="width: 100%;" id="btnThemeCyber" onclick="buyOrApplyTheme('cyber', 150)">Acheter pour 150 AC</button>
                     </div>
                 </div>
@@ -449,34 +175,24 @@
             </div>
         </section>
 
+        <!-- PARAMÈTRES -->
         <section id="settingsTab" class="tab-view">
             <div class="ui-card" style="max-width: 500px; margin: 0 auto;">
-                <h3>⚙️ Éditer les informations du compte</h3>
-                <form id="updateProfileForm" style="margin-top: 20px;">
-                    <div class="form-group">
-                        <label>Nom d'utilisateur</label>
-                        <input type="text" id="setParamUser" required>
-                    </div>
-                    <div class="form-group">
-                        <label>URL d'une photo de profil</label>
-                        <input type="url" id="setParamPic">
-                    </div>
-                    <div class="form-group">
-                        <label>Nouveau mot de passe (Optionnel)</label>
-                        <input type="password" id="setParamPass" minlength="8">
-                    </div>
+                <h3>⚙️ Éditer le Profil</h3>
+                <form id="updateProfileForm" style="margin-top: 15px;">
+                    <div class="form-group"><label>Nom d'utilisateur</label><input type="text" id="setParamUser" required></div>
+                    <div class="form-group"><label>URL de la Photo</label><input type="url" id="setParamPic"></div>
                     <button type="submit" class="btn-action" style="width: 100%;">Enregistrer 💾</button>
                     <div id="settingsAlert" class="alert-msg"></div>
                 </form>
             </div>
         </section>
-
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-        import { getAuth, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-        import { getFirestore, doc, updateDoc, getDoc, collection, query, where, getDocs, addDoc, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+        import { getFirestore, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCF2I4LEcMA1oJRwa7xthvSOQGSCg6lPjs",
@@ -494,28 +210,7 @@
         let currentQuizUser = JSON.parse(localStorage.getItem("currentQuizUser"));
         if (!currentQuizUser) { window.location.href = 'index.html'; }
 
-        let aliCoins = 150;
-        let totalGames = 0;
-        let totalPerfectScores = 0;
-        let purchasedThemes = ['default'];
-        let activeChatFriendUID = null;
-        let unsubChat = null;
-
-        // TI BWAT NOTIFIKASYON MENM JAN AK INDEX.HTML LA
-        function showNotification(targetId, message, type = 'error') {
-            const alertBox = document.getElementById(targetId);
-            if (!alertBox) return;
-            alertBox.textContent = message;
-            alertBox.className = `alert-msg ${type}`;
-            alertBox.style.display = 'block';
-            if (type === 'success') {
-                setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
-            }
-        }
-
-        function hideAllNotifications() {
-            document.querySelectorAll('.alert-msg').forEach(el => el.style.display = 'none');
-        }
+        let aliCoins = 150; let purchasedThemes = ['default'];
 
         function loadUserSessionUI() {
             document.getElementById('sideProfileName').textContent = `${currentQuizUser.prenom} ${currentQuizUser.nom}`;
@@ -523,167 +218,33 @@
             document.getElementById('profFullName').textContent = `${currentQuizUser.prenom} ${currentQuizUser.nom}`;
             document.getElementById('profUsername').textContent = `@${currentQuizUser.username}`;
             document.getElementById('setParamUser').value = currentQuizUser.username;
-            
             if (currentQuizUser.profilePic) {
                 document.getElementById('sideProfilePic').src = currentQuizUser.profilePic;
                 document.getElementById('mainProfilePic').src = currentQuizUser.profilePic;
                 document.getElementById('setParamPic').value = currentQuizUser.profilePic;
             }
-            
-            const flags = { fr: "🇫🇷", ht: "🇭🇹", us: "🇺🇸", ca: "🇨🇦" };
-            document.getElementById('profCountry').textContent = flags[currentQuizUser.country] || "🌐";
-            
+
             getDoc(doc(db, "users", currentQuizUser.uid)).then(snapshot => {
                 if(snapshot.exists()) {
                     const data = snapshot.data();
                     aliCoins = data.coins || 150;
-                    totalGames = data.totalGames || 0;
-                    totalPerfectScores = data.totalPerfectScores || 0;
-                    purchasedThemes = data.purchasedThemes || ['default'];
-                    updateDashboardStats();
-                    checkThemeButtons();
+                    document.getElementById('aliCoinsCount').textContent = aliCoins;
+                    document.getElementById('statGamesPlayed').textContent = data.totalGames || 0;
                 }
             });
         }
         loadUserSessionUI();
 
-        function updateDashboardStats() {
-            document.getElementById('aliCoinsCount').textContent = aliCoins;
-            document.getElementById('statGamesPlayed').textContent = totalGames;
-            let rate = totalGames > 0 ? Math.round((totalPerfectScores / totalGames) * 100) : 0;
-            document.getElementById('statSuccessRate').textContent = `${rate}%`;
-            
-            if (totalGames >= 5) document.getElementById('badge2').classList.add('unlocked');
-            if (totalPerfectScores > 0) document.getElementById('badge1').classList.add('unlocked');
-            if (aliCoins >= 500) document.getElementById('badge3').classList.add('unlocked');
-        }
-
-        function checkThemeButtons() {
-            if(purchasedThemes.includes('cyber')) {
-                document.getElementById('btnThemeCyber').textContent = "Appliquer";
-                document.getElementById('btnThemeCyber').style.background = "var(--success)";
-            }
-        }
-
         window.toggleSidebar = function() {
             document.getElementById('sidebar').classList.toggle('hidden');
-            document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('mainContent').classList.toggle('expanded');
         }
 
         window.switchTab = function(tabId, element) {
-            hideAllNotifications();
             document.querySelectorAll('.tab-view').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.menu-items li').forEach(li => li.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             if(element) element.classList.add('active');
-            if(window.innerWidth <= 768) toggleSidebar();
-        }
-
-        // --- THEME SHOP LOGIC ---
-        window.buyOrApplyTheme = async function(themeId, price) {
-            hideAllNotifications();
-            if(purchasedThemes.includes(themeId)) {
-                applyTheme(themeId);
-                showNotification('shopAlert', "Thème appliqué avec succès !", 'success');
-                return;
-            }
-            if(aliCoins < price) {
-                showNotification('shopAlert', "Vous n'avez pas assez d'AliCoins! 🪙", 'error');
-                return;
-            }
-            aliCoins -= price;
-            purchasedThemes.push(themeId);
-            updateDashboardStats();
-            checkThemeButtons();
-            applyTheme(themeId);
-            showNotification('shopAlert', "Thème acheté et appliqué ! 🎉", 'success');
-
-            await updateDoc(doc(db, "users", currentQuizUser.uid), { coins: aliCoins, purchasedThemes: purchasedThemes });
-        }
-
-        window.applyTheme = function(themeId) {
-            if(themeId === 'default') {
-                document.body.style.background = "linear-gradient(rgba(10, 14, 26, 0.85), rgba(10, 14, 26, 0.98)), url('https://files.catbox.moe/5u3toy.jpg') center/cover fixed";
-            } else if(themeId === 'cyber') {
-                document.body.style.background = "linear-gradient(rgba(21, 11, 41, 0.9), rgba(15, 5, 31, 0.95)), url('https://files.catbox.moe/dbcm8s.png') center/cover fixed";
-            }
-        }
-
-        // --- PARAMÈTRES PROFILE ---
-        document.getElementById('updateProfileForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            hideAllNotifications();
-            const newUsername = document.getElementById('setParamUser').value;
-            const newPic = document.getElementById('setParamPic').value;
-            const newPass = document.getElementById('setParamPass').value;
-
-            try {
-                await updateDoc(doc(db, "users", currentQuizUser.uid), { username: newUsername, profilePic: newPic });
-                currentQuizUser.username = newUsername;
-                currentQuizUser.profilePic = newPic;
-                localStorage.setItem("currentQuizUser", JSON.stringify(currentQuizUser));
-                loadUserSessionUI();
-
-                if(newPass.trim() !== "") { await updatePassword(auth.currentUser, newPass); }
-                showNotification('settingsAlert', "Profil mis à jour avec succès! 💾", 'success');
-            } catch(err) {
-                showNotification('settingsAlert', `Erreur: ${err.message}`, 'error');
-            }
-        });
-
-        // --- CHERCHER ZANMI ---
-        window.searchUserFriend = async function() {
-            hideAllNotifications();
-            const queryName = document.getElementById('searchFriendInput').value;
-            const q = query(collection(db, "users"), where("username", "==", queryName));
-            const querySnapshot = await getDocs(q);
-            const box = document.getElementById('searchFriendResult');
-            box.innerHTML = '';
-
-            if(querySnapshot.empty) {
-                showNotification('friendsAlert', "Aucun joueur trouvé avec ce pseudo.", 'error');
-                return;
-            }
-
-            querySnapshot.forEach((userDoc) => {
-                const uData = userDoc.data();
-                if(uData.uid === currentQuizUser.uid) return;
-                const div = document.createElement('div');
-                div.style = "display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-top:10px;";
-                div.innerHTML = `<span>👤 ${uData.prenom} (@${uData.username})</span><button class="btn-action" style="padding:6px 12px; font-size:12px;" id="btnChat-${uData.uid}">Discuter 💬</button>`;
-                box.appendChild(div);
-                document.getElementById(`btnChat-${uData.uid}`).onclick = () => startPrivateChat(uData);
-            });
-        }
-
-        function startPrivateChat(friendData) {
-            activeChatFriendUID = friendData.uid;
-            document.getElementById('activeChatFriends').innerHTML = `<div style="padding:10px; background:var(--accent-blue); border-radius:8px; font-weight:bold;">🟢 @${friendData.username}</div>`;
-            if(unsubChat) unsubChat();
-            const chatId = currentQuizUser.uid < friendData.uid ? `${currentQuizUser.uid}_${friendData.uid}` : `${friendData.uid}_${currentQuizUser.uid}`;
-            const qMessages = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
-            unsubChat = onSnapshot(qMessages, (snapshot) => {
-                const flow = document.getElementById('chatMessageFlow');
-                flow.innerHTML = '';
-                snapshot.forEach((msgDoc) => {
-                    const msg = msgDoc.data();
-                    const mDiv = document.createElement('div');
-                    mDiv.className = `msg ${msg.senderId === currentQuizUser.uid ? 'sent' : 'received'}`;
-                    mDiv.textContent = msg.text;
-                    flow.appendChild(mDiv);
-                });
-                flow.scrollTop = flow.scrollHeight;
-            });
-        }
-
-        window.sendDirectMessage = async function() {
-            const input = document.getElementById('chatMsgInputField');
-            const txt = input.value.trim();
-            if(!activeChatFriendUID || txt === "") return;
-            const chatId = currentQuizUser.uid < activeChatFriendUID ? `${currentQuizUser.uid}_${activeChatFriendUID}` : `${activeChatFriendUID}_${currentQuizUser.uid}`;
-            await addDoc(collection(db, "chats", chatId, "messages"), { senderId: currentQuizUser.uid, text: txt, timestamp: new Date() });
-            input.value = '';
         }
 
         window.logout = function() {
