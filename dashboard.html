@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aliquiz-dashboad</title>
+    <title>Aliquiz-dashboard</title>
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
     <style>
         :root {
@@ -197,45 +197,6 @@
             margin-bottom: 20px;
         }
 
-        /* --- SOCIAL CHAT SYSTEM --- */
-        .chat-layout {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 15px;
-            height: 400px;
-            margin-top: 15px;
-        }
-        .friends-list-box {
-            background: rgba(0,0,0,0.2);
-            border-radius: 12px;
-            padding: 10px;
-            overflow-y: auto;
-        }
-        .chat-box-area {
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            padding: 15px;
-        }
-        .chat-messages {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .msg {
-            max-width: 70%;
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 14px;
-        }
-        .msg.sent { background: var(--accent-blue); align-self: flex-end; }
-        .msg.received { background: rgba(255,255,255,0.1); align-self: flex-start; }
-        .chat-input-row { display: flex; gap: 10px; margin-top: 10px; }
-
         /* --- FORMS AND INPUTS --- */
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
@@ -260,7 +221,7 @@
         }
         .btn-action:hover { transform: translateY(-2px); }
 
-        /* --- NOTIFICATION BLOCKS (INDEX-STYLE) --- */
+        /* --- NOTIFICATION BLOCKS --- */
         .alert-msg {
             width: 100%;
             padding: 12px;
@@ -300,8 +261,6 @@
             .sidebar { transform: translateX(-260px); }
             .sidebar.active { transform: translateX(0); }
             .main-content { margin-left: 0; padding: 15px; }
-            .chat-layout { grid-template-columns: 1fr; }
-            .friends-list-box { display: none; }
         }
     </style>
 </head>
@@ -321,7 +280,7 @@
         </div>
         <ul class="menu-items">
             <li class="active" onclick="switchTab('homeTab', this)">🏠 Accueil / Jeu</li>
-            <li onclick="switchTab('friendsTab', this)">👥 Nouvo Zanmi</li>
+            <li onclick="window.location.href='chat.html'">👥 Messagerie / Amis</li>
             <li onclick="switchTab('profileTab', this)">📊 Mon Profil</li>
             <li onclick="switchTab('shopTab', this)">🛒 AliShop</li>
             <li onclick="switchTab('settingsTab', this)">⚙️ Paramètres</li>
@@ -343,58 +302,29 @@
         </header>
 
         <section id="homeTab" class="tab-view active">
-            <h2 style="margin-bottom: 20px; color: var(--accent-gold);">Kisa nou pral fè jodi a? 🤔</h2>
             <div class="card-grid">
                 
                 <div class="ui-card" style="text-align: center;">
                     <span style="font-size: 40px;">🎮</span>
                     <h3 style="margin: 10px 0;">Mode Arena</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Defye revèy la sou kesyon byoloji epi genyen AliCoins.</p>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Défiez le chrono sur des questions de biologie et gagnez des AliCoins.</p>
                     <button class="btn-action" style="width: 100%;" onclick="window.location.href='quiz.html'">Lancer le Quiz 🚀</button>
                 </div>
 
                 <div class="ui-card" style="text-align: center;">
                     <span style="font-size: 40px;">📖</span>
                     <h3 style="margin: 10px 0;">Étudier les Notes</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Aprann leson byoloji yo byen fasil anvan ou al konbat.</p>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Apprenez les leçons de biologie facilement avant de combattre.</p>
                     <button class="btn-action" style="width: 100%; background: linear-gradient(135deg, #10b981, #059669);" onclick="window.location.href='note.html'">Étudier 📚</button>
                 </div>
 
                 <div class="ui-card" style="text-align: center;">
                     <span style="font-size: 40px;">🃏</span>
                     <h3 style="margin: 10px 0;">Flashcards</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Sèvi ak kat memwa pou tès rapid sou definisyon yo.</p>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Utilisez des cartes mémoire pour des tests rapides sur les définitions.</p>
                     <button class="btn-action" style="width: 100%; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="window.location.href='flashcard.html'">Ouvrir Flashcards ✨</button>
                 </div>
 
-            </div>
-        </section>
-
-        <section id="friendsTab" class="tab-view">
-            <div class="ui-card">
-                <h3>👥 Rechercher de nouveaux amis</h3>
-                <div class="chat-input-row" style="margin-bottom: 20px;">
-                    <input type="text" id="searchFriendInput" placeholder="Entrez le pseudo d'un joueur...">
-                    <button class="btn-action" onclick="searchUserFriend()">Chercher 🔍</button>
-                </div>
-                <div id="friendsAlert" class="alert-msg"></div>
-                <div id="searchFriendResult" style="padding: 10px 0;"></div>
-
-                <h3 style="margin-top: 20px;">💬 Messagerie privée</h3>
-                <div class="chat-layout">
-                    <div class="friends-list-box" id="activeChatFriends">
-                        <p style="font-size: 12px; color:var(--text-muted); text-align:center;">Aucune discussion active.</p>
-                    </div>
-                    <div class="chat-box-area">
-                        <div class="chat-messages" id="chatMessageFlow">
-                            <p style="text-align: center; color: var(--text-muted); font-size: 13px;">Sélectionnez un ami pour discuter.</p>
-                        </div>
-                        <div class="chat-input-row">
-                            <input type="text" id="chatMsgInputField" placeholder="Écrire un message...">
-                            <button class="btn-action" onclick="sendDirectMessage()">Envoyer</button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -476,7 +406,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
         import { getAuth, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-        import { getFirestore, doc, updateDoc, getDoc, collection, query, where, getDocs, addDoc, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+        import { getFirestore, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCF2I4LEcMA1oJRwa7xthvSOQGSCg6lPjs",
@@ -498,10 +428,7 @@
         let totalGames = 0;
         let totalPerfectScores = 0;
         let purchasedThemes = ['default'];
-        let activeChatFriendUID = null;
-        let unsubChat = null;
 
-        // TI BWAT NOTIFIKASYON MENM JAN AK INDEX.HTML LA
         function showNotification(targetId, message, type = 'error') {
             const alertBox = document.getElementById(targetId);
             if (!alertBox) return;
@@ -631,60 +558,6 @@
                 showNotification('settingsAlert', `Erreur: ${err.message}`, 'error');
             }
         });
-
-        // --- CHERCHER ZANMI ---
-        window.searchUserFriend = async function() {
-            hideAllNotifications();
-            const queryName = document.getElementById('searchFriendInput').value;
-            const q = query(collection(db, "users"), where("username", "==", queryName));
-            const querySnapshot = await getDocs(q);
-            const box = document.getElementById('searchFriendResult');
-            box.innerHTML = '';
-
-            if(querySnapshot.empty) {
-                showNotification('friendsAlert', "Aucun joueur trouvé avec ce pseudo.", 'error');
-                return;
-            }
-
-            querySnapshot.forEach((userDoc) => {
-                const uData = userDoc.data();
-                if(uData.uid === currentQuizUser.uid) return;
-                const div = document.createElement('div');
-                div.style = "display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-top:10px;";
-                div.innerHTML = `<span>👤 ${uData.prenom} (@${uData.username})</span><button class="btn-action" style="padding:6px 12px; font-size:12px;" id="btnChat-${uData.uid}">Discuter 💬</button>`;
-                box.appendChild(div);
-                document.getElementById(`btnChat-${uData.uid}`).onclick = () => startPrivateChat(uData);
-            });
-        }
-
-        function startPrivateChat(friendData) {
-            activeChatFriendUID = friendData.uid;
-            document.getElementById('activeChatFriends').innerHTML = `<div style="padding:10px; background:var(--accent-blue); border-radius:8px; font-weight:bold;">🟢 @${friendData.username}</div>`;
-            if(unsubChat) unsubChat();
-            const chatId = currentQuizUser.uid < friendData.uid ? `${currentQuizUser.uid}_${friendData.uid}` : `${friendData.uid}_${currentQuizUser.uid}`;
-            const qMessages = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
-            unsubChat = onSnapshot(qMessages, (snapshot) => {
-                const flow = document.getElementById('chatMessageFlow');
-                flow.innerHTML = '';
-                snapshot.forEach((msgDoc) => {
-                    const msg = msgDoc.data();
-                    const mDiv = document.createElement('div');
-                    mDiv.className = `msg ${msg.senderId === currentQuizUser.uid ? 'sent' : 'received'}`;
-                    mDiv.textContent = msg.text;
-                    flow.appendChild(mDiv);
-                });
-                flow.scrollTop = flow.scrollHeight;
-            });
-        }
-
-        window.sendDirectMessage = async function() {
-            const input = document.getElementById('chatMsgInputField');
-            const txt = input.value.trim();
-            if(!activeChatFriendUID || txt === "") return;
-            const chatId = currentQuizUser.uid < activeChatFriendUID ? `${currentQuizUser.uid}_${activeChatFriendUID}` : `${activeChatFriendUID}_${currentQuizUser.uid}`;
-            await addDoc(collection(db, "chats", chatId, "messages"), { senderId: currentQuizUser.uid, text: txt, timestamp: new Date() });
-            input.value = '';
-        }
 
         window.logout = function() {
             signOut(auth).then(() => { localStorage.removeItem("currentQuizUser"); window.location.href = 'index.html'; });
