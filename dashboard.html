@@ -27,13 +27,19 @@
             min-height: 100vh; color: var(--text-light); display: flex; overflow-x: hidden;
         }
 
+        /* SIDEBAR FIXÉ POUR ÊTRE TOUJOURS VISIBLE PAR DÉFAUT SUR PC */
         .sidebar {
             width: 260px; background: var(--sidebar-bg); height: 100vh; position: fixed; top: 0; left: 0; z-index: 999;
-            display: flex; flex-direction: column; border-right: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
+            display: flex; flex-direction: column; border-right: 1px solid rgba(255,255,255,0.05); transition: transform 0.3s ease;
         }
+        
+        /* Classe pour cacher/afficher proprement */
         .sidebar.hidden { transform: translateX(-260px); }
 
-        .sidebar-header { padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-header { padding: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-logo { font-size: 24px; }
+        .sidebar-title { color: var(--accent-cyan); font-size: 22px; font-weight: bold; font-family: 'Segoe UI', sans-serif; letter-spacing: 1px; }
+
         .sidebar-profile { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .profile-img-container { width: 70px; height: 70px; border-radius: 50%; margin: 0 auto 10px; border: 2px solid var(--accent-cyan); overflow: hidden; background: #1e293b; }
         .profile-img-container img { width: 100%; height: 100%; object-fit: cover; }
@@ -41,13 +47,14 @@
         .menu-items { list-style: none; padding: 15px 10px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
         .menu-items li { padding: 14px 15px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--text-muted); transition: 0.2s; }
         .menu-items li:hover, .menu-items li.active { background: rgba(255,255,255,0.05); color: var(--accent-cyan); }
-        .menu-items li.active { border-left: 4px solid var(--accent-cyan); }
+        .menu-items li.active { border-left: 4px solid var(--accent-cyan); background: rgba(0, 210, 255, 0.05); }
 
-        .main-content { margin-left: 260px; flex-grow: 1; padding: 30px; transition: 0.3s; min-height: 100vh; }
+        /* MAIN CONTENT AJUSTÉ AVEC LA MARGE DU SIDEBAR */
+        .main-content { margin-left: 260px; flex-grow: 1; padding: 30px; transition: margin-left 0.3s ease; min-height: 100vh; }
         .main-content.expanded { margin-left: 0; }
 
         .top-navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: var(--panel-bg); padding: 15px 25px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); }
-        .menu-toggle-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+        .menu-toggle-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .coins-display { background: rgba(255, 234, 167, 0.1); border: 1px solid var(--accent-gold); padding: 6px 14px; border-radius: 20px; color: var(--accent-gold); font-weight: bold; }
 
         .tab-view { display: none; animation: fadeIn 0.4s; }
@@ -75,16 +82,24 @@
         .form-group input { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 768px) { .sidebar { transform: translateX(-260px); } .sidebar.active { transform: translateX(0); } .main-content { margin-left: 0; padding: 15px; } }
+        
+        /* RESPONSIVE DESIGN POUR LES ÉCRANS MOBILES */
+        @media (max-width: 768px) { 
+            .sidebar { transform: translateX(-260px); } 
+            .sidebar.active { transform: translateX(0); } 
+            .sidebar.hidden { transform: translateX(-260px); }
+            .main-content { margin-left: 0; padding: 15px; } 
+            .main-content.expanded { margin-left: 0; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR AVEC LOGO ET TITRE NET -->
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h2 style="color: var(--accent-cyan); font-size: 20px;">🧬 Aliquiz</h2>
-            <button class="menu-toggle-btn" onclick="toggleSidebar()">✕</button>
+            <span class="sidebar-logo">🧬</span>
+            <span class="sidebar-title">Aliquiz</span>
         </div>
         <div class="sidebar-profile">
             <div class="profile-img-container">
@@ -108,7 +123,7 @@
         <header class="top-navbar">
             <div style="display: flex; align-items: center; gap: 15px;">
                 <button class="menu-toggle-btn" onclick="toggleSidebar()">☰</button>
-                <span style="font-weight: bold;">PANNEAU DE CONFIGURATION ALIQUIZ</span>
+                <span style="font-weight: bold; letter-spacing: 0.5px;">PANNEAU DE CONFIGURATION ALIQUIZ</span>
             </div>
             <div class="coins-display">🪙 <span id="aliCoinsCount">0</span> AC</div>
         </header>
@@ -210,8 +225,6 @@
         let currentQuizUser = JSON.parse(localStorage.getItem("currentQuizUser"));
         if (!currentQuizUser) { window.location.href = 'index.html'; }
 
-        let aliCoins = 150; let purchasedThemes = ['default'];
-
         function loadUserSessionUI() {
             document.getElementById('sideProfileName').textContent = `${currentQuizUser.prenom} ${currentQuizUser.nom}`;
             document.getElementById('sideProfileUser').textContent = `@${currentQuizUser.username}`;
@@ -227,17 +240,25 @@
             getDoc(doc(db, "users", currentQuizUser.uid)).then(snapshot => {
                 if(snapshot.exists()) {
                     const data = snapshot.data();
-                    aliCoins = data.coins || 150;
-                    document.getElementById('aliCoinsCount').textContent = aliCoins;
+                    document.getElementById('aliCoinsCount').textContent = data.coins || 0;
                     document.getElementById('statGamesPlayed').textContent = data.totalGames || 0;
                 }
             });
         }
         loadUserSessionUI();
 
+        // LOGIQUE TOGGLE MODIFIÉE ET ASSURÉE
         window.toggleSidebar = function() {
-            document.getElementById('sidebar').classList.toggle('hidden');
-            document.getElementById('mainContent').classList.toggle('expanded');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            // Permet de switcher correctement sur PC et sur Mobile
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('active');
+            } else {
+                sidebar.classList.toggle('hidden');
+                mainContent.classList.toggle('expanded');
+            }
         }
 
         window.switchTab = function(tabId, element) {
@@ -245,6 +266,11 @@
             document.querySelectorAll('.menu-items li').forEach(li => li.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             if(element) element.classList.add('active');
+            
+            // Ferme automatiquement le menu sur mobile après un clic
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
         }
 
         window.logout = function() {
