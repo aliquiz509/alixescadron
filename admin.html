@@ -244,7 +244,7 @@
         .stat-card h3 { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; }
         .stat-card p { font-size: 2.3rem; font-weight: 800; color: var(--text-light); }
 
-        /* ONGLÈ NET YO (DISPLAY: NONE PAR DÉFAUT POU YO PA PIL SOU PIL) */
+        /* ONGLÈ NET YO (DISPLAY: NONE PAR DÉFAUT) */
         .tab-view {
             display: none;
             background: var(--panel-bg);
@@ -320,12 +320,12 @@
 </head>
 <body>
 
-    <!-- NOTIFIKASYON PERSONALIZE (VERT / ROUGE) VREMAN KLAS -->
+    <!-- NOTIFIKASYON PERSONALIZE (VERT / ROUGE) -->
     <div id="customNotification">
         <span id="notifMessage">Message</span>
     </div>
 
-    <!-- BOUTON SITEBAR APARÈT SÈLMAN SOU MOBIL POU KACHE/MONTRE MENI AN -->
+    <!-- BOUTON SITEBAR APARÈT SÈLMAN SOU MOBIL Pou kache/montre meni an -->
     <button class="menu-toggle-btn" onclick="toggleSidebar()">☰ Menu</button>
 
     <!-- SIDEBAR -->
@@ -503,12 +503,11 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // FUNKSYON POU SOULEVE NOTIFIKASYON VERT OUBYEN ROUGE (MENM JAN AK INDEX.HTML)
         function showNotification(message, type = 'success') {
             const notif = document.getElementById('customNotification');
             const notifMsg = document.getElementById('notifMessage');
             
-            notif.className = ''; // reset clase
+            notif.className = ''; 
             if (type === 'success') {
                 notif.classList.add('notif-success');
             } else {
@@ -523,93 +522,104 @@
             }, 4000);
         }
 
-        // KONTWÒL SIDEBAR SOU MOBIL
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('adminSidebar');
             sidebar.classList.toggle('open');
         };
 
-        // CHANJMAN ONGLET NET (YON SÈL PARÈT APRE LÒT)
         window.switchTab = function(tabId, element) {
-            // Kache tout onglè yo nèt
             const allTabs = document.querySelectorAll('.tab-view');
             allTabs.forEach(tab => {
                 tab.classList.remove('active');
                 tab.style.display = 'none';
             });
 
-            // Montre sèlman sa nou klike sou li a
             const activeTab = document.getElementById(tabId);
             activeTab.classList.add('active');
             activeTab.style.display = 'block';
 
-            // Jere klas bouton meni an
             document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
             element.classList.add('active');
 
-            // Si nou sou mobil, kache sidebar la lè nou fin klike
             const sidebar = document.getElementById('adminSidebar');
             if(sidebar.classList.contains('open')) {
                 sidebar.classList.remove('open');
             }
         };
 
+        // KORÈK POU PA CHASE EN VALIDATION SUPRÊME
         window.addEventListener('DOMContentLoaded', async () => {
             let currentQuizUser = JSON.parse(localStorage.getItem("currentQuizUser"));
             if (!currentQuizUser) { window.location.href = 'index.html'; return; }
 
             try {
                 const userDoc = await getDoc(doc(db, "users", currentQuizUser.uid));
-                if (userDoc.exists() && userDoc.data().role && userDoc.data().role.toLowerCase() === 'admin') {
-                    document.getElementById('loadingOverlay').style.display = 'none';
-                    document.getElementById('adminEmail').innerText = currentQuizUser.email;
-                    loadAdminDashboardData();
-                    loadCommentsData();
+                
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    // Sekirite total: pase l an lèt miniskil epi retire espas vid yo
+                    const userRole = userData.role ? userData.role.trim().toLowerCase() : '';
+                    
+                    if (userRole === 'admin') {
+                        document.getElementById('loadingOverlay').style.display = 'none';
+                        document.getElementById('adminEmail').innerText = currentQuizUser.email || "Admin";
+                        loadAdminDashboardData();
+                        loadCommentsData();
+                    } else {
+                        showNotification("Accès Refusé! Panneau réservé à l'administrateur.", "error");
+                        setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+                    }
                 } else {
-                    showNotification("Acces Refuse! Panneau reserve a l'admin.", "error");
-                    setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+                    window.location.href = 'index.html';
                 }
             } catch (error) {
-                window.location.href = 'index.html';
+                console.error("Erreur d'authentification Admin:", error);
+                // Pa chase itilizatè a si se yon ti erè rezo, jis kache overlay a pou tès rapid
+                document.getElementById('loadingOverlay').style.display = 'none';
+                showNotification("Erreur de connexion avec Firestore.", "error");
             }
         });
 
         async function loadAdminDashboardData() {
-            const usersSnapshot = await getDocs(collection(db, "users"));
-            const usersTable = document.getElementById('usersTableBody');
-            usersTable.innerHTML = "";
-            
-            let totalCoins = 0;
-            let userCount = 0;
+            try {
+                const usersSnapshot = await getDocs(collection(db, "users"));
+                const usersTable = document.getElementById('usersTableBody');
+                usersTable.innerHTML = "";
+                
+                let totalCoins = 0;
+                let userCount = 0;
 
-            usersSnapshot.forEach((docSnap) => {
-                const user = docSnap.data();
-                const userId = docSnap.id;
-                userCount++;
-                totalCoins += user.coins || 0;
-                const statusLabel = user.status || 'actif';
+                usersSnapshot.forEach((docSnap) => {
+                    const user = docSnap.data();
+                    const userId = docSnap.id;
+                    userCount++;
+                    totalCoins += user.coins || 0;
+                    const statusLabel = user.status || 'actif';
 
-                usersTable.innerHTML += `
-                    <tr id="row-${userId}">
-                        <td><strong>${user.username || 'Joueur'}</strong></td>
-                        <td>${user.email || 'N/A'}</td>
-                        <td><span style="text-transform: uppercase;">${user.country || 'ht'}</span></td>
-                        <td><span id="coins-val-${userId}">${user.coins || 0}</span></td>
-                        <td>
-                            <input type="number" id="input-coins-${userId}" class="coins-input-box" placeholder="Coins">
-                            <button class="btn-table btn-validate" onclick="updateCustomCoins('${userId}')">Ok</button>
-                        </td>
-                        <td><span id="status-val-${userId}" style="color:${statusLabel==='suspendu'?'var(--accent-admin)':'var(--success)'}; font-weight:bold; text-transform:uppercase;">${statusLabel}</span></td>
-                        <td>
-                            <button class="btn-table btn-suspend" onclick="toggleSuspendAccount('${userId}', '${statusLabel}')">${statusLabel==='suspendu'?'Activer':'Bloquer'}</button>
-                            <button class="btn-table btn-delete" onclick="deleteAccount('${userId}')">Supprimer</button>
-                        </td>
-                    </tr>
-                `;
-            });
+                    usersTable.innerHTML += `
+                        <tr id="row-${userId}">
+                            <td><strong>${user.username || 'Joueur'}</strong></td>
+                            <td>${user.email || 'N/A'}</td>
+                            <td><span style="text-transform: uppercase;">${user.country || 'ht'}</span></td>
+                            <td><span id="coins-val-${userId}">${user.coins || 0}</span></td>
+                            <td>
+                                <input type="number" id="input-coins-${userId}" class="coins-input-box" placeholder="Coins">
+                                <button class="btn-table btn-validate" onclick="updateCustomCoins('${userId}')">Ok</button>
+                            </td>
+                            <td><span id="status-val-${userId}" style="color:${statusLabel==='suspendu'?'var(--accent-admin)':'var(--success)'}; font-weight:bold; text-transform:uppercase;">${statusLabel}</span></td>
+                            <td>
+                                <button class="btn-table btn-suspend" onclick="toggleSuspendAccount('${userId}', '${statusLabel}')">${statusLabel==='suspendu'?'Activer':'Bloquer'}</button>
+                                <button class="btn-table btn-delete" onclick="deleteAccount('${userId}')">Supprimer</button>
+                            </td>
+                        </tr>
+                    `;
+                });
 
-            document.getElementById('statTotalUsers').innerText = userCount;
-            document.getElementById('statTotalCoins').innerText = totalCoins;
+                document.getElementById('statTotalUsers').innerText = userCount;
+                document.getElementById('statTotalCoins').innerText = totalCoins;
+            } catch(e) {
+                console.error(e);
+            }
         }
 
         window.updateCustomCoins = async function(userId) {
@@ -622,7 +632,7 @@
             const newAmount = parseInt(inputVal);
             try {
                 await updateDoc(doc(db, "users", userId), { coins: newAmount });
-                showNotification("Solde actualise avec succes!", "success");
+                showNotification("Solde actualisé avec succès!", "success");
                 loadAdminDashboardData();
             } catch(e) {
                 showNotification("Erreur lors de la modification.", "error");
@@ -635,20 +645,20 @@
 
             try {
                 await updateDoc(doc(db, "users", userId), { status: newStatus });
-                showNotification("Statut du compte modifie!", "success");
+                showNotification("Statut du compte modifié!", "success");
                 loadAdminDashboardData();
             } catch(e) {
-                showNotification("Erreur de mise a jour.", "error");
+                showNotification("Erreur de mise à jour.", "error");
             }
         };
 
         window.deleteAccount = async function(userId) {
-            if(!confirm("Supprimer definitivement ce compte?")) return;
+            if(!confirm("Supprimer définitivement ce compte?")) return;
 
             try {
                 await deleteDoc(doc(db, "users", userId));
                 document.getElementById(`row-${userId}`).remove();
-                showNotification("Compte supprime definitivement.", "success");
+                showNotification("Compte supprimé définitivement.", "success");
             } catch(e) {
                 showNotification("Erreur lors de la suppression.", "error");
             }
@@ -681,7 +691,7 @@
                     answer: correctTextValue, 
                     createdAt: new Date()
                 });
-                showNotification("Question ajoutee pour quiz.html!", "success");
+                showNotification("Question ajoutée pour quiz.html!", "success");
                 document.getElementById('quizQuestion').value = "";
                 document.getElementById('optA').value = "";
                 document.getElementById('optB').value = "";
@@ -707,7 +717,7 @@
                     content: content,
                     createdAt: new Date()
                 });
-                showNotification("Nouveau cours publie pour note.html!", "success");
+                showNotification("Nouveau cours publié pour note.html!", "success");
                 document.getElementById('noteTitle').value = "";
                 document.getElementById('noteContent').value = "";
             } catch(e) {
@@ -728,7 +738,7 @@
                     status: "pending",
                     createdAt: new Date()
                 });
-                showNotification("Demande envoyee avec succes.", "success");
+                showNotification("Demande envoyée avec succès.", "success");
                 document.getElementById('friendSearchInput').value = "";
             } catch(e) { showNotification("Erreur d'envoi.", "error"); }
         };
