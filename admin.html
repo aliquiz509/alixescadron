@@ -17,6 +17,8 @@
             --success: #2ed573;
             --error: #ff4757;
             --border-color: rgba(255, 255, 255, 0.1);
+            --glow-cyan: rgba(0, 210, 255, 0.4);
+            --glow-admin: rgba(255, 71, 87, 0.4);
         }
 
         * {
@@ -48,103 +50,126 @@
             font-size: 1.5rem;
             color: var(--accent-admin);
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        /* SIDEBAR FUTURISTE */
+        /* SIDEBAR PREMIUM AK BOUTON SOU DASHBOARD LA */
         .sidebar {
-            width: 280px;
+            width: 300px;
             background: var(--panel-bg);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            padding: 25px 20px;
+            padding: 30px 20px;
             z-index: 10;
+            box-shadow: 5px 0 25px rgba(0,0,0,0.5);
         }
 
         .app-logo {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 35px;
         }
 
         .logo-circle {
-            width: 75px;
-            height: 75px;
-            background: rgba(255, 255, 255, 0.05);
+            width: 85px;
+            height: 85px;
+            background: rgba(255, 255, 255, 0.03);
             border: 2px solid var(--accent-admin);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 auto 10px;
-            box-shadow: 0 0 15px var(--accent-admin);
+            margin: 0 auto 15px;
+            box-shadow: 0 0 20px var(--accent-admin);
+            transition: transform 0.3s;
+        }
+
+        .sidebar:hover .logo-circle {
+            transform: scale(1.05);
         }
 
         .real-logo {
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
             object-fit: contain;
         }
 
         .sidebar h2 {
             color: var(--accent-gold);
-            font-size: 1.3rem;
-            margin-bottom: 20px;
+            font-size: 1.4rem;
             text-align: center;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 234, 167, 0.3);
         }
 
         .menu-items {
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
+            margin-top: 15px;
         }
 
         .menu-item {
-            padding: 14px 15px;
-            border-radius: 12px;
+            padding: 14px 18px;
+            border-radius: 14px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             color: var(--text-muted);
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid transparent;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
         }
 
-        .menu-item:hover, .menu-item.active {
+        .menu-item:hover {
+            background: rgba(0, 210, 255, 0.08);
+            color: var(--accent-cyan);
+            border-color: rgba(0, 210, 255, 0.3);
+            box-shadow: 0 0 15px var(--glow-cyan);
+            transform: translateX(8px);
+        }
+
+        .menu-item.active {
             background: rgba(255, 71, 87, 0.15);
             color: var(--accent-admin);
-            border-color: rgba(255, 71, 87, 0.3);
+            border-color: rgba(255, 71, 87, 0.4);
+            box-shadow: 0 0 20px var(--glow-admin);
             transform: translateX(5px);
         }
 
         .logout-btn {
             margin-top: auto;
-            color: #ff4757;
+            color: var(--accent-admin);
             border: 1px solid rgba(255, 71, 87, 0.4);
             background: rgba(255, 71, 87, 0.05);
-            padding: 12px;
-            border-radius: 12px;
+            padding: 14px;
+            border-radius: 14px;
             cursor: pointer;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
             transition: all 0.3s;
         }
 
         .logout-btn:hover {
-            background: #ff4757;
+            background: var(--accent-admin);
             color: white;
-            box-shadow: 0 0 15px rgba(255, 71, 87, 0.4);
+            box-shadow: 0 0 20px var(--glow-admin);
         }
 
-        /* MAIN CONTENT */
+        /* MAIN CONTENT AREA */
         .main-content {
             flex: 1;
-            padding: 30px;
+            padding: 40px;
             overflow-y: auto;
             z-index: 1;
         }
@@ -154,112 +179,128 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 20px;
-            margin-bottom: 30px;
+            padding-bottom: 25px;
+            margin-bottom: 35px;
         }
 
         header h1 {
             color: var(--accent-gold);
-            font-size: 2rem;
+            font-size: 2.2rem;
+            text-shadow: 0 0 15px rgba(255, 234, 167, 0.2);
         }
 
-        /* CARDS ESTATISTIK */
+        /* CARDS ESTATISTIK DESIGN LUXE */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
         }
 
         .stat-card {
             background: var(--panel-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border: 1px solid var(--border-color);
-            padding: 22px;
-            border-radius: 16px;
+            padding: 25px;
+            border-radius: 20px;
             text-align: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            border-top: 3px solid var(--accent-cyan);
+        }
+
+        .stat-card:nth-child(3) {
+            border-top: 3px solid var(--accent-admin);
         }
 
         .stat-card h3 {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
-            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
         }
 
         .stat-card p {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--accent-cyan);
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: var(--text-light);
+            text-shadow: 0 0 10px rgba(255,255,255,0.1);
         }
 
-        /* TAB VIEWS */
+        /* TAB BLÒK VIEW */
         .tab-view {
             display: none;
             background: var(--panel-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border: 1px solid var(--border-color);
-            padding: 25px;
-            border-radius: 18px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-            animation: fadeIn 0.4s ease-in-out;
+            padding: 35px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .tab-view.active {
             display: block;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* TABLES */
+        /* TABLO DESIGN FUTURISTE */
         .table-responsive {
             overflow-x: auto;
-            margin-top: 20px;
+            margin-top: 25px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
+            background: rgba(10, 14, 26, 0.4);
         }
 
         th, td {
-            padding: 14px;
+            padding: 16px;
             border-bottom: 1px solid var(--border-color);
         }
 
         th { 
             color: var(--accent-gold); 
-            font-weight: 600;
-            background: rgba(255,255,255,0.02);
-        }
-
-        tr:hover td {
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
             background: rgba(255,255,255,0.03);
         }
 
-        /* INPUTS AK BOUTON */
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+
+        /* DETAY ENTRÉ DESIGN */
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 22px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         .form-group label {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
-            font-weight: 500;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         input, select, textarea {
-            background: rgba(10, 14, 26, 0.6);
+            background: rgba(10, 14, 26, 0.7);
             border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: 10px;
+            padding: 14px;
+            border-radius: 12px;
             color: white;
             font-size: 15px;
             transition: all 0.3s;
@@ -268,73 +309,118 @@
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--accent-cyan);
-            box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.25);
         }
 
+        /* LABELS AK RADYO BOUTON POU KESYON */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .option-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255,255,255,0.02);
+            padding: 10px 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .option-row input[type="text"] {
+            flex: 1;
+            padding: 10px;
+        }
+
+        .radio-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            color: var(--accent-gold);
+            cursor: pointer;
+        }
+
+        .radio-box input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-cyan);
+            cursor: pointer;
+        }
+
+        /* TI BWAT INPUT COINS NAN TABLO A */
+        .coins-input-box {
+            width: 80px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* BOUTON AK MODÈL KÒRÈK YO */
         .btn-action {
-            background: linear-gradient(135deg, var(--accent-blue), #6a89cc);
+            background: linear-gradient(135deg, var(--accent-blue), #5758bb);
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
+            padding: 14px 28px;
+            border-radius: 14px;
             font-weight: bold;
             cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
             transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         .btn-action:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(74, 105, 189, 0.4);
+            box-shadow: 0 8px 25px rgba(74, 105, 189, 0.4);
+            background: linear-gradient(135deg, #5758bb, var(--accent-blue));
         }
 
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 13px;
-            border-radius: 6px;
-            background: var(--accent-cyan);
-            color: #0a0e1a;
+        .btn-table {
+            padding: 8px 14px;
+            font-size: 12px;
+            border-radius: 8px;
             border: none;
             cursor: pointer;
             font-weight: bold;
-            margin-left: 5px;
+            text-transform: uppercase;
+            transition: all 0.2s;
         }
 
-        /* COMMENTS */
+        .btn-validate { background: var(--accent-cyan); color: #0a0e1a; }
+        .btn-suspend { background: #ffb142; color: #0a0e1a; margin-left: 5px; }
+        .btn-delete { background: var(--accent-admin); color: white; margin-left: 5px; }
+
+        .btn-table:hover { transform: scale(1.05); opacity: 0.9; }
+
         .comment-card {
-            background: rgba(255,255,255,0.03);
+            background: rgba(255,255,255,0.02);
             border: 1px solid var(--border-color);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 12px;
+            padding: 18px;
+            border-radius: 16px;
+            margin-bottom: 15px;
         }
 
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-        }
-
-        /* FRIENDS GRID */
-        .friends-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        @media(max-width: 768px) {
+        @media(max-width: 900px) {
             body { flex-direction: column; }
             .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-color); }
-            .friends-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <div id="loadingOverlay">Verifikation de Securite...</div>
+    <div id="loadingOverlay">Verification de Securite...</div>
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR KI REFÈ MENM JAN AK DASHBOARD -->
     <div class="sidebar">
         <div class="app-logo">
             <div class="logo-circle">
@@ -346,6 +432,7 @@
             <li class="menu-item active" onclick="switchTab('overview', this)">Panneau Principal</li>
             <li class="menu-item" onclick="switchTab('users-tab', this)">Gestion des Joueurs</li>
             <li class="menu-item" onclick="switchTab('quiz-tab', this)">Ajouter des Questions</li>
+            <li class="menu-item" onclick="switchTab('note-tab', this)">Publier une Note</li>
             <li class="menu-item" onclick="switchTab('friends-tab', this)">Demandes d'Amis</li>
             <li class="menu-item" onclick="switchTab('comments-tab', this)">Commentaires</li>
         </ul>
@@ -357,11 +444,11 @@
         <header>
             <div>
                 <h1>Bonjour, Admin Alix</h1>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Bienvenue sur votre panneau de controle supreme.</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Controle general et supervision de la plateforme.</p>
             </div>
             <div style="text-align: right;">
                 <span id="adminEmail" style="font-weight: 600; color: var(--accent-gold);">...</span>
-                <div style="font-size: 0.85rem; color: var(--success);">Coffre AliCoins: Illimite</div>
+                <div style="font-size: 0.85rem; color: var(--success); text-transform: uppercase; font-weight: bold;">Coffre AliCoins: Illimite</div>
             </div>
         </header>
 
@@ -383,25 +470,26 @@
 
         <!-- TAB OVERVIEW -->
         <div id="overview" class="tab-view active">
-            <h2>Activite Generale de la Plateforme</h2>
-            <p style="color: var(--text-muted); margin-top: 10px; line-height: 1.6;">
-                Selectionnez une option dans le menu lateral pour commencer a controler la base de donnees d'AliQuiz. Vous disposez d'un acces total pour voir les informations des joueurs, modifier les soldes de pieces, gerer les demandes d'amis et lire les retours des utilisateurs.
+            <h2>Activite Generale de la Base de Donnees</h2>
+            <p style="color: var(--text-muted); margin-top: 15px; line-height: 1.8;">
+                Bienvenue dans votre espace supreme d'administration. Ce panneau vous permet de gerer l'integralite de l'application AliQuiz. Vous pouvez modifier manuellement les comptes, valider les soldes precis de pieces, suspendre ou supprimer des profils, et diffuser des notes d'information globales directement accessibles sur le tableau de bord des joueurs.
             </p>
         </div>
 
-        <!-- TAB JERE JWÈ YO -->
+        <!-- TAB GESTION DES JOUEURS (EKRI COINS + BLOCK + DELETE) -->
         <div id="users-tab" class="tab-view">
-            <h2>Liste des Joueurs et Modification des Portefeuilles</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem;">Vous pouvez editer le montant des AliCoins d'un joueur directement depuis ce tableau.</p>
+            <h2>Gestion Finale des Comptes Utilisateurs</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Saisissez directement la valeur souhaitee pour modifier le solde d'un joueur.</p>
             <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
-                            <th>Pseudo</th>
+                            <th>Pseudo / Nom</th>
                             <th>Email</th>
                             <th>Pays</th>
-                            <th>AliCoins</th>
-                            <th>Role</th>
+                            <th>Solde Actuel</th>
+                            <th>Nouveau Solde</th>
+                            <th>Statut</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -410,57 +498,84 @@
             </div>
         </div>
 
-        <!-- TAB AJOUTE KESYON -->
+        <!-- TAB AJOUTER DES QUESTIONS (KAZ POU KOCHE REPOU) -->
         <div id="quiz-tab" class="tab-view">
-            <h2>Ajouter une Nouvelle Question</h2>
-            <div style="max-width: 600px; margin-top: 20px;">
+            <h2>Ajouter une Question avec Choix Unique</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Saisissez les 4 options possibles puis cochez la case correspondante a la reponse correcte.</p>
+            <div style="max-width: 650px;">
                 <div class="form-group">
-                    <label>Votre Question</label>
-                    <input type="text" id="quizQuestion" placeholder="Ex: Quelle est l'unite de base du vivant?">
+                    <label>Enonce de la Question</label>
+                    <input type="text" id="quizQuestion" placeholder="Ex: Quel organite genere l'ATP?">
                 </div>
-                <div class="form-group">
-                    <label>Option A (Correcte)</label>
-                    <input type="text" id="optA" placeholder="Reponse correcte">
+                
+                <label style="font-size: 0.85rem; color: var(--text-muted); font-weight: bold; text-transform: uppercase;">Options de Reponse</label>
+                <div class="options-container">
+                    <div class="option-row">
+                        <label class="radio-box"><input type="radio" name="correctAnswerRadio" value="A" checked> A</label>
+                        <input type="text" id="optA" placeholder="Saisir l'option A">
+                    </div>
+                    <div class="option-row">
+                        <label class="radio-box"><input type="radio" name="correctAnswerRadio" value="B"> B</label>
+                        <input type="text" id="optB" placeholder="Saisir l'option B">
+                    </div>
+                    <div class="option-row">
+                        <label class="radio-box"><input type="radio" name="correctAnswerRadio" value="C"> C</label>
+                        <input type="text" id="optC" placeholder="Saisir l'option C">
+                    </div>
+                    <div class="option-row">
+                        <label class="radio-box"><input type="radio" name="correctAnswerRadio" value="D"> D</label>
+                        <input type="text" id="optD" placeholder="Saisir l'option D">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Option B</label>
-                    <input type="text" id="optB" placeholder="Mauvaise reponse 1">
-                </div>
-                <div class="form-group">
-                    <label>Option C</label>
-                    <input type="text" id="optC" placeholder="Mauvaise reponse 2">
-                </div>
-                <button class="btn-action" onclick="saveQuestionToFirebase()">Publier la Question</button>
+                <br>
+                <button class="btn-action" onclick="saveQuestionWithSelection()">Publier la Question</button>
             </div>
         </div>
 
-        <!-- TAB DEMANN ZANMI -->
+        <!-- TAB PUBLIER UNE NOTE (NOUVO MENM JAN W TE MANDE L LA) -->
+        <div id="note-tab" class="tab-view">
+            <h2>Publier une Note Finale d'Information</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Ce message sera diffuse instantanement sur les ecrans de tous les utilisateurs connectes.</p>
+            <div style="max-width: 600px;">
+                <div class="form-group">
+                    <label>Titre de la Note</label>
+                    <input type="text" id="noteTitle" placeholder="Ex: Maintenance ou Mise a jour importante">
+                </div>
+                <div class="form-group">
+                    <label>Contenu du Message</label>
+                    <textarea id="noteContent" rows="6" placeholder="Saisissez les details de l'annonce ici..."></textarea>
+                </div>
+                <button class="btn-action" style="background: linear-gradient(135deg, #2ed573, #26af5f);" onclick="publishAdminNote()">Diffuser la Note</button>
+            </div>
+        </div>
+
+        <!-- TAB DEMANDES D'AMIS -->
         <div id="friends-tab" class="tab-view">
-            <h2>Envoyer une Demande / Liste des Attentes</h2>
-            <div class="friends-grid">
+            <h2>Systeme de Liaison d'Amitie</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 15px;">
                 <div>
-                    <h3 style="color: var(--accent-cyan); margin-bottom: 10px;">Envoyer une Demande d'Ami</h3>
+                    <h3 style="color: var(--accent-cyan); margin-bottom: 15px; font-size: 1rem; text-transform: uppercase;">Envoyer une Demande</h3>
                     <div class="form-group">
-                        <label>Saisir l'UID ou l'Email du Joueur</label>
-                        <input type="text" id="friendSearchInput" placeholder="UID ou email...">
+                        <label>UID ou Adresse Email de la Cible</label>
+                        <input type="text" id="friendSearchInput" placeholder="Saisir l'identifiant...">
                     </div>
                     <button class="btn-action" onclick="sendFriendRequest()">Envoyer la Demande</button>
                 </div>
                 <div>
-                    <h3 style="color: var(--accent-gold); margin-bottom: 10px;">Demandes en Attente</h3>
+                    <h3 style="color: var(--accent-gold); margin-bottom: 15px; font-size: 1rem; text-transform: uppercase;">Flux d'Attente</h3>
                     <div id="friendRequestsContainer" style="color: var(--text-muted); font-size: 0.9rem;">
-                        Aucune demande pour le moment.
+                        Aucune requete en attente de traitement.
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB KÒMANTÈ -->
+        <!-- TAB COMMENTAIRES -->
         <div id="comments-tab" class="tab-view">
-            <h2>Retours et Commentaires des Joueurs</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">Tous les messages laisses par les joueurs depuis leur tableau de bord s'affichent ici en temps reel.</p>
+            <h2>Flux de Commentaires et Retours Utilisateurs</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Historique des impressions envoyees depuis les comptes joueurs.</p>
             <div id="commentsContainer">
-                <p style="color: var(--text-muted);">Aucun commentaire enregistre dans la base de donnees.</p>
+                <p style="color: var(--text-muted);">Aucun feedback disponible dans la base centrale.</p>
             </div>
         </div>
 
@@ -468,7 +583,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, updateDoc, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, updateDoc, deleteDoc, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCF2I4LEcMA1oJRwa7xthvSOQGSCg6lPjs",
@@ -482,7 +597,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // EFFETS SONORES (SANS CHANGEMENT)
         const soundEffect = (type) => {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
             const osc = ctx.createOscillator();
@@ -502,15 +616,10 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             let currentQuizUser = JSON.parse(localStorage.getItem("currentQuizUser"));
-
-            if (!currentQuizUser) {
-                window.location.href = 'index.html';
-                return;
-            }
+            if (!currentQuizUser) { window.location.href = 'index.html'; return; }
 
             try {
                 const userDoc = await getDoc(doc(db, "users", currentQuizUser.uid));
-                
                 if (userDoc.exists() && userDoc.data().role && userDoc.data().role.toLowerCase() === 'admin') {
                     document.getElementById('loadingOverlay').style.display = 'none';
                     document.getElementById('adminEmail').innerText = currentQuizUser.email;
@@ -518,17 +627,16 @@
                     loadCommentsData();
                 } else {
                     soundEffect('error');
-                    alert("Acces Refuse! Ce panneau est reserve a l'administrateur Alix.");
+                    alert("Acces Refuse! Panneau reserve a l'administration supreme.");
                     localStorage.removeItem("currentQuizUser");
                     window.location.href = 'index.html';
                 }
             } catch (error) {
-                console.error("Erreur securite:", error);
                 window.location.href = 'index.html';
             }
         });
 
-        // CHARGEMENT DES JOUEURS
+        // TONBE LI JWÈ YO NAN TABLO A AK INPUT AK REKIPERASYON STATUT
         async function loadAdminDashboardData() {
             const usersSnapshot = await getDocs(collection(db, "users"));
             const usersTable = document.getElementById('usersTableBody');
@@ -542,17 +650,22 @@
                 const userId = docSnap.id;
                 userCount++;
                 totalCoins += user.coins || 0;
+                const statusLabel = user.status || 'actif';
 
                 usersTable.innerHTML += `
-                    <tr>
+                    <tr id="row-${userId}">
                         <td><strong>${user.username || 'Joueur'}</strong><br><small style="color:var(--text-muted)">${user.prenom || ''} ${user.nom || ''}</small></td>
                         <td>${user.email || 'N/A'}</td>
                         <td><span style="text-transform: uppercase;">${user.country || 'ht'}</span></td>
                         <td><span id="coins-val-${userId}">${user.coins || 0}</span></td>
-                        <td><span style="color: ${user.role === 'admin' ? 'var(--accent-admin)' : 'var(--accent-cyan)'}">${user.role || 'player'}</span></td>
                         <td>
-                            <button class="btn-sm" onclick="adjustCoins('${userId}', 50)">+50</button>
-                            <button class="btn-sm" style="background:var(--accent-admin)" onclick="adjustCoins('${userId}', -50)">-50</button>
+                            <input type="number" id="input-coins-${userId}" class="coins-input-box" placeholder="Valeur">
+                            <button class="btn-table btn-validate" onclick="updateCustomCoins('${userId}')">Valider</button>
+                        </td>
+                        <td><span id="status-val-${userId}" style="color:${statusLabel==='suspendu'?'var(--accent-admin)':'var(--success)'}; font-weight:bold; text-transform:uppercase; font-size:11px;">${statusLabel}</span></td>
+                        <td>
+                            <button class="btn-table btn-suspend" onclick="toggleSuspendAccount('${userId}', '${statusLabel}')">${statusLabel==='suspendu'?'Activer':'Suspendre'}</button>
+                            <button class="btn-table btn-delete" onclick="deleteAccount('${userId}')">Supprimer</button>
                         </td>
                     </tr>
                 `;
@@ -562,60 +675,125 @@
             document.getElementById('statTotalCoins').innerText = totalCoins;
         }
 
-        // AJUSTEMENT DES COINS LIVE
-        window.adjustCoins = async function(userId, amount) {
+        // METE KANTITE COINS OU CHWAZI A
+        window.updateCustomCoins = async function(userId) {
             soundEffect('click');
-            try {
-                const userRef = doc(db, "users", userId);
-                const userDoc = await getDoc(userRef);
-                if (userDoc.exists()) {
-                    let currentCoins = userDoc.data().coins || 0;
-                    let newCoins = currentCoins + amount;
-                    if(newCoins < 0) newCoins = 0;
+            const inputVal = document.getElementById(`input-coins-${userId}`).value.trim();
+            if(inputVal === "" || isNaN(inputVal)) {
+                soundEffect('error');
+                alert("Veuillez entrer un nombre valide.");
+                return;
+            }
 
-                    await updateDoc(userRef, { coins: newCoins });
-                    document.getElementById(`coins-val-${userId}`).innerText = newCoins;
-                    soundEffect('success');
-                    
-                    let currentTotalCoins = parseInt(document.getElementById('statTotalCoins').innerText);
-                    document.getElementById('statTotalCoins').innerText = (currentTotalCoins + amount);
-                }
-            } catch (err) {
-                console.error("Erreur modification pieces:", err);
+            const newAmount = parseInt(inputVal);
+            try {
+                await updateDoc(doc(db, "users", userId), { coins: newAmount });
+                document.getElementById(`coins-val-${userId}`).innerText = newAmount;
+                document.getElementById(`input-coins-${userId}`).value = "";
+                soundEffect('success');
+                // Rafrechi estatistik rapid
+                loadAdminDashboardData();
+            } catch(e) {
                 soundEffect('error');
             }
         };
 
-        // ENREGISTRER UNE QUESTION
-        window.saveQuestionToFirebase = async function() {
+        // SISPANN OU AKTIVE YON KONT
+        window.toggleSuspendAccount = async function(userId, currentStatus) {
+            soundEffect('click');
+            const newStatus = currentStatus === 'suspendu' ? 'actif' : 'suspendu';
+            if(!confirm(`Voulez-vous vraiment changer le statut de ce joueur en: ${newStatus}?`)) return;
+
+            try {
+                await updateDoc(doc(db, "users", userId), { status: newStatus });
+                soundEffect('success');
+                loadAdminDashboardData();
+            } catch(e) {
+                soundEffect('error');
+            }
+        };
+
+        // EFASE YON KONT NÈT INYORAN NAN BAZ DONE A
+        window.deleteAccount = async function(userId) {
+            soundEffect('click');
+            if(!confirm("ATTENTION! Voulez-vous definitivement supprimer ce compte joueur de la base de donnees? Cette action est irreversible.")) return;
+
+            try {
+                await deleteDoc(doc(db, "users", userId));
+                document.getElementById(`row-${userId}`).remove();
+                soundEffect('success');
+                alert("Compte supprime avec succes.");
+            } catch(e) {
+                soundEffect('error');
+            }
+        };
+
+        // AJOUTE KESYON AVÈK RADYO BOUTON SELECTOR (A, B, C, D)
+        window.saveQuestionWithSelection = async function() {
             soundEffect('click');
             const question = document.getElementById('quizQuestion').value.trim();
-            const correctOpt = document.getElementById('optA').value.trim();
-            const optB = document.getElementById('optB').value.trim();
-            const optC = document.getElementById('optC').value.trim();
+            const valA = document.getElementById('optA').value.trim();
+            const valB = document.getElementById('optB').value.trim();
+            const valC = document.getElementById('optC').value.trim();
+            const valD = document.getElementById('optD').value.trim();
 
-            if (!question || !correctOpt || !optB || !optC) {
+            const selectedRadio = document.querySelector('input[name="correctAnswerRadio"]:checked').value;
+
+            if(!question || !valA || !valB || !valC || !valD) {
                 soundEffect('error');
-                alert("Veuillez remplir tous les champs avant de publier!");
+                alert("Veuillez remplir l'enonce et les 4 options possibles.");
                 return;
             }
+
+            let correctTextValue = "";
+            if(selectedRadio === "A") correctTextValue = valA;
+            else if(selectedRadio === "B") correctTextValue = valB;
+            else if(selectedRadio === "C") correctTextValue = valC;
+            else if(selectedRadio === "D") correctTextValue = valD;
 
             try {
                 await addDoc(collection(db, "questions"), {
                     question: question,
-                    options: [correctOpt, optB, optC],
-                    answer: correctOpt,
+                    options: [valA, valB, valC, valD],
+                    answer: correctTextValue, 
                     createdAt: new Date()
                 });
                 soundEffect('success');
-                alert("La question a ete publiee avec succes!");
+                alert("La question a ete publiee avec succes avec l'option (" + selectedRadio + ") comme reponse correcte!");
                 document.getElementById('quizQuestion').value = "";
                 document.getElementById('optA').value = "";
                 document.getElementById('optB').value = "";
                 document.getElementById('optC').value = "";
+                document.getElementById('optD').value = "";
             } catch (error) {
                 soundEffect('error');
-                console.error("Erreur:", error);
+            }
+        };
+
+        // ENTEGRASYON NOUVO TAB: PUBLIER UNE NOTE JENERALE
+        window.publishAdminNote = async function() {
+            soundEffect('click');
+            const title = document.getElementById('noteTitle').value.trim();
+            const content = document.getElementById('noteContent').value.trim();
+
+            if(!title || !content) {
+                soundEffect('error');
+                alert("Veuillez remplir le titre et le contenu de la note.");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "notes"), {
+                    title: title,
+                    content: content,
+                    createdAt: new Date()
+                });
+                soundEffect('success');
+                alert("La note d'information globale a ete diffusee avec succes!");
+                document.getElementById('noteTitle').value = "";
+                document.getElementById('noteContent').value = "";
+            } catch(e) {
+                soundEffect('error');
             }
         };
 
@@ -624,12 +802,7 @@
             soundEffect('click');
             const target = document.getElementById('friendSearchInput').value.trim();
             let currentQuizUser = JSON.parse(localStorage.getItem("currentQuizUser"));
-
-            if(!target) {
-                soundEffect('error');
-                alert("Veuillez entrer un UID ou un email valide.");
-                return;
-            }
+            if(!target) { soundEffect('error'); alert("Identifiant invalide."); return; }
 
             try {
                 await addDoc(collection(db, "friendRequests"), {
@@ -640,22 +813,17 @@
                     createdAt: new Date()
                 });
                 soundEffect('success');
-                alert("Demande envoyee avec succes!");
+                alert("Demande envoyee.");
                 document.getElementById('friendSearchInput').value = "";
-            } catch(e) {
-                soundEffect('error');
-                console.error(e);
-            }
+            } catch(e) { soundEffect('error'); }
         };
 
-        // CHARGEMENT DES COMMENTAIRES
+        // LI KÒMANTÈ YO
         async function loadCommentsData() {
             try {
                 const commentSnap = await getDocs(collection(db, "comments"));
                 const container = document.getElementById('commentsContainer');
-                
                 if (commentSnap.empty) return;
-                
                 container.innerHTML = "";
                 let count = 0;
                 commentSnap.forEach(doc => {
@@ -663,7 +831,7 @@
                     count++;
                     container.innerHTML += `
                         <div class="comment-card">
-                            <div class="comment-header">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.85rem;">
                                 <span style="color:var(--accent-cyan)">Joueur: @${c.username || 'Utilisateur'}</span>
                                 <small style="color:var(--text-muted)">${c.createdAt ? new Date(c.createdAt.seconds*1000).toLocaleDateString() : ''}</small>
                             </div>
@@ -672,9 +840,7 @@
                     `;
                 });
                 document.getElementById('statTotalComments').innerText = count;
-            } catch(e) {
-                console.error("Erreur commentaires:", e);
-            }
+            } catch(e) { console.error(e); }
         }
 
         window.switchTab = function(tabId, element) {
