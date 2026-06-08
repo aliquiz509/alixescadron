@@ -203,6 +203,22 @@
             fill: currentColor;
         }
 
+        .forgot-password-link {
+            display: block;
+            text-align: right;
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .forgot-password-link:hover {
+            color: var(--accent-gold);
+            text-decoration: underline;
+        }
+
         .country-selector {
             position: relative;
         }
@@ -474,7 +490,7 @@
             <button class="btn-google context-google-btn" type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="width:20px; height:20px;">
                     <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-                    <path fill="#4285F4" d="M46.5 24c0-1.61-.15-3.16-.42-4.69H24v8.89h12.61c-.54 2.9-2.18 5.37-4.63 7l7.18 5.57C43.37 36.01 46.5 30.64 46.5 24z"/>
+                    <path fill="#4285F4" d="M46.5 24c0-1.61-.15-3.16-.42-4.69H24v8.89h12.61c-.54 2.9 2.18 5.37-4.63 7l7.18 5.57C43.37 36.01 46.5 30.64 46.5 24z"/>
                     <path fill="#FBBC05" d="M10.54 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.98-6.19z"/>
                     <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.18-5.57c-1.99 1.33-4.55 2.13-8.71 2.13-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
                 </svg>
@@ -488,7 +504,7 @@
                     <label>Adresse Email</label>
                     <input type="email" id="loginEmail" placeholder="votre.email@gmail.com" required>
                 </div>
-                <div class="form-group full-width">
+                <div class="form-group full-width" style="margin-bottom: 5px;">
                     <label>Mot de passe</label>
                     <div class="password-wrapper">
                         <input type="password" id="loginPassword" placeholder="Entrez votre mot de passe" required>
@@ -496,6 +512,7 @@
                             <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
                         </button>
                     </div>
+                    <a id="forgotPasswordBtn" class="forgot-password-link">Mot de passe oublié ?</a>
                 </div>
 
                 <div class="form-group full-width recaptcha-holder">
@@ -540,7 +557,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -619,6 +636,42 @@
             flagPreview.querySelector('span').textContent = selectedOption.textContent;
         });
 
+        // FUNKSYON POU REINITIALISE MOT DE PASSE VIA FIREBASE
+        document.getElementById('forgotPasswordBtn').addEventListener('click', async function() {
+            soundEffect('click');
+            hideAllNotifications();
+
+            const email = document.getElementById('loginEmail').value.trim();
+            const captchaResponse = grecaptcha.getResponse(1);
+
+            if (!email) {
+                soundEffect('error');
+                showNotification('loginAlert', "Entrez votre adresse email dans la boîte ci-dessus d'abord !", 'error');
+                return;
+            }
+
+            if (!captchaResponse) {
+                soundEffect('error');
+                showNotification('loginAlert', "Veuillez cocher la case reCAPTCHA pour prouver que vous n'êtes pas un robot !", 'error');
+                return;
+            }
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                soundEffect('success');
+                showNotification('loginAlert', "Lien de réinitialisation envoyé ! Vérifiez votre boîte email (et les spams).", 'success');
+            } catch (error) {
+                soundEffect('error');
+                let userFriendlyMessage = "Une erreur est survenue lors de l'envoi.";
+                if (error.code === 'auth/user-not-found') {
+                    userFriendlyMessage = "Aucun joueur n'est enregistré avec cette adresse email.";
+                } else if (error.code === 'auth/invalid-email') {
+                    userFriendlyMessage = "L'adresse email n'est pas valide.";
+                }
+                showNotification('loginAlert', userFriendlyMessage, 'error');
+            }
+        });
+
         // 1. INSCRIPTION TRADITIONNELLE (AVECK TCHÈK PREALABLE)
         document.getElementById('registrationForm').addEventListener('submit', async function(e){
             e.preventDefault();
@@ -651,7 +704,6 @@
             submitBtn.textContent = "Vérification de disponibilité... ⏳";
 
             try {
-                // TCHÈK 1: Èske pseudo a egziste deja?
                 const qUsername = query(collection(db, "users"), where("username", "==", username));
                 const snapUsername = await getDocs(qUsername);
                 if (!snapUsername.empty) {
@@ -662,7 +714,6 @@
                     return;
                 }
 
-                // TCHÈK 2: Èske imel sa gen kont deja?
                 const qEmail = query(collection(db, "users"), where("email", "==", email));
                 const snapEmail = await getDocs(qEmail);
                 if (!snapEmail.empty) {
@@ -673,7 +724,6 @@
                     return;
                 }
 
-                // Si tou de lib, nou voye OTP kounye a
                 submitBtn.textContent = "Envoi du code OTP... ⏳";
                 const otp = Math.floor(100000 + Math.random() * 900000);
                 localStorage.setItem("otp", otp);
@@ -807,7 +857,6 @@
             loginSubmitBtn.disabled = true;
             loginSubmitBtn.textContent = "Connexion en cours... ⏳";
 
-            // SOUKOU POU KONT ADMIN AN ANVAN LI ALE NAN FIREBASE (Si kont lan poko nan Auth)
             if (email === "aliquiz509@gmail.com" && password === "alixescadron") {
                 const adminSession = {
                     prenom: "Alix",
@@ -820,14 +869,10 @@
                 soundEffect('success');
                 localStorage.setItem("currentQuizUser", JSON.stringify(adminSession));
                 
-                // KREYE OSWA METE AJOU DOKIMAN AN NAN FIRESTORE POU SEKIRITE
                 try {
-                    // Nou konekte l nòmalman nan Auth si kont lan egziste deja
                     const userCredential = await signInWithEmailAndPassword(auth, email, password);
                     await setDoc(doc(db, "users", userCredential.user.uid), { ...adminSession, uid: userCredential.user.uid }, { merge: true });
                 } catch(ae) {
-                    // Si kont lan poko kreye nan Auth, n ap kite l ale nan catch la pou kreyasyon otomatik si sa nesesè, 
-                    // men kòm ou mete detay yo fiks, nou ka fòse redirection an dirèkteman :
                 }
                 window.location.href = 'admin.html';
                 return;
@@ -849,7 +894,6 @@
                 soundEffect('success');
                 localStorage.setItem("currentQuizUser", JSON.stringify(sessionData));
 
-                // REDIRECTION DINAMIK SOU ROLES
                 if (sessionData.role === "admin" || user.email === "aliquiz509@gmail.com") {
                     window.location.href = 'admin.html';
                 } else {
