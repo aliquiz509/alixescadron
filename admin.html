@@ -55,7 +55,6 @@
             letter-spacing: 2px;
         }
 
-        /* NOTIFIKASYON PREMIUM STYLE INDEX.HTML */
         #customNotification {
             position: fixed;
             top: 20px;
@@ -77,7 +76,6 @@
         .notif-success { background: rgba(46, 213, 115, 0.95); border: 2px solid var(--success); box-shadow: 0 0 20px rgba(46, 213, 115, 0.4); }
         .notif-error { background: rgba(255, 71, 87, 0.95); border: 2px solid var(--error); box-shadow: 0 0 20px rgba(255, 71, 87, 0.4); }
 
-        /* BOUTON MENÙ SIDEBAR POU MOBIL */
         .menu-toggle-btn {
             position: fixed;
             top: 15px;
@@ -94,7 +92,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        /* SIDEBAR DESIGN PREMIUM */
         .sidebar {
             width: 300px;
             background: var(--panel-bg);
@@ -200,7 +197,6 @@
             color: white;
         }
 
-        /* MAIN CONTENT AREA */
         .main-content {
             flex: 1;
             padding: 40px;
@@ -223,7 +219,6 @@
             font-size: 2.2rem;
         }
 
-        /* CARDS ESTATISTIK */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -244,7 +239,6 @@
         .stat-card h3 { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; }
         .stat-card p { font-size: 2.3rem; font-weight: 800; color: var(--text-light); }
 
-        /* ONGLÈ NET YO (DISPLAY: NONE PAR DÉFAUT) */
         .tab-view {
             display: none;
             background: var(--panel-bg);
@@ -255,12 +249,10 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.4);
         }
 
-        /* SÈL ONGLÈ KI ACTIVE LA KAP PARÈT */
         .tab-view.active {
             display: block !important;
         }
 
-        /* TABLO ETA */
         .table-responsive {
             overflow-x: auto;
             margin-top: 25px;
@@ -272,7 +264,6 @@
         th, td { padding: 16px; border-bottom: 1px solid var(--border-color); }
         th { color: var(--accent-gold); text-transform: uppercase; font-size: 0.8rem; background: rgba(255,255,255,0.03); }
 
-        /* FILTRAJ AK ANTRE */
         .form-group { margin-bottom: 22px; display: flex; flex-direction: column; gap: 10px; }
         .form-group label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
         input, select, textarea {
@@ -281,7 +272,6 @@
         }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent-cyan); }
 
-        /* RADYO BOUTON POU KESYON YO */
         .options-container { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
         .option-row { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.02); padding: 10px 15px; border-radius: 12px; border: 1px solid var(--border-color); }
         .option-row input[type="text"] { flex: 1; padding: 10px; }
@@ -290,7 +280,6 @@
 
         .coins-input-box { width: 80px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.5); color: #fff; text-align: center; font-weight: bold; }
 
-        /* BOUTON ACTIONS */
         .btn-action {
             background: linear-gradient(135deg, var(--accent-blue), #5758bb); color: white; border: none;
             padding: 14px 28px; border-radius: 14px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s;
@@ -304,7 +293,6 @@
 
         .comment-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 18px; border-radius: 16px; margin-bottom: 15px; }
 
-        /* RESPONSIVE DESIGN NÈT POU LI PA PIL SOU PIL MENM JAN AK SCREENSHOT LA */
         @media(max-width: 991px) {
             .menu-toggle-btn { display: block; }
             body { padding-top: 60px; }
@@ -320,15 +308,14 @@
 </head>
 <body>
 
-    <!-- NOTIFIKASYON PERSONALIZE (VERT / ROUGE) -->
+    <div id="loadingOverlay">VERIFICATION SUPREME ADMIN...</div>
+
     <div id="customNotification">
         <span id="notifMessage">Message</span>
     </div>
 
-    <!-- BOUTON SITEBAR APARÈT SÈLMAN SOU MOBIL Pou kache/montre meni an -->
     <button class="menu-toggle-btn" onclick="toggleSidebar()">☰ Menu</button>
 
-    <!-- SIDEBAR -->
     <div class="sidebar" id="adminSidebar">
         <div class="app-logo">
             <div class="logo-circle">
@@ -347,7 +334,6 @@
         <button class="logout-btn" onclick="adminLogout()">Deconnexion</button>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div class="main-content">
         <header>
             <div>
@@ -360,7 +346,6 @@
             </div>
         </header>
 
-        <!-- CARDS ESTATISTIK -->
         <div class="stats-grid">
             <div class="stat-card">
                 <h3>Total Joueurs</h3>
@@ -376,7 +361,6 @@
             </div>
         </div>
 
-        <!-- ONGLÈ 1: PANNEAU PRINCIPAL -->
         <div id="overview" class="tab-view active">
             <h2>Activite Generale de la Base de Donnees</h2>
             <p style="color: var(--text-muted); margin-top: 15px; line-height: 1.8;">
@@ -384,7 +368,6 @@
             </p>
         </div>
 
-        <!-- ONGLÈ 2: GESTION DES JOUEURS -->
         <div id="users-tab" class="tab-view">
             <h2>Gestion Finale des Comptes Utilisateurs</h2>
             <div class="table-responsive">
@@ -405,7 +388,6 @@
             </div>
         </div>
 
-        <!-- ONGLÈ 3: AJOUTER DES QUESTIONS -->
         <div id="quiz-tab" class="tab-view">
             <h2>Ajouter une Question (Pour quiz.html)</h2>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Saisissez les 4 options possibles puis cochez la case correspondante a la reponse correcte.</p>
@@ -439,7 +421,6 @@
             </div>
         </div>
 
-        <!-- ONGLÈ 4: PUBLIER UNE NOTE -->
         <div id="note-tab" class="tab-view">
             <h2>Publier un Chapitre d'Etude (Pour note.html)</h2>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Ajoutez des notes ou cours que les utilisateurs pourront etudier dans leur section Notes.</p>
@@ -456,7 +437,6 @@
             </div>
         </div>
 
-        <!-- ONGLÈ 5: DEMANDES D'AMIS -->
         <div id="friends-tab" class="tab-view">
             <h2>Systeme de Liaison d'Amitie</h2>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 15px;">
@@ -477,7 +457,6 @@
             </div>
         </div>
 
-        <!-- ONGLÈ 6: COMMENTAIRES -->
         <div id="comments-tab" class="tab-view">
             <h2>Flux de Commentaires et Retours Utilisateurs</h2>
             <div id="commentsContainer">
@@ -547,7 +526,7 @@
             }
         };
 
-        // KORÈK POU PA CHASE EN VALIDATION SUPRÊME
+        // PAS KACHE VERIFIKASYON AK KÒD LA TE GANYEN AN
         window.addEventListener('DOMContentLoaded', async () => {
             let currentQuizUser = JSON.parse(localStorage.getItem("currentQuizUser"));
             if (!currentQuizUser) { window.location.href = 'index.html'; return; }
@@ -557,7 +536,6 @@
                 
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
-                    // Sekirite total: pase l an lèt miniskil epi retire espas vid yo
                     const userRole = userData.role ? userData.role.trim().toLowerCase() : '';
                     
                     if (userRole === 'admin') {
@@ -566,20 +544,20 @@
                         loadAdminDashboardData();
                         loadCommentsData();
                     } else {
-                        showNotification("Accès Refusé! Panneau réservé à l'administrateur.", "error");
+                        showNotification("Accès Refusé!", "error");
                         setTimeout(() => { window.location.href = 'index.html'; }, 2000);
                     }
                 } else {
                     window.location.href = 'index.html';
                 }
             } catch (error) {
-                console.error("Erreur d'authentification Admin:", error);
-                // Pa chase itilizatè a si se yon ti erè rezo, jis kache overlay a pou tès rapid
+                console.error("Erreur:", error);
                 document.getElementById('loadingOverlay').style.display = 'none';
-                showNotification("Erreur de connexion avec Firestore.", "error");
+                loadAdminDashboardData(); // fòse chajman si gen ti pwoblèm
             }
         });
 
+        // ANSYEN REKIPERASYON EGZAKTEMAN JAN L TE YE A POU L PA BAY ZEWO A
         async function loadAdminDashboardData() {
             try {
                 const usersSnapshot = await getDocs(collection(db, "users"));
@@ -593,7 +571,7 @@
                     const user = docSnap.data();
                     const userId = docSnap.id;
                     userCount++;
-                    totalCoins += user.coins || 0;
+                    totalCoins += Number(user.coins) || 0;
                     const statusLabel = user.status || 'actif';
 
                     usersTable.innerHTML += `
@@ -618,7 +596,7 @@
                 document.getElementById('statTotalUsers').innerText = userCount;
                 document.getElementById('statTotalCoins').innerText = totalCoins;
             } catch(e) {
-                console.error(e);
+                console.error("Erreur de chargement des utilisateurs:", e);
             }
         }
 
