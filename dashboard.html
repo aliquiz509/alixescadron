@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aliquiz-dashboard</title>
-    <link rel="icon" type="image/png" href="https://files.catbox.moe/dbcm8s.png">
+    <link class="ui-favicon" rel="icon" type="image/png" href="https://files.catbox.moe/dbcm8s.png">
     <style>
         :root {
             --bg-dark: #0a0e1a;
@@ -196,13 +196,14 @@
             font-weight: bold;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
-        .coins-display svg {
-            width: 16px;
-            height: 16px;
-            fill: var(--accent-gold);
+        /* Lyen nouvo imaj AliCoins ou a entegre isit la */
+        .coins-display img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
         }
 
         /* --- DYNAMIC TABS VIEW --- */
@@ -268,10 +269,10 @@
         /* --- NOTIFICATION BLOCKS --- */
         .alert-msg {
             width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            margin-top: 15px;
-            font-size: 14px;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 13px;
             font-weight: 500;
             text-align: center;
             display: none;
@@ -290,6 +291,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
         }
         .theme-preview {
             height: 60px;
@@ -408,9 +410,8 @@
                     <span style="font-weight: bold; letter-spacing: 1px;">ALIQUIZ</span>
                 </div>
             </div>
-            <!-- Korije isit la: Pyès monnen an tounen yon bèl ti SVG ki p'ap janm boke -->
             <div class="coins-display">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+                <img src="https://files.catbox.moe/ontla9.png" alt="Coins" id="aliCoinsImgIcon">
                 <span id="aliCoinsCount">150</span> AC
             </div>
         </header>
@@ -454,7 +455,6 @@
                     </div>
                     <h2 id="profFullName">...</h2>
                     <p id="profUsername" style="color: var(--accent-cyan);">@...</p>
-                    <!-- Sèl kote ki rete drapo paske sa nesesè -->
                     <p id="profCountry" style="font-size: 24px; margin-top: 10px;">🌐</p>
                 </div>
                 <div class="ui-card">
@@ -490,7 +490,6 @@
                     <button class="shop-nav-btn" onclick="switchShopSection('avatars-shop', this)">Avatars Privilèges</button>
                 </div>
 
-                <!-- SECTION THEMES -->
                 <div id="themes-shop" class="shop-section active">
                     <div class="card-grid">
                         <div class="theme-card">
@@ -508,14 +507,10 @@
                     </div>
                 </div>
 
-                <!-- SECTION AVATARS (50 AVATARS SVG DINAMIK) -->
                 <div id="avatars-shop" class="shop-section">
                     <div class="card-grid" id="avatarsGridContainer">
-                        <!-- N'ap jenere 50 avatar yo otomatikman ak JavaScript isit la -->
-                    </div>
+                        </div>
                 </div>
-
-                <div id="shopAlert" class="alert-msg"></div>
             </div>
         </section>
 
@@ -539,7 +534,6 @@
                     <div id="settingsAlert" class="alert-msg"></div>
                 </form>
 
-                <!-- DEUX BOUTON YO DEPLASE NAN PARAMÈTRES KOUNYEA JAN OU MANDE L LA -->
                 <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 12px;">
                     <h4 style="color: var(--text-muted); font-size: 14px;">Actions sur le compte</h4>
                     <button class="btn-action btn-danger" style="width: 100%;" onclick="logout()">Déconnexion du compte</button>
@@ -576,12 +570,10 @@
         let totalGames = 0;
         let totalPerfectScores = 0;
         let purchasedThemes = ['default'];
-        let purchasedAvatars = ['avatar_1', 'avatar_2', 'avatar_3', 'avatar_4', 'avatar_5']; // 5 premye gratis
+        let purchasedAvatars = ['avatar_1', 'avatar_2', 'avatar_3', 'avatar_4', 'avatar_5'];
 
-        // JENERATÈ AVATAR SVG DINAMIK
         function generateAvatarSVG(id) {
             if (id === 50) {
-                // Dènye Avatar a (ID 50) - Avatar Divin an lò ultra VIP
                 return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -597,12 +589,9 @@
                     <polygon points="50,15 55,28 68,28 58,36 62,48 50,40 38,48 42,36 32,28 45,28" fill="#fff"/>
                 </svg>`;
             }
-            
-            // Lòt 49 avatar yo gen diferan background ak koulè jometrik depann sou ID a
             const hue = (id * 37) % 360;
             const bgHue = (id * 125) % 360;
             const colors = [`hsl(${hue}, 70%, 60%)`, `hsl(${(hue+120)%360}, 65%, 50%)`];
-            
             return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <rect width="100" height="100" fill="hsl(${bgHue}, 40%, 15%)"/>
                 <circle cx="50" cy="50" r="35" fill="${colors[0]}" opacity="0.3"/>
@@ -612,8 +601,9 @@
             </svg>`;
         }
 
-        function showNotification(targetId, message, type = 'error') {
-            const alertBox = document.getElementById(targetId);
+        // KORÈKSYON ALÈT: Mesaj avètisman an ap afiche egzakteman anba fòm avatar ki klike a
+        function showCardNotification(avatarId, message, type = 'error') {
+            const alertBox = document.getElementById(`avatarAlert_${avatarId}`);
             if (!alertBox) return;
             alertBox.textContent = message;
             alertBox.className = `alert-msg ${type}`;
@@ -630,7 +620,6 @@
         function renderProfilePicture(containerId, imgId, path) {
             const container = document.getElementById(containerId);
             if(!container) return;
-            
             if(path && path.startsWith('CUSTOM_SVG_')) {
                 const avatarId = parseInt(path.replace('CUSTOM_SVG_', ''));
                 container.innerHTML = generateAvatarSVG(avatarId);
@@ -687,7 +676,6 @@
             }
         }
 
-        // KONSTRUIRE BOUTIK AVATAR YO (50 AVATARS)
         function buildAvatarsShopUI() {
             const grid = document.getElementById('avatarsGridContainer');
             if (!grid) return;
@@ -724,6 +712,7 @@
                     <h4 style="${i === 50 ? 'color:var(--accent-gold); font-weight:bold;' : ''}">${title}</h4>
                     <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 12px;">Statut: ${priceText}</p>
                     <button class="btn-action" style="width: 100%; ${buttonStyle}" id="btnAvatar_${i}">${buttonText}</button>
+                    <div id="avatarAlert_${i}" class="alert-msg"></div>
                 `;
                 
                 grid.appendChild(card);
@@ -743,13 +732,13 @@
                 currentQuizUser.profilePic = customValue;
                 localStorage.setItem("currentQuizUser", JSON.stringify(currentQuizUser));
                 loadUserSessionUI();
-                showNotification('shopAlert', "Avatar sélectionné et mis à jour ! 👤", 'success');
+                showCardNotification(id, "Avatar sélectionné ! 👤", 'success');
                 await updateDoc(doc(db, "users", currentQuizUser.uid), { profilePic: customValue });
                 return;
             }
 
             if (aliCoins < price) {
-                showNotification('shopAlert', "🪙 Vous n'avez pas assez d'AliCoins pour cet avatar !", 'error');
+                showCardNotification(id, "Vous n'avez pas assez d'AliCoins pour cet avatar !", 'error');
                 return;
             }
 
@@ -761,7 +750,7 @@
             currentQuizUser.profilePic = customValue;
             localStorage.setItem("currentQuizUser", JSON.stringify(currentQuizUser));
             loadUserSessionUI();
-            showNotification('shopAlert', "Avatar acheté et appliqué avec succès ! 🎉", 'success');
+            showCardNotification(id, "Avatar acheté et appliqué ! 🎉", 'success');
 
             await updateDoc(doc(db, "users", currentQuizUser.uid), { 
                 coins: aliCoins, 
@@ -792,16 +781,14 @@
             if(window.innerWidth <= 768) toggleSidebar();
         }
 
-        // --- THEME SHOP LOGIC ---
         window.buyOrApplyTheme = async function(themeId, price) {
             hideAllNotifications();
             if(purchasedThemes.includes(themeId)) {
                 applyTheme(themeId);
-                showNotification('shopAlert', "Thème appliqué !", 'success');
                 return;
             }
             if(aliCoins < price) {
-                showNotification('shopAlert', "Pas assez d'AliCoins! 🪙", 'error');
+                alert("Pas assez d'AliCoins! 🪙");
                 return;
             }
             aliCoins -= price;
@@ -809,7 +796,6 @@
             updateDashboardStats();
             checkThemeButtons();
             applyTheme(themeId);
-            showNotification('shopAlert', "Thème débloqué ! 🎉", 'success');
 
             await updateDoc(doc(db, "users", currentQuizUser.uid), { coins: aliCoins, purchasedThemes: purchasedThemes });
         }
@@ -822,7 +808,17 @@
             }
         }
 
-        // --- UPDATE PROFILE FORM ---
+        function showNotification(targetId, message, type = 'error') {
+            const alertBox = document.getElementById(targetId);
+            if (!alertBox) return;
+            alertBox.textContent = message;
+            alertBox.className = `alert-msg ${type}`;
+            alertBox.style.display = 'block';
+            if (type === 'success') {
+                setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
+            }
+        }
+
         document.getElementById('updateProfileForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             hideAllNotifications();
@@ -851,14 +847,9 @@
         window.deleteUserAccount = async function() {
             hideAllNotifications();
             const confirmation = confirm("Êtes-vous sûr de vouloir supprimer définitivement votre compte? Cette action est irréversible.");
-            
             if (confirmation) {
                 const user = auth.currentUser;
-                if (!user) {
-                    showNotification('accountActionAlert', "Erreur: jwè a pa konekte.", 'error');
-                    return;
-                }
-
+                if (!user) return;
                 try {
                     await deleteDoc(doc(db, "users", currentQuizUser.uid));
                     await deleteUser(user);
