@@ -347,7 +347,6 @@
             color: var(--accent-cyan) !important;
         }
 
-        /* STIL POU TI BWAT NOTIFIKASYON YO */
         .alert-msg {
             width: 100%;
             padding: 12px;
@@ -395,7 +394,7 @@
             <button class="btn-google context-google-btn" type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="width:20px; height:20px;">
                     <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-                    <path fill="#4285F4" d="M46.5 24c0-1.61-.15-3.16-.42-4.69H24v8.89h12.61c-.54 2.9-2.18 5.37-4.63 7l7.18 5.57C43.37 36.01 46.5 30.64 46.5 24z"/>
+                    <path fill="#4285F4" d="M46.5 24c0-1.61-.15-3.16-.42-4.69H24v8.89h12.61c-.54 2.9 2.18 5.37-4.63 7l7.18 5.57C43.37 36.01 46.5 30.64 46.5 24z"/>
                     <path fill="#FBBC05" d="M10.54 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.98-6.19z"/>
                     <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.18-5.57c-1.99 1.33-4.55 2.13-8.71 2.13-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
                 </svg>
@@ -636,7 +635,6 @@
             flagPreview.querySelector('span').textContent = selectedOption.textContent;
         });
 
-        // FUNKSYON POU REINITIALISE MOT DE PASSE VIA FIREBASE
         document.getElementById('forgotPasswordBtn').addEventListener('click', async function() {
             soundEffect('click');
             hideAllNotifications();
@@ -672,7 +670,7 @@
             }
         });
 
-        // 1. INSCRIPTION TRADITIONNELLE (AVECK TCHÈK PREALABLE)
+        // 1. INSCRIPTION TRADITIONNELLE
         document.getElementById('registrationForm').addEventListener('submit', async function(e){
             e.preventDefault();
             soundEffect('click');
@@ -746,7 +744,7 @@
             }
         });
 
-        // VERIFICATION OTP AK REDIRECTION SOU DASHBOARD
+        // VERIFICATION OTP
         window.verifyOTP = async function() {
             soundEffect('click');
             hideAllNotifications();
@@ -769,6 +767,9 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
                 const user = userCredential.user;
 
+                // KORÈKSYON: Si se email pa w la, li tou ba l role admin depi nan enskripsyon
+                const isSuperAdmin = userData.email.toLowerCase() === "aliquiz509@gmail.com";
+
                 const profileData = {
                     nom: userData.playerName,
                     prenom: userData.firstName,
@@ -776,7 +777,7 @@
                     email: userData.email,
                     country: userData.country,
                     uid: user.uid,
-                    role: "player",
+                    role: isSuperAdmin ? "admin" : "player",
                     createdAt: new Date()
                 };
 
@@ -784,7 +785,12 @@
                 soundEffect('success');
                 
                 localStorage.setItem("currentQuizUser", JSON.stringify(profileData));
-                window.location.href = 'dashboard.html';
+                
+                if (profileData.role === "admin") {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
             } catch(error) {
                 soundEffect('error');
                 otpBtn.disabled = false;
@@ -837,7 +843,7 @@
             }
         };
 
-        // 2. KONEKSYON TRADITIONNELLE (AVEC REDIRECTION SPECIAL ADMIN)
+        // 2. KONEKSYON TRADITIONNELLE (AVEC REDIRECTION SPECIAL ADMIN KORÈK)
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             soundEffect('click');
@@ -857,49 +863,45 @@
             loginSubmitBtn.disabled = true;
             loginSubmitBtn.textContent = "Connexion en cours... ⏳";
 
-            if (email === "aliquiz509@gmail.com" && password === "alixescadron") {
-                const adminSession = {
-                    prenom: "Alix",
-                    nom: "Admin",
-                    username: "aliquiz509",
-                    email: "aliquiz509@gmail.com",
-                    country: "ht",
-                    role: "admin"
-                };
-                soundEffect('success');
-                localStorage.setItem("currentQuizUser", JSON.stringify(adminSession));
-                
-                try {
-                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                    await setDoc(doc(db, "users", userCredential.user.uid), { ...adminSession, uid: userCredential.user.uid }, { merge: true });
-                } catch(ae) {
-                }
-                window.location.href = 'admin.html';
-                return;
-            }
-
             try {
+                // Nou fè koneksyon an anvan pou nou ka gen UID a kòrèkteman
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
+
+                // Tcheke si se email admin pa w la nèt
+                const isSuperAdmin = email.toLowerCase() === "aliquiz509@gmail.com" && password === "alixescadron";
 
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 let sessionData;
                 
-                if(userDoc.exists()) {
+                if (userDoc.exists()) {
                     sessionData = userDoc.data();
+                    // Si se kont admin nan, nou asire nou wòl nan rete admin nan sesyon an
+                    if (isSuperAdmin) sessionData.role = "admin";
                 } else {
-                    sessionData = { prenom: "Joueur", nom: "", username: user.email.split('@')[0], country: "fr", role: "player" };
+                    sessionData = { 
+                        prenom: isSuperAdmin ? "Alix" : "Joueur", 
+                        nom: isSuperAdmin ? "Admin" : "", 
+                        username: isSuperAdmin ? "aliquiz509" : user.email.split('@')[0], 
+                        country: "ht", 
+                        role: isSuperAdmin ? "admin" : "player",
+                        uid: user.uid
+                    };
+                    // Si dokiman an pa t egziste, nou kreye l rapid
+                    await setDoc(doc(db, "users", user.uid), sessionData);
                 }
                 
                 soundEffect('success');
                 localStorage.setItem("currentQuizUser", JSON.stringify(sessionData));
 
-                if (sessionData.role === "admin" || user.email === "aliquiz509@gmail.com") {
+                // REDIREKSYON DAPRÈ WÒL LA
+                if (sessionData.role === "admin" || sessionData.email === "aliquiz509@gmail.com") {
                     window.location.href = 'admin.html';
                 } else {
                     window.location.href = 'dashboard.html';
                 }
             } catch(error) {
+                console.error(error);
                 soundEffect('error');
                 showNotification('loginAlert', "Email ou mot de passe incorrect !", 'error');
             } finally {
@@ -920,20 +922,26 @@
                     const userDoc = await getDoc(doc(db, "users", user.uid));
                     let finalData;
 
+                    const isSuperAdmin = user.email.toLowerCase() === "aliquiz509@gmail.com";
+
                     if(!userDoc.exists()) {
                         finalData = {
                             nom: user.displayName ? user.displayName.split(' ')[1] || "" : "",
                             prenom: user.displayName ? user.displayName.split(' ')[0] || "Joueur" : "Joueur",
                             username: user.email.split('@')[0] + Math.floor(Math.random() * 100),
                             email: user.email,
-                            country: "fr",
+                            country: "ht",
                             uid: user.uid,
-                            role: user.email === "aliquiz509@gmail.com" ? "admin" : "player",
+                            role: isSuperAdmin ? "admin" : "player",
                             createdAt: new Date()
                         };
                         await setDoc(doc(db, "users", user.uid), finalData);
                     } else {
                         finalData = userDoc.data();
+                        if (isSuperAdmin && finalData.role !== "admin") {
+                            finalData.role = "admin";
+                            await setDoc(doc(db, "users", user.uid), { role: "admin" }, { merge: true });
+                        }
                     }
 
                     soundEffect('success');
@@ -948,7 +956,7 @@
                     console.error(error);
                     soundEffect('error');
                     const activeScreen = document.getElementById('registerScreen').classList.contains('active') ? 'registerAlert' : 'loginAlert';
-                    showNotification(activeScreen, "L'authentification Google a échoué ou le reCAPTCHA a expiré.", 'error');
+                    showNotification(activeScreen, "L'authentification Google a échoué ou le reCAPTCHA a exprire.", 'error');
                 }
             });
         });
