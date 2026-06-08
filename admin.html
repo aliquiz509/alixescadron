@@ -7,7 +7,7 @@
     <style>
         :root {
             --bg-dark: #0a0e1a;
-            --panel-bg: rgba(16, 24, 48, 0.85);
+            --panel-bg: rgba(16, 24, 48, 0.95);
             --accent-gold: #ffeaa7;
             --accent-cyan: #00d2ff;
             --accent-admin: #ff4757;
@@ -37,6 +37,7 @@
             min-height: 100vh;
             display: flex;
             color: var(--text-light);
+            overflow-x: hidden;
         }
 
         #loadingOverlay {
@@ -54,7 +55,46 @@
             letter-spacing: 2px;
         }
 
-        /* SIDEBAR PREMIUM AK BOUTON SOU DASHBOARD LA */
+        /* NOTIFIKASYON PREMIUM STYLE INDEX.HTML */
+        #customNotification {
+            position: fixed;
+            top: 20px;
+            right: -350px;
+            width: 320px;
+            padding: 16px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 10000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #customNotification.show { right: 20px; }
+        .notif-success { background: rgba(46, 213, 115, 0.95); border: 2px solid var(--success); box-shadow: 0 0 20px rgba(46, 213, 115, 0.4); }
+        .notif-error { background: rgba(255, 71, 87, 0.95); border: 2px solid var(--error); box-shadow: 0 0 20px rgba(255, 71, 87, 0.4); }
+
+        /* BOUTON MENÙ SIDEBAR POU MOBIL */
+        .menu-toggle-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            color: var(--accent-cyan);
+            padding: 12px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        /* SIDEBAR DESIGN PREMIUM */
         .sidebar {
             width: 300px;
             background: var(--panel-bg);
@@ -63,8 +103,9 @@
             display: flex;
             flex-direction: column;
             padding: 30px 20px;
-            z-index: 10;
+            z-index: 99;
             box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
         }
 
         .app-logo {
@@ -83,11 +124,6 @@
             align-items: center;
             margin: 0 auto 15px;
             box-shadow: 0 0 20px var(--accent-admin);
-            transition: transform 0.3s;
-        }
-
-        .sidebar:hover .logo-circle {
-            transform: scale(1.05);
         }
 
         .real-logo {
@@ -102,7 +138,6 @@
             text-align: center;
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(255, 234, 167, 0.3);
         }
 
         .menu-items {
@@ -142,7 +177,6 @@
             color: var(--accent-admin);
             border-color: rgba(255, 71, 87, 0.4);
             box-shadow: 0 0 20px var(--glow-admin);
-            transform: translateX(5px);
         }
 
         .logout-btn {
@@ -158,12 +192,12 @@
             letter-spacing: 1px;
             font-size: 0.85rem;
             transition: all 0.3s;
+            text-align: center;
         }
 
         .logout-btn:hover {
             background: var(--accent-admin);
             color: white;
-            box-shadow: 0 0 20px var(--glow-admin);
         }
 
         /* MAIN CONTENT AREA */
@@ -172,6 +206,7 @@
             padding: 40px;
             overflow-y: auto;
             z-index: 1;
+            width: 100%;
         }
 
         header {
@@ -186,10 +221,9 @@
         header h1 {
             color: var(--accent-gold);
             font-size: 2.2rem;
-            text-shadow: 0 0 15px rgba(255, 234, 167, 0.2);
         }
 
-        /* CARDS ESTATISTIK DESIGN LUXE */
+        /* CARDS ESTATISTIK */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -204,30 +238,13 @@
             padding: 25px;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             border-top: 3px solid var(--accent-cyan);
         }
 
-        .stat-card:nth-child(3) {
-            border-top: 3px solid var(--accent-admin);
-        }
+        .stat-card h3 { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; }
+        .stat-card p { font-size: 2.3rem; font-weight: 800; color: var(--text-light); }
 
-        .stat-card h3 {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
-        .stat-card p {
-            font-size: 2.3rem;
-            font-weight: 800;
-            color: var(--text-light);
-            text-shadow: 0 0 10px rgba(255,255,255,0.1);
-        }
-
-        /* TAB BLÒK VIEW */
+        /* ONGLÈ NET YO (DISPLAY: NONE PAR DÉFAUT POU YO PA PIL SOU PIL) */
         .tab-view {
             display: none;
             background: var(--panel-bg);
@@ -236,19 +253,14 @@
             padding: 35px;
             border-radius: 24px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-            animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
+        /* SÈL ONGLÈ KI ACTIVE LA KAP PARÈT */
         .tab-view.active {
-            display: block;
+            display: block !important;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* TABLO DESIGN FUTURISTE */
+        /* TABLO ETA */
         .table-responsive {
             overflow-x: auto;
             margin-top: 25px;
@@ -256,172 +268,68 @@
             border: 1px solid var(--border-color);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            background: rgba(10, 14, 26, 0.4);
-        }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 16px; border-bottom: 1px solid var(--border-color); }
+        th { color: var(--accent-gold); text-transform: uppercase; font-size: 0.8rem; background: rgba(255,255,255,0.03); }
 
-        th, td {
-            padding: 16px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th { 
-            color: var(--accent-gold); 
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            background: rgba(255,255,255,0.03);
-        }
-
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: rgba(255,255,255,0.02); }
-
-        /* DETAY ENTRÉ DESIGN */
-        .form-group {
-            margin-bottom: 22px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .form-group label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
+        /* FILTRAJ AK ANTRE */
+        .form-group { margin-bottom: 22px; display: flex; flex-direction: column; gap: 10px; }
+        .form-group label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
         input, select, textarea {
-            background: rgba(10, 14, 26, 0.7);
-            border: 1px solid var(--border-color);
-            padding: 14px;
-            border-radius: 12px;
-            color: white;
-            font-size: 15px;
-            transition: all 0.3s;
+            background: rgba(10, 14, 26, 0.7); border: 1px solid var(--border-color);
+            padding: 14px; border-radius: 12px; color: white; font-size: 15px;
         }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent-cyan); }
 
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.25);
-        }
+        /* RADYO BOUTON POU KESYON YO */
+        .options-container { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+        .option-row { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.02); padding: 10px 15px; border-radius: 12px; border: 1px solid var(--border-color); }
+        .option-row input[type="text"] { flex: 1; padding: 10px; }
+        .radio-box { display: flex; align-items: center; gap: 8px; font-weight: bold; color: var(--accent-gold); cursor: pointer; }
+        .radio-box input[type="radio"] { width: 18px; height: 18px; accent-color: var(--accent-cyan); }
 
-        /* LABELS AK RADYO BOUTON POU KESYON */
-        .options-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 10px;
-        }
+        .coins-input-box { width: 80px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.5); color: #fff; text-align: center; font-weight: bold; }
 
-        .option-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: rgba(255,255,255,0.02);
-            padding: 10px 15px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-        }
-
-        .option-row input[type="text"] {
-            flex: 1;
-            padding: 10px;
-        }
-
-        .radio-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: bold;
-            color: var(--accent-gold);
-            cursor: pointer;
-        }
-
-        .radio-box input[type="radio"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--accent-cyan);
-            cursor: pointer;
-        }
-
-        /* TI BWAT INPUT COINS NAN TABLO A */
-        .coins-input-box {
-            width: 80px;
-            padding: 6px 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: rgba(0,0,0,0.5);
-            color: #fff;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        /* BOUTON AK MODÈL KÒRÈK YO */
+        /* BOUTON ACTIONS */
         .btn-action {
-            background: linear-gradient(135deg, var(--accent-blue), #5758bb);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, var(--accent-blue), #5758bb); color: white; border: none;
+            padding: 14px 28px; border-radius: 14px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: all 0.3s;
         }
+        .btn-action:hover { transform: translateY(-2px); }
 
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 105, 189, 0.4);
-            background: linear-gradient(135deg, #5758bb, var(--accent-blue));
-        }
-
-        .btn-table {
-            padding: 8px 14px;
-            font-size: 12px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
-            transition: all 0.2s;
-        }
-
+        .btn-table { padding: 8px 14px; font-size: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; }
         .btn-validate { background: var(--accent-cyan); color: #0a0e1a; }
         .btn-suspend { background: #ffb142; color: #0a0e1a; margin-left: 5px; }
         .btn-delete { background: var(--accent-admin); color: white; margin-left: 5px; }
 
-        .btn-table:hover { transform: scale(1.05); opacity: 0.9; }
+        .comment-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 18px; border-radius: 16px; margin-bottom: 15px; }
 
-        .comment-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border-color);
-            padding: 18px;
-            border-radius: 16px;
-            margin-bottom: 15px;
-        }
-
-        @media(max-width: 900px) {
-            body { flex-direction: column; }
-            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-color); }
+        /* RESPONSIVE DESIGN NÈT POU LI PA PIL SOU PIL MENM JAN AK SCREENSHOT LA */
+        @media(max-width: 991px) {
+            .menu-toggle-btn { display: block; }
+            body { padding-top: 60px; }
+            .sidebar {
+                position: fixed; top: 0; left: 0; height: 100vh; width: 280px;
+                transform: translateX(-100%); z-index: 2000;
+            }
+            .sidebar.open { transform: translateX(0); }
+            header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .main-content { padding: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <div id="loadingOverlay">Verification de Securite...</div>
+    <!-- NOTIFIKASYON PERSONALIZE (VERT / ROUGE) VREMAN KLAS -->
+    <div id="customNotification">
+        <span id="notifMessage">Message</span>
+    </div>
 
-    <!-- SIDEBAR KI REFÈ MENM JAN AK DASHBOARD -->
-    <div class="sidebar">
+    <!-- BOUTON SITEBAR APARÈT SÈLMAN SOU MOBIL POU KACHE/MONTRE MENI AN -->
+    <button class="menu-toggle-btn" onclick="toggleSidebar()">☰ Menu</button>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="adminSidebar">
         <div class="app-logo">
             <div class="logo-circle">
                 <img src="https://files.catbox.moe/dbcm8s.png" alt="Logo" class="real-logo">
@@ -468,7 +376,7 @@
             </div>
         </div>
 
-        <!-- TAB OVERVIEW -->
+        <!-- ONGLÈ 1: PANNEAU PRINCIPAL -->
         <div id="overview" class="tab-view active">
             <h2>Activite Generale de la Base de Donnees</h2>
             <p style="color: var(--text-muted); margin-top: 15px; line-height: 1.8;">
@@ -476,10 +384,9 @@
             </p>
         </div>
 
-        <!-- TAB GESTION DES JOUEURS (EKRI COINS + BLOCK + DELETE) -->
+        <!-- ONGLÈ 2: GESTION DES JOUEURS -->
         <div id="users-tab" class="tab-view">
             <h2>Gestion Finale des Comptes Utilisateurs</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem;">Saisissez directement la valeur souhaitee pour modifier le solde d'un joueur.</p>
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -498,9 +405,9 @@
             </div>
         </div>
 
-        <!-- TAB AJOUTER DES QUESTIONS (KAZ POU KOCHE REPOU) -->
+        <!-- ONGLÈ 3: AJOUTER DES QUESTIONS -->
         <div id="quiz-tab" class="tab-view">
-            <h2>Ajouter une Question avec Choix Unique</h2>
+            <h2>Ajouter une Question (Pour quiz.html)</h2>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Saisissez les 4 options possibles puis cochez la case correspondante a la reponse correcte.</p>
             <div style="max-width: 650px;">
                 <div class="form-group">
@@ -532,24 +439,24 @@
             </div>
         </div>
 
-        <!-- TAB PUBLIER UNE NOTE (NOUVO MENM JAN W TE MANDE L LA) -->
+        <!-- ONGLÈ 4: PUBLIER UNE NOTE -->
         <div id="note-tab" class="tab-view">
-            <h2>Publier une Note Finale d'Information</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Ce message sera diffuse instantanement sur les ecrans de tous les utilisateurs connectes.</p>
+            <h2>Publier un Chapitre d'Etude (Pour note.html)</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Ajoutez des notes ou cours que les utilisateurs pourront etudier dans leur section Notes.</p>
             <div style="max-width: 600px;">
                 <div class="form-group">
-                    <label>Titre de la Note</label>
-                    <input type="text" id="noteTitle" placeholder="Ex: Maintenance ou Mise a jour importante">
+                    <label>Titre de la Note / Chapitre</label>
+                    <input type="text" id="noteTitle" placeholder="Ex: Chapitre 1: Introduction a la Biologie">
                 </div>
                 <div class="form-group">
-                    <label>Contenu du Message</label>
-                    <textarea id="noteContent" rows="6" placeholder="Saisissez les details de l'annonce ici..."></textarea>
+                    <label>Contenu ou Corps du Cours</label>
+                    <textarea id="noteContent" rows="8" placeholder="Saisissez le texte integral du cours ou de la note ici..."></textarea>
                 </div>
                 <button class="btn-action" style="background: linear-gradient(135deg, #2ed573, #26af5f);" onclick="publishAdminNote()">Diffuser la Note</button>
             </div>
         </div>
 
-        <!-- TAB DEMANDES D'AMIS -->
+        <!-- ONGLÈ 5: DEMANDES D'AMIS -->
         <div id="friends-tab" class="tab-view">
             <h2>Systeme de Liaison d'Amitie</h2>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 15px;">
@@ -570,10 +477,9 @@
             </div>
         </div>
 
-        <!-- TAB COMMENTAIRES -->
+        <!-- ONGLÈ 6: COMMENTAIRES -->
         <div id="comments-tab" class="tab-view">
             <h2>Flux de Commentaires et Retours Utilisateurs</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Historique des impressions envoyees depuis les comptes joueurs.</p>
             <div id="commentsContainer">
                 <p style="color: var(--text-muted);">Aucun feedback disponible dans la base centrale.</p>
             </div>
@@ -597,20 +503,54 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const soundEffect = (type) => {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.connect(gain); gain.connect(ctx.destination);
-            if(type === 'success') {
-                osc.frequency.setValueAtTime(523.25, ctx.currentTime); osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.3, ctx.currentTime); osc.start(); osc.stop(ctx.currentTime + 0.25);
-            } else if(type === 'error') {
-                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, ctx.currentTime);
-                gain.gain.setValueAtTime(0.2, ctx.currentTime); osc.start(); osc.stop(ctx.currentTime + 0.2);
-            } else if(type === 'click') {
-                osc.frequency.setValueAtTime(400, ctx.currentTime); gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                osc.start(); osc.stop(ctx.currentTime + 0.05);
+        // FUNKSYON POU SOULEVE NOTIFIKASYON VERT OUBYEN ROUGE (MENM JAN AK INDEX.HTML)
+        function showNotification(message, type = 'success') {
+            const notif = document.getElementById('customNotification');
+            const notifMsg = document.getElementById('notifMessage');
+            
+            notif.className = ''; // reset clase
+            if (type === 'success') {
+                notif.classList.add('notif-success');
+            } else {
+                notif.classList.add('notif-error');
+            }
+            
+            notifMsg.innerText = message;
+            notif.classList.add('show');
+
+            setTimeout(() => {
+                notif.classList.remove('show');
+            }, 4000);
+        }
+
+        // KONTWÒL SIDEBAR SOU MOBIL
+        window.toggleSidebar = function() {
+            const sidebar = document.getElementById('adminSidebar');
+            sidebar.classList.toggle('open');
+        };
+
+        // CHANJMAN ONGLET NET (YON SÈL PARÈT APRE LÒT)
+        window.switchTab = function(tabId, element) {
+            // Kache tout onglè yo nèt
+            const allTabs = document.querySelectorAll('.tab-view');
+            allTabs.forEach(tab => {
+                tab.classList.remove('active');
+                tab.style.display = 'none';
+            });
+
+            // Montre sèlman sa nou klike sou li a
+            const activeTab = document.getElementById(tabId);
+            activeTab.classList.add('active');
+            activeTab.style.display = 'block';
+
+            // Jere klas bouton meni an
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+
+            // Si nou sou mobil, kache sidebar la lè nou fin klike
+            const sidebar = document.getElementById('adminSidebar');
+            if(sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
             }
         };
 
@@ -626,17 +566,14 @@
                     loadAdminDashboardData();
                     loadCommentsData();
                 } else {
-                    soundEffect('error');
-                    alert("Acces Refuse! Panneau reserve a l'administration supreme.");
-                    localStorage.removeItem("currentQuizUser");
-                    window.location.href = 'index.html';
+                    showNotification("Acces Refuse! Panneau reserve a l'admin.", "error");
+                    setTimeout(() => { window.location.href = 'index.html'; }, 2000);
                 }
             } catch (error) {
                 window.location.href = 'index.html';
             }
         });
 
-        // TONBE LI JWÈ YO NAN TABLO A AK INPUT AK REKIPERASYON STATUT
         async function loadAdminDashboardData() {
             const usersSnapshot = await getDocs(collection(db, "users"));
             const usersTable = document.getElementById('usersTableBody');
@@ -654,17 +591,17 @@
 
                 usersTable.innerHTML += `
                     <tr id="row-${userId}">
-                        <td><strong>${user.username || 'Joueur'}</strong><br><small style="color:var(--text-muted)">${user.prenom || ''} ${user.nom || ''}</small></td>
+                        <td><strong>${user.username || 'Joueur'}</strong></td>
                         <td>${user.email || 'N/A'}</td>
                         <td><span style="text-transform: uppercase;">${user.country || 'ht'}</span></td>
                         <td><span id="coins-val-${userId}">${user.coins || 0}</span></td>
                         <td>
-                            <input type="number" id="input-coins-${userId}" class="coins-input-box" placeholder="Valeur">
-                            <button class="btn-table btn-validate" onclick="updateCustomCoins('${userId}')">Valider</button>
+                            <input type="number" id="input-coins-${userId}" class="coins-input-box" placeholder="Coins">
+                            <button class="btn-table btn-validate" onclick="updateCustomCoins('${userId}')">Ok</button>
                         </td>
-                        <td><span id="status-val-${userId}" style="color:${statusLabel==='suspendu'?'var(--accent-admin)':'var(--success)'}; font-weight:bold; text-transform:uppercase; font-size:11px;">${statusLabel}</span></td>
+                        <td><span id="status-val-${userId}" style="color:${statusLabel==='suspendu'?'var(--accent-admin)':'var(--success)'}; font-weight:bold; text-transform:uppercase;">${statusLabel}</span></td>
                         <td>
-                            <button class="btn-table btn-suspend" onclick="toggleSuspendAccount('${userId}', '${statusLabel}')">${statusLabel==='suspendu'?'Activer':'Suspendre'}</button>
+                            <button class="btn-table btn-suspend" onclick="toggleSuspendAccount('${userId}', '${statusLabel}')">${statusLabel==='suspendu'?'Activer':'Bloquer'}</button>
                             <button class="btn-table btn-delete" onclick="deleteAccount('${userId}')">Supprimer</button>
                         </td>
                     </tr>
@@ -675,62 +612,49 @@
             document.getElementById('statTotalCoins').innerText = totalCoins;
         }
 
-        // METE KANTITE COINS OU CHWAZI A
         window.updateCustomCoins = async function(userId) {
-            soundEffect('click');
             const inputVal = document.getElementById(`input-coins-${userId}`).value.trim();
             if(inputVal === "" || isNaN(inputVal)) {
-                soundEffect('error');
-                alert("Veuillez entrer un nombre valide.");
+                showNotification("Veuillez entrer un nombre valide.", "error");
                 return;
             }
 
             const newAmount = parseInt(inputVal);
             try {
                 await updateDoc(doc(db, "users", userId), { coins: newAmount });
-                document.getElementById(`coins-val-${userId}`).innerText = newAmount;
-                document.getElementById(`input-coins-${userId}`).value = "";
-                soundEffect('success');
-                // Rafrechi estatistik rapid
+                showNotification("Solde actualise avec succes!", "success");
                 loadAdminDashboardData();
             } catch(e) {
-                soundEffect('error');
+                showNotification("Erreur lors de la modification.", "error");
             }
         };
 
-        // SISPANN OU AKTIVE YON KONT
         window.toggleSuspendAccount = async function(userId, currentStatus) {
-            soundEffect('click');
             const newStatus = currentStatus === 'suspendu' ? 'actif' : 'suspendu';
-            if(!confirm(`Voulez-vous vraiment changer le statut de ce joueur en: ${newStatus}?`)) return;
+            if(!confirm(`Changer le statut en: ${newStatus}?`)) return;
 
             try {
                 await updateDoc(doc(db, "users", userId), { status: newStatus });
-                soundEffect('success');
+                showNotification("Statut du compte modifie!", "success");
                 loadAdminDashboardData();
             } catch(e) {
-                soundEffect('error');
+                showNotification("Erreur de mise a jour.", "error");
             }
         };
 
-        // EFASE YON KONT NÈT INYORAN NAN BAZ DONE A
         window.deleteAccount = async function(userId) {
-            soundEffect('click');
-            if(!confirm("ATTENTION! Voulez-vous definitivement supprimer ce compte joueur de la base de donnees? Cette action est irreversible.")) return;
+            if(!confirm("Supprimer definitivement ce compte?")) return;
 
             try {
                 await deleteDoc(doc(db, "users", userId));
                 document.getElementById(`row-${userId}`).remove();
-                soundEffect('success');
-                alert("Compte supprime avec succes.");
+                showNotification("Compte supprime definitivement.", "success");
             } catch(e) {
-                soundEffect('error');
+                showNotification("Erreur lors de la suppression.", "error");
             }
         };
 
-        // AJOUTE KESYON AVÈK RADYO BOUTON SELECTOR (A, B, C, D)
         window.saveQuestionWithSelection = async function() {
-            soundEffect('click');
             const question = document.getElementById('quizQuestion').value.trim();
             const valA = document.getElementById('optA').value.trim();
             const valB = document.getElementById('optB').value.trim();
@@ -740,8 +664,7 @@
             const selectedRadio = document.querySelector('input[name="correctAnswerRadio"]:checked').value;
 
             if(!question || !valA || !valB || !valC || !valD) {
-                soundEffect('error');
-                alert("Veuillez remplir l'enonce et les 4 options possibles.");
+                showNotification("Remplissez tous les champs des questions.", "error");
                 return;
             }
 
@@ -758,27 +681,23 @@
                     answer: correctTextValue, 
                     createdAt: new Date()
                 });
-                soundEffect('success');
-                alert("La question a ete publiee avec succes avec l'option (" + selectedRadio + ") comme reponse correcte!");
+                showNotification("Question ajoutee pour quiz.html!", "success");
                 document.getElementById('quizQuestion').value = "";
                 document.getElementById('optA').value = "";
                 document.getElementById('optB').value = "";
                 document.getElementById('optC').value = "";
                 document.getElementById('optD').value = "";
             } catch (error) {
-                soundEffect('error');
+                showNotification("Erreur d'enregistrement.", "error");
             }
         };
 
-        // ENTEGRASYON NOUVO TAB: PUBLIER UNE NOTE JENERALE
         window.publishAdminNote = async function() {
-            soundEffect('click');
             const title = document.getElementById('noteTitle').value.trim();
             const content = document.getElementById('noteContent').value.trim();
 
             if(!title || !content) {
-                soundEffect('error');
-                alert("Veuillez remplir le titre et le contenu de la note.");
+                showNotification("Le titre et le contenu sont requis.", "error");
                 return;
             }
 
@@ -788,21 +707,18 @@
                     content: content,
                     createdAt: new Date()
                 });
-                soundEffect('success');
-                alert("La note d'information globale a ete diffusee avec succes!");
+                showNotification("Nouveau cours publie pour note.html!", "success");
                 document.getElementById('noteTitle').value = "";
                 document.getElementById('noteContent').value = "";
             } catch(e) {
-                soundEffect('error');
+                showNotification("Erreur lors de la publication.", "error");
             }
         };
 
-        // DEMANDE D'AMI
         window.sendFriendRequest = async function() {
-            soundEffect('click');
             const target = document.getElementById('friendSearchInput').value.trim();
             let currentQuizUser = JSON.parse(localStorage.getItem("currentQuizUser"));
-            if(!target) { soundEffect('error'); alert("Identifiant invalide."); return; }
+            if(!target) { showNotification("Veuillez saisir un identifiant.", "error"); return; }
 
             try {
                 await addDoc(collection(db, "friendRequests"), {
@@ -812,13 +728,11 @@
                     status: "pending",
                     createdAt: new Date()
                 });
-                soundEffect('success');
-                alert("Demande envoyee.");
+                showNotification("Demande envoyee avec succes.", "success");
                 document.getElementById('friendSearchInput').value = "";
-            } catch(e) { soundEffect('error'); }
+            } catch(e) { showNotification("Erreur d'envoi.", "error"); }
         };
 
-        // LI KÒMANTÈ YO
         async function loadCommentsData() {
             try {
                 const commentSnap = await getDocs(collection(db, "comments"));
@@ -831,11 +745,7 @@
                     count++;
                     container.innerHTML += `
                         <div class="comment-card">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.85rem;">
-                                <span style="color:var(--accent-cyan)">Joueur: @${c.username || 'Utilisateur'}</span>
-                                <small style="color:var(--text-muted)">${c.createdAt ? new Date(c.createdAt.seconds*1000).toLocaleDateString() : ''}</small>
-                            </div>
-                            <p style="font-size:0.95rem; line-height:1.4;">${c.message || ''}</p>
+                            <p><strong>@${c.username || 'Joueur'}:</strong> ${c.message || ''}</p>
                         </div>
                     `;
                 });
@@ -843,16 +753,7 @@
             } catch(e) { console.error(e); }
         }
 
-        window.switchTab = function(tabId, element) {
-            soundEffect('click');
-            document.querySelectorAll('.tab-view').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            element.classList.add('active');
-        };
-
         window.adminLogout = function() {
-            soundEffect('click');
             localStorage.removeItem("currentQuizUser");
             window.location.href = 'index.html';
         };
