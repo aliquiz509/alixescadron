@@ -29,7 +29,6 @@
             min-height: 100vh;
         }
 
-        /* Loading Screen */
         #loadingOverlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -43,7 +42,6 @@
             font-weight: bold;
         }
 
-        /* Sidebar Styling */
         .sidebar {
             width: 260px;
             background-color: var(--card-bg);
@@ -60,7 +58,6 @@
             text-align: center;
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(255, 71, 87, 0.3);
         }
 
         .menu-items {
@@ -77,9 +74,6 @@
             transition: all 0.3s;
             color: var(--text-muted);
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .menu-item:hover, .menu-item.active {
@@ -97,16 +91,13 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.3s;
         }
 
         .logout-btn:hover {
             background: #ff3838;
             color: white;
-            box-shadow: 0 0 15px rgba(255, 56, 56, 0.4);
         }
 
-        /* Main Content Area */
         .main-content {
             flex: 1;
             padding: 30px;
@@ -122,26 +113,6 @@
             margin-bottom: 30px;
         }
 
-        header h1 {
-            font-size: 1.8rem;
-        }
-
-        .admin-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .admin-badge {
-            background: var(--accent-admin);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-
-        /* Dashboard Cards / Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -157,19 +128,12 @@
             text-align: center;
         }
 
-        .stat-card h3 {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-
         .stat-card p {
             font-size: 1.8rem;
             font-weight: bold;
             color: var(--accent-cyan);
         }
 
-        /* Views (Tabs) */
         .tab-view {
             display: none;
             background: var(--card-bg);
@@ -182,7 +146,6 @@
             display: block;
         }
 
-        /* Table Styling for Users */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -195,15 +158,8 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        th {
-            color: var(--accent-cyan);
-        }
+        th { color: var(--accent-cyan); }
 
-        tr:hover {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        /* Quick Action Inputs */
         .form-group {
             margin-bottom: 15px;
             display: flex;
@@ -211,17 +167,12 @@
             gap: 5px;
         }
 
-        input, select, textarea {
+        input {
             background: var(--bg-color);
             border: 1px solid var(--border-color);
             padding: 10px;
             border-radius: 6px;
             color: white;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--accent-cyan);
         }
 
         .btn-action {
@@ -232,20 +183,13 @@
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn-action:hover {
-            box-shadow: 0 0 10px rgba(0, 210, 211, 0.5);
         }
     </style>
 </head>
 <body>
 
-    <!-- Ekran verifikasyon anvan paj la louvri -->
     <div id="loadingOverlay">Verifikasyon Sekirite...</div>
 
-    <!-- Sidebar Menu -->
     <div class="sidebar">
         <h2>AliQuiz Admin</h2>
         <ul class="menu-items">
@@ -256,28 +200,21 @@
         <button class="logout-btn" onclick="adminLogout()">Koneksyon Koupe</button>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
         <header>
             <div>
-                <h1 id="welcomeTitle">Bonjou, Admin</h1>
+                <h1>Bonjou, Admin</h1>
                 <p style="color: var(--text-muted); font-size: 0.9rem;">Byenvini nan panèl kontwòl jwèt la.</p>
             </div>
-            <div class="admin-profile">
-                <span id="adminEmail" style="font-weight: 500;">admin@aliquiz.com</span>
-                <span class="admin-badge">Siprèm</span>
+            <div>
+                <span id="adminEmail" style="font-weight: 500;">...</span>
             </div>
         </header>
 
-        <!-- STATISTIK PRENSIPAL -->
         <div class="stats-grid">
             <div class="stat-card">
                 <h3>Total Jwè</h3>
                 <p id="statTotalUsers">0</p>
-            </div>
-            <div class="stat-card">
-                <h3>Kesyon nan Sistèm nan</h3>
-                <p id="statTotalQuestions">0</p>
             </div>
             <div class="stat-card">
                 <h3>AliCoins an Sikilasyon</h3>
@@ -285,13 +222,11 @@
             </div>
         </div>
 
-        <!-- TAB 1: OVERVIEW -->
         <div id="overview" class="tab-view active">
             <h2>Aktivite Jeneral</h2>
             <p style="color: var(--text-muted); margin-top: 10px;">Chwazi yon opsyon nan meni ki sou kote a pou w kòmanse jere baz done a.</p>
         </div>
 
-        <!-- TAB 2: JERE JWÈ YO -->
         <div id="users-tab" class="tab-view">
             <h2>Lis Tout Jwè yo</h2>
             <table>
@@ -301,21 +236,17 @@
                         <th>Email</th>
                         <th>AliCoins</th>
                         <th>Wòl</th>
-                        <th>Aksyon</th>
                     </tr>
                 </thead>
-                <tbody id="usersTableBody">
-                    <!-- Dinamikman chaje nan JS -->
-                </tbody>
+                <tbody id="usersTableBody"></tbody>
             </table>
         </div>
 
-        <!-- TAB 3: AJOUTE KESYON -->
         <div id="quiz-tab" class="tab-view">
             <h2>Ajoute yon Nouvo Kesyon Quiz</h2>
             <div style="max-width: 500px; margin-top: 20px;">
                 <div class="form-group">
-                    <label>Kesyon an (Byoloji, elatriye)</label>
+                    <label>Kesyon an</label>
                     <input type="text" id="quizQuestion" placeholder="Kisa ki selil la?">
                 </div>
                 <div class="form-group">
@@ -326,60 +257,46 @@
                     <label>Opsyon B</label>
                     <input type="text" id="optB" placeholder="Fo repons 1">
                 </div>
-                <div class="form-group">
-                    <label>Opsyon C</label>
-                    <input type="text" id="optC" placeholder="Fo repons 2">
-                </div>
-                <div class="form-group">
-                    <label>Opsyon D</label>
-                    <input type="text" id="optD" placeholder="Fo repons 3">
-                </div>
-                <button class="btn-action" style="margin-top: 10px;" onclick="saveQuestionToFirebase()">Pibliye Kesyon an</button>
+                <button class="btn-action" onclick="saveQuestionToFirebase()">Pibliye Kesyon an</button>
             </div>
         </div>
     </div>
 
-    <!-- LOGIK JAVASCRIPT AK VERIFIKASYON FIREBASE -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
-        // Konfigirasyon Firebase ou a (Asire w li matche ak index.html)
+        // Konfigirasyon ou an ki kòrèk nèt
         const firebaseConfig = {
-            apiKey: "AIzaSy...",
-            authDomain: "aliquiz-...",
-            projectId: "aliquiz-...",
-            storageBucket: "aliquiz-...",
-            messagingSenderId: "...",
-            appId: "..."
+            apiKey: "AIzaSyCF2I4LEcMA1oJRwa7xthvSOQGSCg6lPjs",
+            authDomain: "aliquiz-509.firebaseapp.com",
+            projectId: "aliquiz-509",
+            storageBucket: "aliquiz-509.firebasestorage.app",
+            messagingSenderId: "319472495068",
+            appId: "1:319472495068:web:092e0b9efb14dae8f60719"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // 1. BLÒK VERIFIKASYON SEKIRITE - Depi paj la ap chaje
         window.addEventListener('DOMContentLoaded', async () => {
             let currentQuizUser = JSON.parse(localStorage.getItem("currentQuizUser"));
 
             if (!currentQuizUser) {
-                // Pa gen sesyon ditou, tounen nan login
                 window.location.href = 'index.html';
                 return;
             }
 
             try {
-                // Tcheke dirèkteman nan Firestore pou evite fwod nan localStorage
+                // Nou fòse kòd la al tcheke nan Firestore dirèkteman
                 const userDoc = await getDoc(doc(db, "users", currentQuizUser.uid));
                 
-                if (userDoc.exists() && userDoc.data().role === 'admin') {
-                    // Se yon admin vre, kache loading overlay la epi afiche done yo
+                // KORÈKSYON: `.toLowerCase()` pou si role la te ekri pa erè nan lòt fòm
+                if (userDoc.exists() && userDoc.data().role && userDoc.data().role.toLowerCase() === 'admin') {
                     document.getElementById('loadingOverlay').style.display = 'none';
                     document.getElementById('adminEmail').innerText = currentQuizUser.email;
-                    
-                    // Chaje estatistik yo
                     loadAdminDashboardData();
                 } else {
-                    // Si li pa admin, bloke li epi mete l deyò
                     alert("Aksè Refize! Ou pa gen dwa admin.");
                     localStorage.removeItem("currentQuizUser");
                     window.location.href = 'index.html';
@@ -390,9 +307,7 @@
             }
         });
 
-        // Fonksyon pou chaje done yo nan Firestore
         async function loadAdminDashboardData() {
-            // Chaje Itilizatè yo
             const usersSnapshot = await getDocs(collection(db, "users"));
             const usersTable = document.getElementById('usersTableBody');
             usersTable.innerHTML = "";
@@ -407,11 +322,10 @@
 
                 usersTable.innerHTML += `
                     <tr>
-                        <td>${user.username || 'Jwè senp'}</td>
+                        <td>${user.username || 'Jwè'}</td>
                         <td>${user.email}</td>
                         <td>🪙 ${user.coins || 0}</td>
                         <td><span style="color: ${user.role === 'admin' ? 'var(--accent-admin)' : 'var(--accent-cyan)'}">${user.role || 'user'}</span></td>
-                        <td><button style="padding: 3px 8px; font-size:0.8rem; background: transparent; border: 1px solid var(--accent-cyan); color: white; cursor:pointer; border-radius:4px;">Modifye</button></td>
                     </tr>
                 `;
             });
@@ -420,11 +334,9 @@
             document.getElementById('statTotalCoins').innerText = totalCoins + " 🪙";
         }
 
-        // Ekspoze fonksyon yo pou bouton HTML yo ka jwenn yo
         window.switchTab = function(tabId, element) {
             document.querySelectorAll('.tab-view').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-            
             document.getElementById(tabId).classList.add('active');
             element.classList.add('active');
         };
@@ -433,38 +345,6 @@
             localStorage.removeItem("currentQuizUser");
             window.location.href = 'index.html';
         };
-
-        // Fonksyon pou kreye nouvo kesyon
-        window.saveQuestionToFirebase = async function() {
-            const question = document.getElementById('quizQuestion').value;
-            const a = document.getElementById('optA').value;
-            const b = document.getElementById('optB').value;
-            const c = document.getElementById('optC').value;
-            const d = document.getElementById('optD').value;
-
-            if(!question || !a || !b || !c || !d) {
-                alert("Tanpri ranpli tout chan yo!");
-                return;
-            }
-
-            try {
-                await addDoc(collection(db, "questions"), {
-                    question: question,
-                    options: [a, b, c, d],
-                    correctAnswer: a, // Lojik pa nou: premye a toujou kòrèk nan baz done a
-                    category: "Biologie"
-                });
-                alert("Kesyon an ajoute ak siksè!");
-                // Netwaye fòm lan
-                document.getElementById('quizQuestion').value = "";
-                document.getElementById('optA').value = "";
-                document.getElementById('optB').value = "";
-                document.getElementById('optC').value = "";
-                document.getElementById('optD').value = "";
-            } catch (e) {
-                alert("Erè lè n t ap anrejistre kesyon an.");
-            }
-        }
     </script>
 </body>
 </html>
