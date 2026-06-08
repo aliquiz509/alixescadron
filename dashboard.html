@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aliquiz-dashboard</title>
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧬</text></svg>">
+    <!-- Favicon chanje pou sèvi ak imaj logo AliQuiz la pito -->
+    <link rel="icon" type="image/png" href="https://files.catbox.moe/dbcm8s.png">
     <style>
         :root {
             --bg-dark: #0a0e1a;
@@ -17,6 +18,7 @@
             --text-muted: #a4b0be;
             --success: #2ed573;
             --error: #ff4757;
+            --warning: #ffa502;
         }
 
         * {
@@ -64,6 +66,18 @@
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
+        .sidebar-logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-logo-area img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+
         .sidebar-profile {
             padding: 20px;
             text-align: center;
@@ -106,6 +120,12 @@
             font-weight: 500;
             color: var(--text-muted);
             transition: all 0.2s;
+        }
+
+        .menu-items li svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
         }
 
         .menu-items li:hover, .menu-items li.active {
@@ -221,6 +241,10 @@
         }
         .btn-action:hover { transform: translateY(-2px); }
 
+        .btn-danger {
+            background: linear-gradient(135deg, var(--error), #b33939);
+        }
+
         /* --- NOTIFICATION BLOCKS --- */
         .alert-msg {
             width: 100%;
@@ -268,7 +292,11 @@
 
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h2 style="color: var(--accent-cyan); font-size: 20px;">🧬 Aliquiz</h2>
+            <!-- Korije isit la: DNA Emoji a ranplase pa lyen imaj logo a -->
+            <div class="sidebar-logo-area">
+                <img src="https://files.catbox.moe/dbcm8s.png" alt="Logo">
+                <h2 style="color: var(--accent-cyan); font-size: 20px;">Aliquiz</h2>
+            </div>
             <button class="menu-toggle-btn" onclick="toggleSidebar()">✕</button>
         </div>
         <div class="sidebar-profile">
@@ -279,12 +307,31 @@
             <p id="sideProfileUser" style="font-size: 12px; color: var(--text-muted);">@username</p>
         </div>
         <ul class="menu-items">
-            <li class="active" onclick="switchTab('homeTab', this)">🏠 Accueil / Jeu</li>
-            <li onclick="window.location.href='chat.html'">👥 Messagerie / Amis</li>
-            <li onclick="switchTab('profileTab', this)">📊 Mon Profil</li>
-            <li onclick="switchTab('shopTab', this)">🛒 AliShop</li>
-            <li onclick="switchTab('settingsTab', this)">⚙️ Paramètres</li>
-            <li onclick="logout()" style="color: var(--error); margin-top: auto;">🚪 Déconnexion</li>
+            <!-- Emojis yo ranplase pa SVG Ikòn ki konpatib toupatou -->
+            <li class="active" onclick="switchTab('homeTab', this)">
+                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                Accueil / Jeu
+            </li>
+            <li onclick="window.location.href='chat.html'">
+                <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+                Messagerie / Amis
+            </li>
+            <li onclick="switchTab('profileTab', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                Mon Profil
+            </li>
+            <li onclick="switchTab('shopTab', this)">
+                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                AliShop
+            </li>
+            <li onclick="switchTab('settingsTab', this)">
+                <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                Paramètres
+            </li>
+            <li onclick="logout()" style="color: var(--error); margin-top: auto;">
+                <svg viewBox="0 0 24 24" style="fill: var(--error);"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                Déconnexion
+            </li>
         </ul>
     </nav>
 
@@ -330,13 +377,22 @@
 
         <section id="profileTab" class="tab-view">
             <div class="card-grid">
-                <div class="ui-card" style="text-align: center;">
-                    <div class="profile-img-container" style="width: 110px; height: 110px; border-width: 3px;">
-                        <img id="mainProfilePic" src="https://files.catbox.moe/dbcm8s.png" alt="Avatar">
+                <div class="ui-card" style="text-align: center; display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
+                    <div style="width: 100%;">
+                        <div class="profile-img-container" style="width: 110px; height: 110px; border-width: 3px;">
+                            <img id="mainProfilePic" src="https://files.catbox.moe/dbcm8s.png" alt="Avatar">
+                        </div>
+                        <h2 id="profFullName">...</h2>
+                        <p id="profUsername" style="color: var(--accent-cyan);">@...</p>
+                        <p id="profCountry" style="font-size: 24px; margin-top: 10px;">🌐</p>
                     </div>
-                    <h2 id="profFullName">...</h2>
-                    <p id="profUsername" style="color: var(--accent-cyan);">@...</p>
-                    <p id="profCountry" style="font-size: 24px; margin-top: 10px;">🌐</p>
+
+                    <!-- Aksyon kont yo ajoute anba enfòmasyon profil la -->
+                    <div style="width: 100%; margin-top: 30px; display: flex; flex-direction: column; gap: 10px;">
+                        <button class="btn-action btn-danger" style="width: 100%;" onclick="logout()">🚪 Déconnexion</button>
+                        <button class="btn-action btn-danger" style="background: #ff4757; width: 100%; font-size: 13px;" onclick="deleteUserAccount()">⚠️ Supprimer mon compte</button>
+                    </div>
+                    <div id="profileAlert" class="alert-msg"></div>
                 </div>
                 <div class="ui-card">
                     <h3>📊 Statistiques de progression</h3>
@@ -405,8 +461,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-        import { getAuth, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-        import { getFirestore, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+        import { getAuth, signOut, updatePassword, deleteUser } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+        import { getFirestore, doc, updateDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCF2I4LEcMA1oJRwa7xthvSOQGSCg6lPjs",
@@ -561,6 +617,39 @@
 
         window.logout = function() {
             signOut(auth).then(() => { localStorage.removeItem("currentQuizUser"); window.location.href = 'index.html'; });
+        }
+
+        // --- FONKSYON POU SUPRIME KONT LAN ---
+        window.deleteUserAccount = async function() {
+            hideAllNotifications();
+            const confirmation = confirm("Èske ou sèten ou vle siprime kont ou nèt? Tout AliCoins ak nòt ou yo ap pèdi nèt e ou p'ap ka rekiperasyon yo ankò.");
+            
+            if (confirmation) {
+                const user = auth.currentUser;
+                if (!user) {
+                    showNotification('profileAlert', "Erreur: jwè a pa konekte.", 'error');
+                    return;
+                }
+
+                try {
+                    // 1. Efase dokiman itilizatè a nan Firestore dabò
+                    await deleteDoc(doc(db, "users", currentQuizUser.uid));
+                    
+                    // 2. Efase kont lan nan Firebase Auth
+                    await deleteUser(user);
+                    
+                    // 3. Netwaye LocalStorage epi voye l nan paj akey la
+                    localStorage.removeItem("currentQuizUser");
+                    window.location.href = 'index.html';
+                } catch (err) {
+                    // Remak: Si jwè a te pran anpil tan konekte, Firebase ap mande pou l "re-authenticate" anvan li kite l siprime kont lan
+                    if (err.code === 'auth/requires-recent-login') {
+                        showNotification('profileAlert', "Sekirite: Tanpri dekonèkte epi rekonekte ankò pou w ka siprime kont ou.", 'error');
+                    } else {
+                        showNotification('profileAlert', `Erreur: ${err.message}`, 'error');
+                    }
+                }
+            }
         }
     </script>
 </body>
