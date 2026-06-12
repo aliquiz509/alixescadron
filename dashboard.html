@@ -96,7 +96,7 @@
             justify-content: center;
         }
 
-        .profile-img-container img, .profile-img-container svg {
+        .profile-img-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -218,10 +218,19 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* CONFIGURATION GRID RANJE DE 3 FIXED */
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
+        }
+
+        /* Pou ti ekran yo ka pase an kaskad si espas la twò piti */
+        @media (max-width: 992px) {
+            .card-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .card-grid { grid-template-columns: 1fr; }
         }
 
         .ui-card {
@@ -280,7 +289,7 @@
         .alert-msg.error { background: rgba(255, 71, 87, 0.15); border: 1px solid var(--error); color: #ff6b81; }
         .alert-msg.success { background: rgba(46, 213, 115, 0.15); border: 1px solid var(--success); color: #2ed573; }
 
-        /* --- THEME BOXES FOR SHOP --- */
+        /* --- THEME & AVATAR BOXES FOR SHOP --- */
         .theme-card {
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 12px;
@@ -293,7 +302,7 @@
             position: relative;
         }
         .theme-preview {
-            height: 90px;
+            height: 110px;
             border-radius: 8px;
             margin-bottom: 10px;
             background-position: center !important;
@@ -301,17 +310,19 @@
         }
 
         .avatar-preview-box {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             margin: 0 auto 10px;
             border-radius: 50%;
             overflow: hidden;
             background: #1e293b;
+            border: 2px solid rgba(255,255,255,0.1);
         }
 
-        .avatar-preview-box svg {
+        .avatar-preview-box img {
             width: 100%;
             height: 100%;
+            object-fit: cover;
         }
 
         .badges-grid { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px; }
@@ -417,6 +428,7 @@
             </div>
         </header>
 
+        <!-- LÒT SEKSYON YO SÈVI AK KRITÈ DE 3 TOU -->
         <section id="homeTab" class="tab-view active">
             <div class="card-grid">
                 <div class="ui-card" style="text-align: center;">
@@ -449,6 +461,7 @@
         </section>
 
         <section id="profileTab" class="tab-view">
+            <!-- Profil kouche sou fòma 3 tou -->
             <div class="card-grid">
                 <div class="ui-card" style="text-align: center;">
                     <div class="profile-img-container" id="mainProfilePicContainer" style="width: 110px; height: 110px; border-width: 3px;">
@@ -458,7 +471,7 @@
                     <p id="profUsername" style="color: var(--accent-cyan);">@...</p>
                     <p id="profCountry" style="font-size: 24px; margin-top: 10px;">🌐</p>
                 </div>
-                <div class="ui-card">
+                <div class="ui-card" style="grid-column: span 2;">
                     <h3>Statistiques de progression</h3>
                     <div style="margin-top: 15px; display:flex; flex-direction:column; gap:12px;">
                         <p>Parties jouées: <strong id="statGamesPlayed" style="color: var(--accent-cyan);">0</strong></p>
@@ -492,8 +505,7 @@
                 </div>
 
                 <div id="themes-shop" class="shop-section active">
-                    <div class="card-grid" id="themesGridContainer">
-                        </div>
+                    <div class="card-grid" id="themesGridContainer"></div>
                 </div>
 
                 <div id="avatars-shop" class="shop-section">
@@ -558,10 +570,10 @@
         let totalGames = 0;
         let totalPerfectScores = 0;
         let purchasedThemes = ['default'];
-        let purchasedAvatars = ['avatar_1', 'avatar_2', 'avatar_3', 'avatar_4', 'avatar_5'];
+        let purchasedAvatars = ['avatar_1']; // Premye a gratis pa defo
         let currentActiveTheme = 'default';
 
-        // LIS 9 BACKGROUND YO AK PRI YO +50 AC CHAK NIVO
+        // LIS 15 BACKGROUND YO (+50 AC CHAK NIVO)
         const allBackgrounds = [
             { id: "default", name: "Espace Par Défaut", url: "https://files.catbox.moe/5u3toy.jpg", price: 0 },
             { id: "theme_1", name: "Nébuleuse Émeraude", url: "https://files.catbox.moe/7nz8sv.jpg", price: 150 },
@@ -572,37 +584,33 @@
             { id: "theme_6", name: "Abysse Quantique", url: "https://files.catbox.moe/0fhbzk.jpg", price: 400 },
             { id: "theme_7", name: "Horizon Plasma", url: "https://files.catbox.moe/9ynvok.jpg", price: 450 },
             { id: "theme_8", name: "Supernova Dorée", url: "https://files.catbox.moe/q7b06h.jpg", price: 500 },
-            { id: "theme_9", name: "Infini Stellaire", url: "https://files.catbox.moe/ecpzmd.jpg", price: 550 }
+            { id: "theme_9", name: "Infini Stellaire", url: "https://files.catbox.moe/ecpzmd.jpg", price: 550 },
+            { id: "theme_10", name: "Nébuleuse Pourpre", url: "https://files.catbox.moe/8h9pt8.jpg", price: 600 },
+            { id: "theme_11", name: "Trou Noir Actif", url: "https://files.catbox.moe/9lnzej.jpg", price: 650 },
+            { id: "theme_12", name: "Éclat Solaire", url: "https://files.catbox.moe/3uc6dp.jpg", price: 700 },
+            { id: "theme_13", name: "Poussière Cosmique", url: "https://files.catbox.moe/r7b7j5.jpg", price: 750 },
+            { id: "theme_14", name: "Matrice Biologique", url: "https://files.catbox.moe/mj89p9.jpg", price: 800 },
+            { id: "theme_15", name: "Vide Intergalactique", url: "https://files.catbox.moe/v1crdt.jpg", price: 850 }
         ];
 
-        function generateAvatarSVG(id) {
-            if (id === 50) {
-                return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#ffeaa7"/>
-                            <stop offset="50%" stop-color="#f1c40f"/>
-                            <stop offset="100%" stop-color="#e67e22"/>
-                        </linearGradient>
-                    </defs>
-                    <rect width="100" height="100" fill="#1e272e"/>
-                    <circle cx="50" cy="50" r="40" fill="url(#goldGrad)"/>
-                    <circle cx="50" cy="45" r="18" fill="#111"/>
-                    <path d="M25 80c0-15 10-22 25-22s25 7 25 22z" fill="#111"/>
-                    <polygon points="50,15 55,28 68,28 58,36 62,48 50,40 38,48 42,36 32,28 45,28" fill="#fff"/>
-                </svg>`;
-            }
-            const hue = (id * 37) % 360;
-            const bgHue = (id * 125) % 360;
-            const colors = [`hsl(${hue}, 70%, 60%)`, `hsl(${(hue+120)%360}, 65%, 50%)`];
-            return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <rect width="100" height="100" fill="hsl(${bgHue}, 40%, 15%)"/>
-                <circle cx="50" cy="50" r="35" fill="${colors[0]}" opacity="0.3"/>
-                <circle cx="50" cy="42" r="16" fill="${colors[0]}"/>
-                <path d="M30 78c0-12 8-18 20-18s20 6 20 18z" fill="${colors[1]}"/>
-                <rect x="42" y="38" width="16" height="4" rx="2" fill="#fff" opacity="0.6"/>
-            </svg>`;
-        }
+        // LIS 15 AVATARS YO (+50 AC CHAK NIVO)
+        const allAvatars = [
+            { id: "avatar_1", name: "Avatar Recrue #1", url: "https://files.catbox.moe/bv2xfa.jpg", price: 0 },
+            { id: "avatar_2", name: "Avatar Nova #2", url: "https://files.catbox.moe/x7kaki.jpg", price: 50 },
+            { id: "avatar_3", name: "Avatar Pulsar #3", url: "https://files.catbox.moe/gizn5i.jpg", price: 100 },
+            { id: "avatar_4", name: "Avatar Plasma #4", url: "https://files.catbox.moe/amu0te.jpg", price: 150 },
+            { id: "avatar_5", name: "Avatar Quantum #5", url: "https://files.catbox.moe/02bmjf.jpg", price: 200 },
+            { id: "avatar_6", name: "Avatar Helix #6", url: "https://files.catbox.moe/xt4z2j.jpg", price: 250 },
+            { id: "avatar_7", name: "Avatar Astro #7", url: "https://files.catbox.moe/7wkxhb.jpg", price: 300 },
+            { id: "avatar_8", name: "Avatar Cyber #8", url: "https://files.catbox.moe/nn84x6.jpg", price: 350 },
+            { id: "avatar_9", name: "Avatar Bio-Tech #9", url: "https://files.catbox.moe/f3mvtw.jpg", price: 400 },
+            { id: "avatar_10", name: "Avatar Amiral #10", url: "https://files.catbox.moe/gqu3fs.jpg", price: 450 },
+            { id: "avatar_11", name: "Avatar Cosmos #11", url: "https://files.catbox.moe/uvsm7n.jpg", price: 500 },
+            { id: "avatar_12", name: "Avatar Éclipse #12", url: "https://files.catbox.moe/v597b0.jpg", price: 550 },
+            { id: "avatar_13", name: "Avatar Titan #13", url: "https://files.catbox.moe/k9gy1b.jpg", price: 600 },
+            { id: "avatar_14", name: "Avatar Oracle #14", url: "https://files.catbox.moe/peyzmr.jpg", price: 650 },
+            { id: "avatar_15", name: "✨ AVATAR SUPRÊME ✨", url: "https://files.catbox.moe/n2jouk.jpg", price: 700 }
+        ];
 
         function showCardNotification(targetId, message, type = 'error') {
             const alertBox = document.getElementById(targetId);
@@ -619,15 +627,13 @@
             document.querySelectorAll('.alert-msg').forEach(el => el.style.display = 'none');
         }
 
-        function renderProfilePicture(containerId, imgId, path) {
-            const container = document.getElementById(containerId);
-            if(!container) return;
-            if(path && path.startsWith('CUSTOM_SVG_')) {
-                const avatarId = parseInt(path.replace('CUSTOM_SVG_', ''));
-                container.innerHTML = generateAvatarSVG(avatarId);
-            } else {
-                container.innerHTML = `<img id="${imgId}" src="${path || 'https://files.catbox.moe/dbcm8s.png'}" alt="Avatar">`;
-            }
+        function renderProfilePictures(path) {
+            const sideContainer = document.getElementById('sideProfilePicContainer');
+            const mainContainer = document.getElementById('mainProfilePicContainer');
+            const finalPath = path || 'https://files.catbox.moe/dbcm8s.png';
+
+            if(sideContainer) sideContainer.innerHTML = `<img id="sideProfilePic" src="${finalPath}" alt="Avatar">`;
+            if(mainContainer) mainContainer.innerHTML = `<img id="mainProfilePic" src="${finalPath}" alt="Avatar">`;
         }
 
         function loadUserSessionUI() {
@@ -638,8 +644,7 @@
             document.getElementById('setParamUser').value = currentQuizUser.username;
             document.getElementById('setParamPic').value = currentQuizUser.profilePic || "";
             
-            renderProfilePicture('sideProfilePicContainer', 'sideProfilePic', currentQuizUser.profilePic);
-            renderProfilePicture('mainProfilePicContainer', 'mainProfilePic', currentQuizUser.profilePic);
+            renderProfilePictures(currentQuizUser.profilePic);
             
             const flags = { fr: "🇫🇷", ht: "🇭🇹", us: "🇺🇸", ca: "🇨🇦" };
             document.getElementById('profCountry').textContent = flags[currentQuizUser.country] || "🌐";
@@ -651,10 +656,10 @@
                     totalGames = data.totalGames || 0;
                     totalPerfectScores = data.totalPerfectScores || 0;
                     purchasedThemes = data.purchasedThemes || ['default'];
-                    purchasedAvatars = data.purchasedAvatars || ['avatar_1', 'avatar_2', 'avatar_3', 'avatar_4', 'avatar_5'];
+                    purchasedAvatars = data.purchasedAvatars || ['avatar_1'];
                     currentActiveTheme = data.activeTheme || 'default';
                     
-                    // Aplike tèm ki sere a otomatikman nan kòmansman an
+                    // Aplike tèm ki sove a nan body a
                     applyTheme(currentActiveTheme);
 
                     updateDashboardStats();
@@ -675,7 +680,7 @@
             if (aliCoins >= 500) document.getElementById('badge3').classList.add('unlocked');
         }
 
-        // BATI DESIGN SHOP BOUTIK POU TIM YO
+        // DESIGN SHOP THEMES (RANJE DE 3 FIXED NAN CSS)
         function buildThemesShopUI() {
             const container = document.getElementById('themesGridContainer');
             if(!container) return;
@@ -685,7 +690,7 @@
                 const isPurchased = purchasedThemes.includes(theme.id);
                 const isActive = (currentActiveTheme === theme.id);
                 
-                let btnText = "Acheter " + theme.price + " AC";
+                let btnText = `Acheter (${theme.price} AC)`;
                 let btnStyle = "background: var(--accent-blue);";
 
                 if (isPurchased) {
@@ -699,7 +704,7 @@
                 const card = document.createElement('div');
                 card.className = "theme-card";
                 card.innerHTML = `
-                    <div class="theme-preview" style="background: linear-gradient(rgba(10,14,26,0.5), rgba(10,14,26,0.8)), url('${theme.url}');"></div>
+                    <div class="theme-preview" style="background: linear-gradient(rgba(10,14,26,0.3), rgba(10,14,26,0.7)), url('${theme.url}');"></div>
                     <h4>${theme.name}</h4>
                     <p style="font-size: 12px; color: var(--text-muted); margin: 5px 0 15px;">Prix: ${theme.price === 0 ? 'Gratuit' : theme.price + ' AC'}</p>
                     <button class="btn-action" style="width: 100%; ${btnStyle}" id="btnTheme_${theme.id}">${btnText}</button>
@@ -713,7 +718,7 @@
             });
         }
 
-        // ACHETE OUBYEN APLIKE TÈM AK PREZÈVASYON OTOMATIK
+        // ACHTE / APLIKE BACKGROUND EPI SERE L POU TOUT SITE LA REWÈL
         window.buyOrApplyTheme = async function(themeId, price) {
             hideAllNotifications();
             
@@ -721,6 +726,11 @@
                 currentActiveTheme = themeId;
                 applyTheme(themeId);
                 buildThemesShopUI();
+
+                // Sove chanjman an pou tout paj yo ka gen aksè
+                currentQuizUser.activeTheme = themeId;
+                localStorage.setItem("currentQuizUser", JSON.stringify(currentQuizUser));
+
                 showCardNotification(`themeAlert_${themeId}`, "Thème appliqué avec succès! 🌌", 'success');
                 await updateDoc(doc(db, "users", currentQuizUser.uid), { activeTheme: themeId });
                 return;
@@ -738,6 +748,10 @@
             applyTheme(themeId);
             updateDashboardStats();
             buildThemesShopUI();
+
+            currentQuizUser.activeTheme = themeId;
+            localStorage.setItem("currentQuizUser", JSON.stringify(currentQuizUser));
+
             showCardNotification(`themeAlert_${themeId}`, "Thème acheté et appliqué! 🎉", 'success');
 
             await updateDoc(doc(db, "users", currentQuizUser.uid), { 
@@ -747,92 +761,86 @@
             });
         }
 
-        // FUNKSYON KIPLIRE APÈRISYON AN REALTIME
         window.applyTheme = function(themeId) {
             const selected = allBackgrounds.find(t => t.id === themeId) || allBackgrounds[0];
             document.body.style.background = `linear-gradient(rgba(10, 14, 26, 0.85), rgba(10, 14, 26, 0.98)), url('${selected.url}') center/cover fixed`;
         }
 
+        // DESIGN SHOP AVATARS (RANJE DE 3 FIXED NAN CSS)
         function buildAvatarsShopUI() {
             const grid = document.getElementById('avatarsGridContainer');
             if (!grid) return;
             grid.innerHTML = "";
 
-            for (let i = 1; i <= 50; i++) {
-                const avatarKey = `avatar_${i}`;
-                const isPurchased = purchasedAvatars.includes(avatarKey);
+            allAvatars.forEach(avatar => {
+                const isPurchased = purchasedAvatars.includes(avatar.id);
+                const isActive = (currentQuizUser.profilePic === avatar.url);
                 
-                let priceText = "Gratuit";
-                let buttonStyle = "background: var(--accent-blue);";
-                let buttonText = isPurchased ? "Appliquer" : "Prendre";
-                let title = `Avatar Prestige #${i}`;
-
-                if (i === 50) {
-                    priceText = "10,000 AC";
-                    title = "✨ AVATAR DIVIN ✨";
-                    buttonStyle = "background: linear-gradient(135deg, #f1c40f, #e67e22); color: #000; font-weight:bold;";
-                } else if (i > 5) {
-                    priceText = "150 AC";
-                }
+                let btnText = `Acheter (${avatar.price} AC)`;
+                let btnStyle = "background: var(--accent-blue);";
 
                 if (isPurchased) {
-                    buttonStyle = "background: var(--success);";
-                    buttonText = "Appliquer";
-                } else if (i > 5) {
-                    buttonText = `Acheter (${priceText})`;
+                    btnText = isActive ? "Actif 👤" : "Appliquer";
+                    btnStyle = isActive ? "background: var(--warning); color: black;" : "background: var(--success);";
+                } else if (avatar.price === 0) {
+                    btnText = "Prendre Gratuit";
+                    btnStyle = "background: var(--success);";
                 }
 
                 const card = document.createElement('div');
                 card.className = "theme-card";
                 card.innerHTML = `
-                    <div class="avatar-preview-box">${generateAvatarSVG(i)}</div>
-                    <h4 style="${i === 50 ? 'color:var(--accent-gold); font-weight:bold;' : ''}">${title}</h4>
-                    <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 12px;">Statut: ${priceText}</p>
-                    <button class="btn-action" style="width: 100%; ${buttonStyle}" id="btnAvatar_${i}">${buttonText}</button>
-                    <div id="avatarAlert_${i}" class="alert-msg"></div>
+                    <div class="avatar-preview-box">
+                        <img src="${avatar.url}" alt="${avatar.name}">
+                    </div>
+                    <h4>${avatar.name}</h4>
+                    <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 12px;">Prix: ${avatar.price === 0 ? 'Gratuit' : avatar.price + ' AC'}</p>
+                    <button class="btn-action" style="width: 100%; ${btnStyle}" id="btnAvatar_${avatar.id}">${btnText}</button>
+                    <div id="avatarAlert_${avatar.id}" class="alert-msg"></div>
                 `;
-                
                 grid.appendChild(card);
 
-                document.getElementById(`btnAvatar_${i}`).addEventListener('click', () => {
-                    buyOrApplyAvatar(i, i === 50 ? 10000 : (i > 5 ? 150 : 0));
-                });
-            }
+                document.getElementById(`btnAvatar_${avatar.id}`).onclick = () => {
+                    buyOrApplyAvatar(avatar.id, avatar.url, avatar.price);
+                };
+            });
         }
 
-        window.buyOrApplyAvatar = async function(id, price) {
+        // ACHTE / APLIKE AVATAR EPI SYNC LI POU TOUT SITE LA VIA LOCALSTORAGE
+        window.buyOrApplyAvatar = async function(avatarId, avatarUrl, price) {
             hideAllNotifications();
-            const avatarKey = `avatar_${id}`;
-            const customValue = `CUSTOM_SVG_${id}`;
 
-            if (purchasedAvatars.includes(avatarKey)) {
-                currentQuizUser.profilePic = customValue;
+            if (purchasedAvatars.includes(avatarId)) {
+                currentQuizUser.profilePic = avatarUrl;
                 localStorage.setItem("currentQuizUser", JSON.stringify(currentQuizUser));
-                loadUserSessionUI();
-                showCardNotification(`avatarAlert_${id}`, "Avatar sélectionné ! 👤", 'success');
-                await updateDoc(doc(db, "users", currentQuizUser.uid), { profilePic: customValue });
+                
+                renderProfilePictures(avatarUrl);
+                buildAvatarsShopUI();
+                showCardNotification(`avatarAlert_${avatarId}`, "Avatar sélectionné ! 👤", 'success');
+                await updateDoc(doc(db, "users", currentQuizUser.uid), { profilePic: avatarUrl });
                 return;
             }
 
             if (aliCoins < price) {
-                showCardNotification(`avatarAlert_${id}`, "Vous n'avez pas assez d'AliCoins pour cet avatar !", 'error');
+                showCardNotification(`avatarAlert_${avatarId}`, "Vous n'avez pas assez d'AliCoins !", 'error');
                 return;
             }
 
             aliCoins -= price;
-            purchasedAvatars.push(avatarKey);
+            purchasedAvatars.push(avatarId);
+            currentQuizUser.profilePic = avatarUrl;
+            
+            localStorage.setItem("currentQuizUser", JSON.stringify(currentQuizUser));
             updateDashboardStats();
             buildAvatarsShopUI();
+            renderProfilePictures(avatarUrl);
             
-            currentQuizUser.profilePic = customValue;
-            localStorage.setItem("currentQuizUser", JSON.stringify(currentQuizUser));
-            loadUserSessionUI();
-            showCardNotification(`avatarAlert_${id}`, "Avatar acheté et appliqué ! 🎉", 'success');
+            showCardNotification(`avatarAlert_${avatarId}`, "Avatar acheté et appliqué ! 🎉", 'success');
 
             await updateDoc(doc(db, "users", currentQuizUser.uid), { 
                 coins: aliCoins, 
                 purchasedAvatars: purchasedAvatars,
-                profilePic: customValue 
+                profilePic: avatarUrl 
             });
         }
 
