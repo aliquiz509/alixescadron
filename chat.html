@@ -3,190 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aliquiz - Chat & Amis</title>
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%2300d2ff'><path d='M30,20 Q50,50 70,20 M30,80 Q50,50 70,80 M50,20 L50,80 M38,35 L62,35 M38,65 L62,65'/></svg>">
+    <title>AliQuiz - Espace Social</title>
     <style>
         :root {
-            --bg-dark: #0a0e1a;
-            --panel-bg: rgba(16, 24, 48, 0.9);
-            --sidebar-bg: #0f172a;
-            --accent-gold: #ffeaa7;
-            --accent-cyan: #00d2ff;
-            --accent-blue: #4a69bd;
+            --bg-main: #0b0f19;
+            --bg-card: #151d30;
+            --accent-cyan: #00f0ff;
+            --accent-gold: #ffb800;
             --text-light: #ffffff;
-            --text-muted: #a4b0be;
-            --success: #2ed573;
-            --error: #ff4757;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --text-muted: #8fa0bc;
+            --success: #00e676;
+            --error: #ff3d00;
         }
 
         body {
-            background: linear-gradient(rgba(10, 14, 26, 0.85), rgba(10, 14, 26, 0.98)), 
-                        url('https://files.catbox.moe/5u3toy.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-main);
             color: var(--text-light);
-            display: flex;
             overflow-x: hidden;
         }
 
-        /* --- SIDEBAR STYLE --- */
-        .sidebar {
-            width: 260px;
-            background: var(--sidebar-bg);
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 999;
-            transition: all 0.3s ease;
+        .social-layout {
             display: flex;
-            flex-direction: column;
-            border-right: 1px solid rgba(255,255,255,0.05);
+            height: 100vh;
+            position: relative;
         }
 
-        .sidebar.hidden { transform: translateX(-260px); }
+        /* SIDEBAR */
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-card);
+            border-right: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            z-index: 10;
+        }
 
         .sidebar-header {
             padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
             border-bottom: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
         }
 
         .menu-items {
             list-style: none;
-            padding: 15px 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            flex-grow: 1;
+            padding: 0;
+            margin: 0;
         }
 
         .menu-items li {
-            padding: 14px 15px;
-            border-radius: 10px;
+            padding: 15px 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text-muted);
-            transition: all 0.2s;
+            font-size: 14px;
+            transition: background 0.2s;
+            border-left: 3px solid transparent;
         }
 
         .menu-items li:hover, .menu-items li.active {
-            background: rgba(255,255,255,0.05);
+            background: rgba(0, 240, 255, 0.05);
+            border-left-color: var(--accent-cyan);
             color: var(--accent-cyan);
         }
 
-        .menu-items li.active { border-left: 4px solid var(--accent-cyan); }
-        
-        .menu-items li svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
-            flex-shrink: 0;
-        }
-
-        /* --- MAIN CONTENT AREA --- */
+        /* MAIN CONTENT */
         .main-content {
-            margin-left: 260px;
-            flex-grow: 1;
-            padding: 30px;
-            transition: all 0.3s ease;
-            min-height: 100vh;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-main);
+            position: relative;
         }
-
-        .main-content.expanded { margin-left: 0; }
 
         .top-navbar {
+            height: 60px;
+            background: var(--bg-card);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            background: var(--panel-bg);
-            padding: 15px 25px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.05);
+            padding: 0 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .menu-toggle-btn {
+        .btn-toggle {
             background: none;
             border: none;
             color: white;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .menu-toggle-btn svg {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
+            display: none;
         }
 
-        /* --- LAYOUT CHAT RESPONSIVE --- */
-        .chat-container {
-            display: grid;
-            grid-template-columns: 340px 1fr;
-            gap: 20px;
-            height: calc(100vh - 140px);
-        }
-
-        .ui-card {
-            background: var(--panel-bg);
-            border-radius: 20px;
+        .view-body {
+            flex: 1;
             padding: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            height: 100%;
-        }
-
-        .chat-box-area {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .chat-header-info {
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .chat-messages {
-            flex-grow: 1;
             overflow-y: auto;
-            padding: 15px 5px;
+            position: relative;
+        }
+
+        .tab-view {
+            display: none;
+        }
+
+        .tab-view.active {
+            display: block;
+        }
+
+        /* SCROLLERS & ITEMS */
+        .list-scroller {
             display: flex;
             flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .user-item {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .user-item:hover {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .user-info-mini {
+            display: flex;
+            align-items: center;
             gap: 12px;
         }
 
-        .chat-messages::-webkit-scrollbar, .list-scroller::-webkit-scrollbar {
-            width: 5px;
+        .user-avatar-mini {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255,255,255,0.1);
         }
-        .chat-messages::-webkit-scrollbar-thumb, .list-scroller::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+
+        .user-info-mini h4 {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .user-info-mini p {
+            margin: 3px 0 0 0;
+            font-size: 12px;
+        }
+
+        /* CHAT CONTAINER BOX */
+        .chat-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-main);
+            z-index: 5;
+            display: none;
+            flex-direction: column;
+        }
+
+        .chat-container.view-chat {
+            display: flex;
+        }
+
+        .chat-header-info {
+            padding: 15px 20px;
+            background: var(--bg-card);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .msg-container {
@@ -194,255 +200,247 @@
             flex-direction: column;
             max-width: 70%;
         }
-        .msg-container.sent { align-self: flex-end; }
-        .msg-container.received { align-self: flex-start; }
+
+        .msg-container.sent {
+            align-self: flex-end;
+            align-items: flex-end;
+        }
+
+        .msg-container.received {
+            align-self: flex-start;
+            align-items: flex-start;
+        }
 
         .msg {
-            padding: 11px 15px;
-            border-radius: 14px;
+            padding: 10px 14px;
+            border-radius: 12px;
             font-size: 14px;
             line-height: 1.4;
-            word-wrap: break-word;
-            position: relative;
+            word-break: break-word;
         }
-        .msg-container.sent .msg { background: var(--accent-blue); border-bottom-right-radius: 2px; }
-        .msg-container.received .msg { background: rgba(255,255,255,0.1); border-bottom-left-radius: 2px; }
+
+        .sent .msg {
+            background: var(--accent-cyan);
+            color: #000;
+            border-top-right-radius: 2px;
+        }
+
+        .received .msg {
+            background: var(--bg-card);
+            color: #fff;
+            border-top-left-radius: 2px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
 
         .msg-meta {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 4px;
             font-size: 10px;
             color: var(--text-muted);
-            margin-top: 2px;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
-
-        /* TIK METÒD STYLE */
-        .ticks { display: inline-flex; align-items: center; }
-        .tick-svg { width: 13px; height: 13px; fill: var(--text-muted); }
-        .tick-svg.delivered { fill: rgba(255,255,255,0.6); }
-        .tick-svg.read { fill: var(--accent-cyan); }
 
         .chat-input-row {
+            padding: 15px 20px;
+            background: var(--bg-card);
+            border-top: 1px solid rgba(255,255,255,0.05);
             display: flex;
             gap: 10px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.08);
         }
 
-        /* --- LISTES ET ELEMENTS --- */
-        .list-scroller {
-            flex-grow: 1;
-            overflow-y: auto;
-            margin-top: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .user-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255,255,255,0.03);
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .user-item:hover { background: rgba(255,255,255,0.08); border-color: var(--accent-cyan); }
-
-        .user-info-mini {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            position: relative;
-        }
-        .user-avatar-mini {
-            width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--accent-cyan); object-fit: cover;
-        }
-
-        .status-dot-indicator {
-            width: 10px; height: 10px; border-radius: 50%; background: #ccc;
-            display: inline-block; margin-right: 5px;
-        }
-        .status-dot-indicator.online { background: var(--success); box-shadow: 0 0 8px var(--success); }
-
-        /* --- FORMS AND INPUTS --- */
-        .chat-input-row input, .search-box input {
-            width: 100%;
-            padding: 12px;
-            background: rgba(255,255,255,0.05);
+        .chat-input-row input {
+            flex: 1;
+            background: rgba(0,0,0,0.2);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 8px;
+            padding: 12px;
             color: white;
             outline: none;
         }
-        
+
+        /* UTILS */
         .btn-action {
+            background: var(--accent-cyan);
+            color: black;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-weight: bold;
+            cursor: pointer;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 10px 18px;
-            background: linear-gradient(135deg, var(--accent-blue), #6a89cc);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
+            gap: 5px;
         }
-        .btn-action:hover { transform: translateY(-1px); }
-        .btn-action svg { width: 14px; height: 14px; fill: currentColor; }
+
+        .btn-action:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .search-bar-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-bar-row input {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            padding: 10px;
+            color: white;
+            outline: none;
+        }
+
+        .status-dot-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            background: #555;
+            margin-right: 5px;
+        }
+
+        .status-dot-indicator.online {
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
+        }
+
+        .alert-msg {
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .alert-msg.success { background: rgba(0, 230, 118, 0.15); color: var(--success); border: 1px solid var(--success); }
+        .alert-msg.error { background: rgba(255, 61, 0, 0.15); color: var(--error); border: 1px solid var(--error); }
 
         .btn-back {
-            background: rgba(255,255,255,0.1);
+            background: none;
             border: none;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
+            color: var(--accent-cyan);
             cursor: pointer;
-            font-size: 14px;
             display: flex;
             align-items: center;
             gap: 5px;
         }
-        .btn-back svg { width: 14px; height: 14px; fill: currentColor; }
 
-        .tab-view { display: none; height: 100%; flex-direction: column; }
-        .tab-view.active { display: flex; }
-
-        .alert-msg {
-            padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 13px; text-align: center; display: none;
+        .btn-back svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--accent-cyan);
         }
-        .alert-msg.error { background: rgba(255, 71, 87, 0.15); border: 1px solid var(--error); color: #ff6b81; }
-        .alert-msg.success { background: rgba(46, 213, 115, 0.15); border: 1px solid var(--success); color: #2ed573; }
 
+        .tick-svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--text-muted);
+        }
+
+        .tick-svg.delivered { fill: var(--text-muted); }
+        .tick-svg.read { fill: var(--accent-cyan); }
+
+        /* RESPONSIVE */
         @media (max-width: 768px) {
-            .chat-container { grid-template-columns: 1fr; }
-            .sidebar { transform: translateX(-260px); }
-            .sidebar.active { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 15px; }
-            
-            .right-panel { display: none; }
-            .chat-container.view-chat .left-panel { display: none; }
-            .chat-container.view-chat .right-panel { display: flex; }
+            .sidebar {
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                transform: translateX(-100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .btn-toggle {
+                display: block;
+            }
         }
     </style>
 </head>
 <body>
 
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <svg viewBox="0 0 100 100" style="width: 24px; height: 24px; fill: var(--accent-cyan);"><path d="M30,20 Q50,50 70,20 M30,80 Q50,50 70,80 M50,20 L50,80 M38,35 L62,35 M38,65 L62,65" stroke="var(--accent-cyan)" stroke-width="6" stroke-linecap="round"/></svg>
-                <h2 style="color: var(--accent-cyan); font-size: 20px;">Aliquiz</h2>
-            </div>
-            <button class="menu-toggle-btn" onclick="toggleSidebar()">
-                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-            </button>
-        </div>
-        <ul class="menu-items">
-            <li onclick="window.location.href='dashboard.html'">
-                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-                Retour Dashboard
-            </li>
-            <li class="active" onclick="switchSubTab('listeAmisTab', this)">
-                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-                Liste des Amis
-            </li>
-            <li onclick="switchSubTab('sugAmisTab', this)">
-                <svg viewBox="0 0 24 24"><path d="M11.5 22c1.38 0 2.5-1.12 2.5-2.5h-5c0 1.38 1.12 2.5 2.5 2.5zm5.75-5.75c1.47-1.33 2.25-3.13 2.25-5.25 0-3.64-2.48-6.72-5.92-7.39V2.5C13.5 1.67 12.83 1 12 1s-1.5 1.67-1.5 2.5v1.11C7.06 5.28 4.58 8.36 4.58 12c0 2.12.78 3.92 2.25 5.25L17.25 16.25z"/></svg>
-                Suggestions d'amis
-            </li>
-            <li onclick="switchSubTab('rechercheAmisTab', this)">
-                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                Recherche d'Amis
-            </li>
-            <li onclick="switchSubTab('demandeAmieTab', this)">
-                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                Demandes d'Ami
-            </li>
-            <li onclick="switchSubTab('listeBlokeTab', this)">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L16.9 18.31C15.55 19.37 13.85 20 12 20zm4.31-3.1L5.69 6.31C7.05 5.25 8.75 4.6 10 4.6c4.42 0 8 3.58 8 8 0 1.85-.63 3.55-1.69 4.9z"/></svg>
-                Liste Bloquée
-            </li>
-        </ul>
-    </nav>
-
-    <main class="main-content" id="mainContent">
+    <div class="social-layout">
         
-        <header class="top-navbar">
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <button class="menu-toggle-btn" onclick="toggleSidebar()">
-                    <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-                </button>
-                <span style="font-weight: bold; letter-spacing: 1px; color: var(--accent-cyan);">MESSAGERIE</span>
+        <!-- SIDEBAR DE GAUCHE -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2 style="color:var(--accent-cyan); font-size:18px; margin:0;">AliQuiz Social</h2>
             </div>
-        </header>
+            <ul class="menu-items">
+                <li class="active" onclick="switchSubTab('amisTab', this)">
+                    <span>Mes Amis</span>
+                </li>
+                <li onclick="switchSubTab('rechercheTab', this)">
+                    <span>Rechercher</span>
+                </li>
+                <li onclick="switchSubTab('demandeAmieTab', this)">
+                    <span>Demandes d'Ami</span>
+                </li>
+                <li onclick="switchSubTab('bloqueTab', this)">
+                    <span>Joueurs Bloqués</span>
+                </li>
+            </ul>
+        </div>
 
-        <div class="chat-container" id="chatContainer">
+        <!-- ZONE DE DROITE (CONTENU PRINCIPAL) -->
+        <div class="main-content" id="mainContent">
             
-            <div class="ui-card left-panel">
+            <div class="top-navbar">
+                <button class="btn-toggle" onclick="toggleSidebar()">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+                </button>
+            </div>
+
+            <div class="view-body">
                 
-                <div id="listeAmisTab" class="tab-view active">
-                    <h3 style="display:flex; align-items:center; gap:8px;">Mes Amis</h3>
-                    <div class="list-scroller" id="friendsScroller">
-                        <p style="text-align:center; font-size:13px; color:var(--text-muted);">Chargement...</p>
-                    </div>
+                <!-- TAB 1: LISTE DES AMIS & SUGGESTIONS -->
+                <div class="tab-view active" id="amisTab">
+                    <h3 style="color:var(--accent-gold); font-size:16px; margin:0 0 10px 0;">Mes Amis</h3>
+                    <div class="list-scroller" id="friendsScroller"></div>
+
+                    <h3 style="color:var(--accent-gold); font-size:16px; margin:25px 0 10px 0;">Suggestions de joueurs</h3>
+                    <div class="list-scroller" id="suggestionsScroller"></div>
                 </div>
 
-                <div id="sugAmisTab" class="tab-view">
-                    <h3>Suggestions d'amis</h3>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px;">Découvrez des joueurs sur Aliquiz :</p>
-                    <div class="list-scroller" id="suggestionsScroller">
-                        <p style="text-align:center; font-size:13px; color:var(--text-muted);">Chargement des suggestions...</p>
+                <!-- TAB 2: RECHERCHE AVANCÉE -->
+                <div class="tab-view" id="rechercheTab">
+                    <h3 style="color:var(--accent-gold); font-size:16px; margin:0 0 10px 0;">Rechercher un joueur</h3>
+                    <div class="search-bar-row">
+                        <input type="text" id="searchUserInput" placeholder="Entrez le prénom ou le @username...">
+                        <button class="btn-action" onclick="searchNewPlayer()">Rechercher</button>
                     </div>
-                </div>
-
-                <div id="rechercheAmisTab" class="tab-view">
-                    <h3>Rechercher un joueur</h3>
-                    <div class="search-box" style="margin-top:10px; display:flex; gap:8px;">
-                        <input type="text" id="searchUserInput" placeholder="Pseudo exact...">
-                        <button class="btn-action" onclick="searchNewPlayer()">Chercher</button>
-                    </div>
-                    <div id="searchAlert" class="alert-msg"></div>
+                    <div id="searchAlert"></div>
                     <div class="list-scroller" id="searchResultScroller"></div>
                 </div>
 
-                <div id="demandeAmieTab" class="tab-view">
-                    <h3>Demandes reçues</h3>
-                    <div class="list-scroller" id="requestsScroller">
-                        <p style="text-align:center; font-size:13px; color:var(--text-muted);">Aucune demande.</p>
-                    </div>
+                <!-- TAB 3: DEMANDES REÇUES & EN ATTENTE -->
+                <div class="tab-view" id="demandeAmieTab">
+                    <h3 style="color:var(--accent-gold); font-size:16px; margin:0 0 10px 0;">Demandes reçues</h3>
+                    <div class="list-scroller" id="requestsScroller"></div>
                 </div>
 
-                <div id="listeBlokeTab" class="tab-view">
-                    <h3>Joueurs bloqués</h3>
-                    <div class="list-scroller" id="blockedScroller">
-                        <p style="text-align:center; font-size:13px; color:var(--text-muted);">Aucun joueur bloqué.</p>
-                    </div>
+                <!-- TAB 4: LISTE DES BLOQUÉS -->
+                <div class="tab-view" id="bloqueTab">
+                    <h3 style="color:var(--accent-gold); font-size:16px; margin:0 0 10px 0;">Joueurs bloqués</h3>
+                    <div class="list-scroller" id="blockedScroller"></div>
                 </div>
 
             </div>
 
-            <div class="ui-card right-panel" id="rightPanel">
-                <div class="chat-box-area" id="chatBoxContent">
-                    <div style="text-align: center; margin: auto; color: var(--text-muted);">
-                        <svg viewBox="0 0 24 24" style="width:60px; height:60px; fill:var(--text-muted); margin-bottom:15px;"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
-                        <p>Sélectionnez un ami pour commencer à texter.</p>
-                    </div>
-                </div>
+            <!-- BOITE DE CHAT PRIVÉ (DYNAMIC COVERSATION OVERLAY) -->
+            <div class="chat-container" id="chatContainer">
+                <div id="chatBoxContent" style="display:flex; flex-direction:column; height:100%;"></div>
             </div>
 
         </div>
+    </div>
 
-    </main>
-
+    <!-- SCRIPT FIREBASE LOGIC COMPLETE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
         import { getAuth } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
@@ -479,9 +477,7 @@
             } catch(e) { console.error(e); }
         }
 
-        // Mete itilizatè a Online lè l louvri paj la
         setUserOnlineStatus(true);
-        // Dekonekte l si l fèmen tab la
         window.addEventListener('beforeunload', () => {
             setUserOnlineStatus(false);
         });
@@ -526,22 +522,26 @@
             setTimeout(() => box.style.display='none', 4000);
         }
 
-        async function loadSocialLists() {
-            const userDoc = await getDoc(doc(db, "users", currentQuizUser.uid));
-            if(!userDoc.exists()) return;
-            const userData = userDoc.data();
+        // OBSÈVÈ METE JOU AN TAN REYÈL POU EVITE PWOBLEM KA PA MONTE YO
+        function listenToMyUserData() {
+            onSnapshot(doc(db, "users", currentQuizUser.uid), (snapshot) => {
+                if (!snapshot.exists()) return;
+                const userData = snapshot.data();
 
-            const friends = userData.friends || [];
-            const requests = userData.requests || [];
-            const blocked = userData.blocked || [];
+                const friends = userData.friends || [];
+                const requests = userData.requests || [];
+                const blocked = userData.blocked || [];
+                const sentRequests = userData.sentRequests || []; 
 
-            renderFriendsList(friends);
-            renderRequestsList(requests);
-            renderBlockedList(blocked);
-            loadSuggestions(friends, blocked, requests);
+                renderFriendsList(friends);
+                renderRequestsList(requests);
+                renderBlockedList(blocked);
+                renderSentRequestsList(sentRequests); 
+                loadSuggestions(friends, blocked, requests, sentRequests);
+            });
         }
 
-        // 1. LISTE AMIS AK LISTENERS POU STATUS ONLINE AN TAN REYÈL
+        // 1. LISTE AMIS
         async function renderFriendsList(friendsUIDs) {
             const container = document.getElementById('friendsScroller');
             container.innerHTML = '';
@@ -556,7 +556,6 @@
                 div.id = `friend-item-${uid}`;
                 container.appendChild(div);
 
-                // Koute chanjman estati chak zanmi an tan reyèl nan lis la
                 onSnapshot(doc(db, "users", uid), (fDoc) => {
                     if(fDoc.exists()) {
                         const fData = fDoc.data();
@@ -583,7 +582,7 @@
         }
 
         // 2. SUGGESTIONS
-        async function loadSuggestions(myFriends, myBlocked, myRequests) {
+        async function loadSuggestions(myFriends, myBlocked, myRequests, mySentRequests) {
             const container = document.getElementById('suggestionsScroller');
             container.innerHTML = '';
             
@@ -594,7 +593,11 @@
 
                 snap.forEach(uDoc => {
                     const uData = uDoc.data();
-                    if(uData.uid === currentQuizUser.uid || myFriends.includes(uData.uid) || myBlocked.includes(uData.uid) || myRequests.includes(uData.uid)) return;
+                    if(uData.uid === currentQuizUser.uid || 
+                       myFriends.includes(uData.uid) || 
+                       myBlocked.includes(uData.uid) || 
+                       myRequests.includes(uData.uid) || 
+                       mySentRequests.includes(uData.uid)) return;
 
                     count++;
                     const div = document.createElement('div');
@@ -625,60 +628,110 @@
             }
         }
 
-        // 3. VOYE DEMANN
+        // 3. VOYE DEMANN ZANMI (FIKSÉ NET)
         window.sendFriendRequest = async function(targetUid, btnId = null) {
             try {
+                const myRef = doc(db, "users", currentQuizUser.uid);
                 const targetRef = doc(db, "users", targetUid);
+                
+                const mySnap = await getDoc(myRef);
                 const targetSnap = await getDoc(targetRef);
-                if(targetSnap.exists()) {
-                    let reqs = targetSnap.data().requests || [];
-                    if(!reqs.includes(currentQuizUser.uid)) {
-                        reqs.push(currentQuizUser.uid);
-                        await updateDoc(targetRef, { requests: reqs });
+
+                if(mySnap.exists() && targetSnap.exists()) {
+                    let mySentRequests = mySnap.data().sentRequests || [];
+                    let targetRequests = targetSnap.data().requests || [];
+
+                    if(!targetRequests.includes(currentQuizUser.uid)) {
+                        targetRequests.push(currentQuizUser.uid);
+                        mySentRequests.push(targetUid);
+
+                        const batch = writeBatch(db);
+                        batch.update(targetRef, { requests: targetRequests });
+                        batch.update(myRef, { sentRequests: mySentRequests });
+                        await batch.commit();
+
                         if(btnId) {
                             const btn = document.getElementById(btnId);
-                            btn.textContent = "Envoyé";
-                            btn.style.background = "var(--success)";
-                            btn.disabled = true;
+                            if(btn) {
+                                btn.textContent = "Envoyé";
+                                btn.style.background = "var(--success)";
+                                btn.disabled = true;
+                            }
                         } else {
                             showAlert('searchAlert', 'Demande envoyée !', 'success');
+                            searchNewPlayer(); 
                         }
                     } else {
                         if(!btnId) showAlert('searchAlert', 'Déjà envoyée.', 'error');
                     }
                 }
-            } catch(e) { if(!btnId) showAlert('searchAlert', 'Erreur.', 'error'); }
+            } catch(e) { 
+                console.error(e);
+                if(!btnId) showAlert('searchAlert', 'Erreur lors de l\'envoi.', 'error'); 
+            }
         }
 
-        // 4. CHÈCHE JWÈ
+        // 4. RECHÈCH FLÈKSIB COCHON (.INCLUDES)
         window.searchNewPlayer = async function() {
-            const input = document.getElementById('searchUserInput').value.trim();
+            const input = document.getElementById('searchUserInput').value.trim().toLowerCase();
             if(input === '') return;
-            const q = query(collection(db, "users"), where("username", "==", input));
-            const snap = await getDocs(q);
+            
             const box = document.getElementById('searchResultScroller');
-            box.innerHTML = '';
+            box.innerHTML = '<p style="text-align:center; font-size:13px; color:var(--text-muted);">Recherche...</p>';
 
-            if(snap.empty) {
-                showAlert('searchAlert', 'Aucun joueur trouvé.', 'error');
-                return;
+            try {
+                const q = query(collection(db, "users"), limit(100));
+                const snap = await getDocs(q);
+                box.innerHTML = '';
+
+                let foundCount = 0;
+                
+                const myDoc = await getDoc(doc(db, "users", currentQuizUser.uid));
+                const myData = myDoc.data() || {};
+                const myFriends = myData.friends || [];
+                const mySentReqs = myData.sentRequests || [];
+
+                snap.forEach(uDoc => {
+                    const uData = uDoc.data();
+                    if(uData.uid === currentQuizUser.uid) return;
+
+                    const username = (uData.username || "").toLowerCase();
+                    const prenom = (uData.prenom || "").toLowerCase();
+
+                    if(username.includes(input) || prenom.includes(input)) {
+                        foundCount++;
+                        const div = document.createElement('div');
+                        div.className = 'user-item';
+                        const flag = uData.country ? ` ${uData.country}` : '';
+                        
+                        let actionBtn = `<button class="btn-action" style="padding:5px 10px; font-size:12px;" onclick="sendFriendRequest('${uData.uid}')">Ajouter</button>`;
+                        
+                        if(myFriends.includes(uData.uid)) {
+                            actionBtn = `<span style="color:var(--success); font-size:12px; font-weight:bold;">Ami</span>`;
+                        } else if(mySentReqs.includes(uData.uid)) {
+                            actionBtn = `<span style="color:var(--text-muted); font-size:12px;">Déjà envoyé</span>`;
+                        }
+
+                        div.innerHTML = `
+                            <div class="user-info-mini">
+                                <img class="user-avatar-mini" src="${uData.profilePic || 'https://files.catbox.moe/dbcm8s.png'}">
+                                <div><h4>${uData.prenom}${flag} (@${uData.username})</h4></div>
+                            </div>
+                            ${actionBtn}
+                        `;
+                        box.appendChild(div);
+                    }
+                });
+
+                if(foundCount === 0) {
+                    showAlert('searchAlert', 'Aucun joueur trouvé.', 'error');
+                    box.innerHTML = `<p style="text-align:center;font-size:13px;color:var(--text-muted);">Aucun résultat.</p>`;
+                }
+
+            } catch(e) {
+                console.error(e);
+                showAlert('searchAlert', 'Erreur de recherche.', 'error');
             }
-
-            snap.forEach(uDoc => {
-                const uData = uDoc.data();
-                if(uData.uid === currentQuizUser.uid) return;
-                const div = document.createElement('div');
-                div.className = 'user-item';
-                const flag = uData.country ? ` ${uData.country}` : '';
-                div.innerHTML = `
-                    <div class="user-info-mini">
-                        <img class="user-avatar-mini" src="${uData.profilePic || 'https://files.catbox.moe/dbcm8s.png'}">
-                        <div><h4>${uData.prenom}${flag} (@${uData.username})</h4></div>
-                    </div>
-                    <button class="btn-action" style="padding:5px 10px; font-size:12px;" onclick="sendFriendRequest('${uData.uid}')">Ajouter</button>
-                `;
-                box.appendChild(div);
-            });
         }
 
         // 5. DEMANDES REÇUES
@@ -686,7 +739,7 @@
             const container = document.getElementById('requestsScroller');
             container.innerHTML = '';
             if(requestsUIDs.length === 0) {
-                container.innerHTML = `<p style="text-align:center;font-size:13px;color:var(--text-muted);">Aucune demande.</p>`;
+                container.innerHTML = `<p style="text-align:center;font-size:13px;color:var(--text-muted);">Aucune demande reçue.</p>`;
                 return;
             }
             for(let uid of requestsUIDs) {
@@ -722,29 +775,99 @@
                 let myReqs = mySnap.data().requests || [];
                 let myFriends = mySnap.data().friends || [];
                 let fFriends = fSnap.data().friends || [];
+                let fSentRequests = fSnap.data().sentRequests || [];
 
                 myReqs = myReqs.filter(id => id !== senderUid);
+                fSentRequests = fSentRequests.filter(id => id !== currentQuizUser.uid); 
                 if(!myFriends.includes(senderUid)) myFriends.push(senderUid);
                 if(!fFriends.includes(currentQuizUser.uid)) fFriends.push(currentQuizUser.uid);
 
-                await updateDoc(myRef, { requests: myReqs, friends: myFriends });
-                await updateDoc(friendRef, { friends: fFriends });
-                loadSocialLists();
+                const batch = writeBatch(db);
+                batch.update(myRef, { requests: myReqs, friends: myFriends });
+                batch.update(friendRef, { friends: fFriends, sentRequests: fSentRequests });
+                await batch.commit();
             }
         }
 
         async function rejectFriend(senderUid) {
             const myRef = doc(db, "users", currentQuizUser.uid);
+            const friendRef = doc(db, "users", senderUid);
             const mySnap = await getDoc(myRef);
+            const fSnap = await getDoc(friendRef);
+
             if(mySnap.exists()) {
                 let myReqs = mySnap.data().requests || [];
                 myReqs = myReqs.filter(id => id !== senderUid);
-                await updateDoc(myRef, { requests: myReqs });
-                loadSocialLists();
+                
+                const batch = writeBatch(db);
+                batch.update(myRef, { requests: myReqs });
+
+                if(fSnap.exists()) {
+                    let fSentRequests = fSnap.data().sentRequests || [];
+                    fSentRequests = fSentRequests.filter(id => id !== currentQuizUser.uid);
+                    batch.update(friendRef, { sentRequests: fSentRequests });
+                }
+                await batch.commit();
             }
         }
 
-        // 6. BLOCKED
+        // 6. LIS MOUN MWEN VOYE DEMANN BA YO (EN ATTENTE)
+        async function renderSentRequestsList(sentRequestsUIDs) {
+            let container = document.getElementById('sentRequestsScroller');
+            if(!container) {
+                const demandeView = document.getElementById('demandeAmieTab');
+                if(demandeView) {
+                    const hr = document.createElement('hr');
+                    hr.style.margin = "20px 0 10px 0";
+                    hr.style.border = "0";
+                    hr.style.borderTop = "1px solid rgba(255,255,255,0.08)";
+                    
+                    const title = document.createElement('h3');
+                    title.textContent = "Demandes envoyées (En attente)";
+                    title.style.fontSize = "15px";
+                    title.style.color = "var(--accent-gold)";
+                    
+                    container = document.createElement('div');
+                    container.className = "list-scroller";
+                    container.id = "sentRequestsScroller";
+                    
+                    demandeView.appendChild(hr);
+                    demandeView.appendChild(title);
+                    demandeView.appendChild(container);
+                }
+            }
+            
+            if(!container) return;
+            container.innerHTML = '';
+            
+            if(sentRequestsUIDs.length === 0) {
+                container.innerHTML = `<p style="text-align:center;font-size:13px;color:var(--text-muted);">Aucune demande en attente.</p>`;
+                return;
+            }
+
+            for(let uid of sentRequestsUIDs) {
+                const uDoc = await getDoc(doc(db, "users", uid));
+                if(uDoc.exists()) {
+                    const uData = uDoc.data();
+                    const div = document.createElement('div');
+                    div.className = 'user-item';
+                    div.style.cursor = 'default';
+                    div.innerHTML = `
+                        <div class="user-info-mini">
+                            <img class="user-avatar-mini" src="${uData.profilePic || 'https://files.catbox.moe/dbcm8s.png'}">
+                            <div>
+                                <h4 style="font-size:13px;">${uData.prenom}</h4>
+                                <p style="font-size:11px;color:var(--text-muted);">@${uData.username}</p>
+                            </div>
+                        </div>
+                        <span style="font-size:11px; background:rgba(255,255,255,0.05); padding:4px 8px; border-radius:6px; color:var(--text-muted);">En attente...</span>
+                    `;
+                    container.appendChild(div);
+                }
+            }
+        }
+
+        // 7. LISTE BLOCKED
         async function renderBlockedList(blockedUIDs) {
             const container = document.getElementById('blockedScroller');
             container.innerHTML = '';
@@ -778,7 +901,6 @@
 
                 await updateDoc(myRef, { blocked: blocked, friends: friends });
                 backToFriendsList();
-                loadSocialLists();
             }
         }
 
@@ -789,11 +911,10 @@
                 let blocked = mySnap.data().blocked || [];
                 blocked = blocked.filter(id => id !== targetUid);
                 await updateDoc(myRef, { blocked: blocked });
-                loadSocialLists();
             }
         }
 
-        // --- DINAMIK CONVERSATION (AK JESTYON ONLINE TOU VÈ / TICK / READ RECEIPTS) ---
+        // --- DINAMIK CONVERSATION & LIVE TICKS ---
         function openPrivateChat(friendData) {
             activeChatFriendUID = friendData.uid;
             if(unsubChat) unsubChat();
@@ -828,14 +949,13 @@
 
                 <div class="chat-input-row">
                     <input type="text" id="chatInputField" placeholder="Écrire un message...">
-                    <button class="btn-action" onclick="sendChatMessage()">
+                    <button class="btn-action" id="sendMessageBtn">
                         <span>Envoyer</span>
-                        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                        <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:black;"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                     </button>
                 </div>
             `;
 
-            // A. Koute estati online zanmi an an tan reyèl pou header konvèsasyon an
             let initialFriendOnlineStatus = false;
             unsubFriendStatus = onSnapshot(doc(db, "users", friendData.uid), (snapshot) => {
                 if(snapshot.exists()) {
@@ -854,7 +974,6 @@
                 }
             });
 
-            // B. Koute mesaj yo an tan reyèl epi mete yo sou "read" si lòt moun nan voye yo
             const qMessages = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
             
             unsubChat = onSnapshot(qMessages, async (snapshot) => {
@@ -869,7 +988,6 @@
                     const msgId = msgDoc.id;
                     const isMe = msg.senderId === currentQuizUser.uid;
 
-                    // Si se pa mwen ki voye mesaj sa a epi estati l pa "read", nou pase l sou read otomatikman kounye a paske chat la ouvè
                     if (!isMe && msg.status !== "read") {
                         if (!batch) batch = writeBatch(db);
                         batch.update(doc(db, "chats", chatId, "messages", msgId), { status: "read" });
@@ -878,23 +996,19 @@
                     const containerDiv = document.createElement('div');
                     containerDiv.className = `msg-container ${isMe ? 'sent' : 'received'}`;
 
-                    // Detèmine tik yo pou mesaj mwen voye yo
                     let tickMarkup = '';
                     if (isMe) {
                         if (msg.status === "read") {
-                            // De ba vèt / cyan lè l li l
                             tickMarkup = `
                                 <span class="ticks">
                                     <svg class="tick-svg read" viewBox="0 0 24 24"><path d="M0.41 13.41L6 19l1.41-1.42L1.83 12m5.66 5.66l12-12L18.07 4.25 7.5 14.82M23.25 5.66l-12 12-1.42-1.41 12-12z"/></svg>
                                 </span>`;
                         } else if (msg.status === "delivered") {
-                            // De ba blan/gri lè moun lan online men l poko li l
                             tickMarkup = `
                                 <span class="ticks">
                                     <svg class="tick-svg delivered" viewBox="0 0 24 24"><path d="M0.41 13.41L6 19l1.41-1.42L1.83 12m5.66 5.66l12-12L18.07 4.25 7.5 14.82M23.25 5.66l-12 12-1.42-1.41 12-12z"/></svg>
                                 </span>`;
                         } else {
-                            // Yon sèl ba lè lòt moun lan offline
                             tickMarkup = `
                                 <span class="ticks">
                                     <svg class="tick-svg" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
@@ -902,7 +1016,6 @@
                         }
                     }
 
-                    // Fòma ti lè mesaj la
                     let timeStr = "";
                     if (msg.timestamp) {
                         const tDate = msg.timestamp.toDate ? msg.timestamp.toDate() : new Date(msg.timestamp);
@@ -919,26 +1032,23 @@
                     flow.appendChild(containerDiv);
                 });
 
-                // Egzekite chanjman "read" yo nan Firebase si sa nesesè
-                if (batch) {
-                    await batch.commit();
-                }
-
+                if (batch) { await batch.commit(); }
                 flow.scrollTop = flow.scrollHeight;
             });
 
             setTimeout(() => {
-                document.getElementById('chatInputField').focus();
-                document.getElementById('chatInputField').addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') sendChatMessage(initialFriendOnlineStatus);
-                });
+                const inputFld = document.getElementById('chatInputField');
+                if(inputFld) {
+                    inputFld.focus();
+                    inputFld.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') sendChatMessage(initialFriendOnlineStatus);
+                    });
+                }
+                const sBtn = document.getElementById('sendMessageBtn');
+                if(sBtn) {
+                    sBtn.onclick = () => sendChatMessage(initialFriendOnlineStatus);
+                }
             }, 200);
-
-            // Chanje bouton voye a pou l pase estati kòrèk la tou lè n klike sou li
-            const sendBtn = document.querySelector('.chat-input-row button');
-            if(sendBtn) {
-                sendBtn.onclick = () => sendChatMessage(initialFriendOnlineStatus);
-            }
         }
 
         window.sendChatMessage = async function(isFriendOnline = false) {
@@ -947,10 +1057,9 @@
             const txt = input.value.trim();
             if(!activeChatFriendUID || txt === "") return;
 
-            // Si zanmi an online, estati mesaj la ap "delivered" dirèkteman (de ba), si l offline l ap "sent" (yon sèl ba)
             const initialStatus = isFriendOnline ? "delivered" : "sent";
-
             const chatId = currentQuizUser.uid < activeChatFriendUID ? `${currentQuizUser.uid}_${activeChatFriendUID}` : `${activeChatFriendUID}_${currentQuizUser.uid}`;
+            
             await addDoc(collection(db, "chats", chatId, "messages"), {
                 senderId: currentQuizUser.uid,
                 text: txt,
@@ -961,7 +1070,8 @@
             input.focus();
         }
 
-        loadSocialLists();
+        // LANSE KOUTE KONEKSYON AN TAN REYÈL
+        listenToMyUserData();
     </script>
 </body>
 </html>
