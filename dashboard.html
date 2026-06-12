@@ -199,7 +199,6 @@
             gap: 8px;
         }
 
-        /* Lyen nouvo imaj AliCoins ou a entegre isit la */
         .coins-display img {
             width: 22px;
             height: 22px;
@@ -294,9 +293,11 @@
             position: relative;
         }
         .theme-preview {
-            height: 60px;
+            height: 90px;
             border-radius: 8px;
             margin-bottom: 10px;
+            background-position: center !important;
+            background-size: cover !important;
         }
 
         .avatar-preview-box {
@@ -491,25 +492,12 @@
                 </div>
 
                 <div id="themes-shop" class="shop-section active">
-                    <div class="card-grid">
-                        <div class="theme-card">
-                            <div class="theme-preview" style="background: linear-gradient(rgba(10,14,26,0.85), rgba(10,14,26,0.98)), url('https://files.catbox.moe/5u3toy.jpg'); background-size: cover;"></div>
-                            <h4>Thème Espace Par Défaut</h4>
-                            <p style="font-size: 12px; color: var(--text-muted); margin: 5px 0 15px;">Le thème classique de biologie spatiale.</p>
-                            <button class="btn-action" style="width: 100%;" onclick="applyTheme('default')">Appliquer Gratuit</button>
+                    <div class="card-grid" id="themesGridContainer">
                         </div>
-                        <div class="theme-card">
-                            <div class="theme-preview" style="background: linear-gradient(rgba(21,11,41,0.9), rgba(15,5,31,0.95)), url('https://files.catbox.moe/dbcm8s.png'); background-size: cover;"></div>
-                            <h4>Thème Cyber-Biologie</h4>
-                            <p style="font-size: 12px; color: var(--text-muted); margin: 5px 0 15px;">Un style néon violet futuriste ultra immersif.</p>
-                            <button class="btn-action" style="width: 100%;" id="btnThemeCyber" onclick="buyOrApplyTheme('cyber', 150)">Acheter pour 150 AC</button>
-                        </div>
-                    </div>
                 </div>
 
                 <div id="avatars-shop" class="shop-section">
-                    <div class="card-grid" id="avatarsGridContainer">
-                        </div>
+                    <div class="card-grid" id="avatarsGridContainer"></div>
                 </div>
             </div>
         </section>
@@ -571,6 +559,21 @@
         let totalPerfectScores = 0;
         let purchasedThemes = ['default'];
         let purchasedAvatars = ['avatar_1', 'avatar_2', 'avatar_3', 'avatar_4', 'avatar_5'];
+        let currentActiveTheme = 'default';
+
+        // LIS 9 BACKGROUND YO AK PRI YO +50 AC CHAK NIVO
+        const allBackgrounds = [
+            { id: "default", name: "Espace Par Défaut", url: "https://files.catbox.moe/5u3toy.jpg", price: 0 },
+            { id: "theme_1", name: "Nébuleuse Émeraude", url: "https://files.catbox.moe/7nz8sv.jpg", price: 150 },
+            { id: "theme_2", name: "Néon Cyber-Biologie", url: "https://files.catbox.moe/5e14ci.jpg", price: 200 },
+            { id: "theme_3", name: "Aurore Cosmique", url: "https://files.catbox.moe/rzdtal.jpg", price: 250 },
+            { id: "theme_4", name: "Galaxie Violette", url: "https://files.catbox.moe/7vkh0g.jpg", price: 300 },
+            { id: "theme_5", name: "Interface Tech-Lab", url: "https://files.catbox.moe/kok7dy.jpg", price: 350 },
+            { id: "theme_6", name: "Abysse Quantique", url: "https://files.catbox.moe/0fhbzk.jpg", price: 400 },
+            { id: "theme_7", name: "Horizon Plasma", url: "https://files.catbox.moe/9ynvok.jpg", price: 450 },
+            { id: "theme_8", name: "Supernova Dorée", url: "https://files.catbox.moe/q7b06h.jpg", price: 500 },
+            { id: "theme_9", name: "Infini Stellaire", url: "https://files.catbox.moe/ecpzmd.jpg", price: 550 }
+        ];
 
         function generateAvatarSVG(id) {
             if (id === 50) {
@@ -601,9 +604,8 @@
             </svg>`;
         }
 
-        // KORÈKSYON ALÈT: Mesaj avètisman an ap afiche egzakteman anba fòm avatar ki klike a
-        function showCardNotification(avatarId, message, type = 'error') {
-            const alertBox = document.getElementById(`avatarAlert_${avatarId}`);
+        function showCardNotification(targetId, message, type = 'error') {
+            const alertBox = document.getElementById(targetId);
             if (!alertBox) return;
             alertBox.textContent = message;
             alertBox.className = `alert-msg ${type}`;
@@ -650,9 +652,13 @@
                     totalPerfectScores = data.totalPerfectScores || 0;
                     purchasedThemes = data.purchasedThemes || ['default'];
                     purchasedAvatars = data.purchasedAvatars || ['avatar_1', 'avatar_2', 'avatar_3', 'avatar_4', 'avatar_5'];
+                    currentActiveTheme = data.activeTheme || 'default';
                     
+                    // Aplike tèm ki sere a otomatikman nan kòmansman an
+                    applyTheme(currentActiveTheme);
+
                     updateDashboardStats();
-                    checkThemeButtons();
+                    buildThemesShopUI();
                     buildAvatarsShopUI();
                 }
             });
@@ -669,11 +675,82 @@
             if (aliCoins >= 500) document.getElementById('badge3').classList.add('unlocked');
         }
 
-        function checkThemeButtons() {
-            if(purchasedThemes.includes('cyber')) {
-                document.getElementById('btnThemeCyber').textContent = "Appliquer";
-                document.getElementById('btnThemeCyber').style.background = "var(--success)";
+        // BATI DESIGN SHOP BOUTIK POU TIM YO
+        function buildThemesShopUI() {
+            const container = document.getElementById('themesGridContainer');
+            if(!container) return;
+            container.innerHTML = "";
+
+            allBackgrounds.forEach(theme => {
+                const isPurchased = purchasedThemes.includes(theme.id);
+                const isActive = (currentActiveTheme === theme.id);
+                
+                let btnText = "Acheter " + theme.price + " AC";
+                let btnStyle = "background: var(--accent-blue);";
+
+                if (isPurchased) {
+                    btnText = isActive ? "Actif 🌟" : "Appliquer";
+                    btnStyle = isActive ? "background: var(--warning); color: black;" : "background: var(--success);";
+                } else if (theme.price === 0) {
+                    btnText = "Appliquer Gratuit";
+                    btnStyle = "background: var(--success);";
+                }
+
+                const card = document.createElement('div');
+                card.className = "theme-card";
+                card.innerHTML = `
+                    <div class="theme-preview" style="background: linear-gradient(rgba(10,14,26,0.5), rgba(10,14,26,0.8)), url('${theme.url}');"></div>
+                    <h4>${theme.name}</h4>
+                    <p style="font-size: 12px; color: var(--text-muted); margin: 5px 0 15px;">Prix: ${theme.price === 0 ? 'Gratuit' : theme.price + ' AC'}</p>
+                    <button class="btn-action" style="width: 100%; ${btnStyle}" id="btnTheme_${theme.id}">${btnText}</button>
+                    <div id="themeAlert_${theme.id}" class="alert-msg"></div>
+                `;
+                container.appendChild(card);
+
+                document.getElementById(`btnTheme_${theme.id}`).onclick = () => {
+                    buyOrApplyTheme(theme.id, theme.price);
+                };
+            });
+        }
+
+        // ACHETE OUBYEN APLIKE TÈM AK PREZÈVASYON OTOMATIK
+        window.buyOrApplyTheme = async function(themeId, price) {
+            hideAllNotifications();
+            
+            if(purchasedThemes.includes(themeId)) {
+                currentActiveTheme = themeId;
+                applyTheme(themeId);
+                buildThemesShopUI();
+                showCardNotification(`themeAlert_${themeId}`, "Thème appliqué avec succès! 🌌", 'success');
+                await updateDoc(doc(db, "users", currentQuizUser.uid), { activeTheme: themeId });
+                return;
             }
+
+            if(aliCoins < price) {
+                showCardNotification(`themeAlert_${themeId}`, "Pas assez d'AliCoins! 🪙", 'error');
+                return;
+            }
+
+            aliCoins -= price;
+            purchasedThemes.push(themeId);
+            currentActiveTheme = themeId;
+            
+            applyTheme(themeId);
+            updateDashboardStats();
+            buildThemesShopUI();
+            showCardNotification(`themeAlert_${themeId}`, "Thème acheté et appliqué! 🎉", 'success');
+
+            await updateDoc(doc(db, "users", currentQuizUser.uid), { 
+                coins: aliCoins, 
+                purchasedThemes: purchasedThemes, 
+                activeTheme: themeId 
+            });
+        }
+
+        // FUNKSYON KIPLIRE APÈRISYON AN REALTIME
+        window.applyTheme = function(themeId) {
+            const selected = allBackgrounds.find(t => t.id === themeId) || allBackgrounds[0];
+            document.body.style.background = `linear-gradient(rgba(10, 14, 26, 0.85), rgba(10, 14, 26, 0.98)), url('${selected.url}') center/cover fixed`;
         }
 
         function buildAvatarsShopUI() {
@@ -732,13 +809,13 @@
                 currentQuizUser.profilePic = customValue;
                 localStorage.setItem("currentQuizUser", JSON.stringify(currentQuizUser));
                 loadUserSessionUI();
-                showCardNotification(id, "Avatar sélectionné ! 👤", 'success');
+                showCardNotification(`avatarAlert_${id}`, "Avatar sélectionné ! 👤", 'success');
                 await updateDoc(doc(db, "users", currentQuizUser.uid), { profilePic: customValue });
                 return;
             }
 
             if (aliCoins < price) {
-                showCardNotification(id, "Vous n'avez pas assez d'AliCoins pour cet avatar !", 'error');
+                showCardNotification(`avatarAlert_${id}`, "Vous n'avez pas assez d'AliCoins pour cet avatar !", 'error');
                 return;
             }
 
@@ -750,7 +827,7 @@
             currentQuizUser.profilePic = customValue;
             localStorage.setItem("currentQuizUser", JSON.stringify(currentQuizUser));
             loadUserSessionUI();
-            showCardNotification(id, "Avatar acheté et appliqué ! 🎉", 'success');
+            showCardNotification(`avatarAlert_${id}`, "Avatar acheté et appliqué ! 🎉", 'success');
 
             await updateDoc(doc(db, "users", currentQuizUser.uid), { 
                 coins: aliCoins, 
@@ -779,33 +856,6 @@
             document.getElementById(tabId).classList.add('active');
             if(element) element.classList.add('active');
             if(window.innerWidth <= 768) toggleSidebar();
-        }
-
-        window.buyOrApplyTheme = async function(themeId, price) {
-            hideAllNotifications();
-            if(purchasedThemes.includes(themeId)) {
-                applyTheme(themeId);
-                return;
-            }
-            if(aliCoins < price) {
-                alert("Pas assez d'AliCoins! 🪙");
-                return;
-            }
-            aliCoins -= price;
-            purchasedThemes.push(themeId);
-            updateDashboardStats();
-            checkThemeButtons();
-            applyTheme(themeId);
-
-            await updateDoc(doc(db, "users", currentQuizUser.uid), { coins: aliCoins, purchasedThemes: purchasedThemes });
-        }
-
-        window.applyTheme = function(themeId) {
-            if(themeId === 'default') {
-                document.body.style.background = "linear-gradient(rgba(10, 14, 26, 0.85), rgba(10, 14, 26, 0.98)), url('https://files.catbox.moe/5u3toy.jpg') center/cover fixed";
-            } else if(themeId === 'cyber') {
-                document.body.style.background = "linear-gradient(rgba(21, 11, 41, 0.9), rgba(15, 5, 31, 0.95)), url('https://files.catbox.moe/dbcm8s.png') center/cover fixed";
-            }
         }
 
         function showNotification(targetId, message, type = 'error') {
