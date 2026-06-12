@@ -218,15 +218,29 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ANKADREMAN RANJE DE 3 STRIT */
-        .card-grid {
+        /* CARD GRIDS (ACCUEIL AK PROFILE RETE DINAMIK OSWA PA SÈKSYON) */
+        .card-grid-accueil {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .card-grid-profile {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        /* RANJE DE 2 STRIT POU MAGAZEN AN (SHOP) KOU APARÈY LA SOU TOUT KALITE EKRAN */
+        .card-grid-shop {
             display: grid !important;
-            grid-template-columns: repeat(3, 1fr) !important;
+            grid-template-columns: repeat(2, 1fr) !important;
             gap: 20px;
         }
 
         @media (max-width: 768px) {
-            .card-grid { gap: 10px; }
+            .card-grid-accueil, .card-grid-profile { grid-template-columns: 1fr; gap: 15px; }
+            .card-grid-shop { gap: 10px; }
             .theme-card h4 { font-size: 13px; }
         }
 
@@ -299,7 +313,7 @@
             position: relative;
         }
         .theme-preview {
-            height: 110px;
+            height: 130px;
             border-radius: 8px;
             margin-bottom: 10px;
             background-position: center !important;
@@ -307,8 +321,8 @@
         }
 
         .avatar-preview-box {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             margin: 0 auto 10px;
             border-radius: 50%;
             overflow: hidden;
@@ -426,7 +440,7 @@
         </header>
 
         <section id="homeTab" class="tab-view active">
-            <div class="card-grid">
+            <div class="card-grid-accueil">
                 <div class="ui-card" style="text-align: center;">
                     <div style="margin-bottom: 15px; color: var(--accent-cyan);">
                         <svg viewBox="0 0 24 24" style="width:50px; height:50px; fill:currentColor;"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S19.67 9 20.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
@@ -446,18 +460,27 @@
                 </div>
 
                 <div class="ui-card" style="text-align: center;">
-                    <div style="margin-bottom: 15px; color: #f59e0b;">
-                        <svg viewBox="0 0 24 24" style="width:50px; height:50px; fill:currentColor;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+                    <div style="margin-bottom: 15px; color: #a29bfe;">
+                        <svg viewBox="0 0 24 24" style="width:50px; height:50px; fill:currentColor;"><path d="M12 2c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l2.79-2.79C10.09 18.64 11.03 19 12 19c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
                     </div>
-                    <h3 style="margin: 10px 0;">Flashcards</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Utilisez des cartes mémoire pour des tests rapides.</p>
-                    <button class="btn-action" style="width: 100%; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="window.location.href='flashcard.html'">Ouvrir Flashcards</button>
+                    <h3 style="margin: 10px 0;">Intelligence Artificielle</h3>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Posez des questions et discutez en direct avec l'IA.</p>
+                    <button class="btn-action" style="width: 100%; background: linear-gradient(135deg, #6c5ce7, #a29bfe);" onclick="window.location.href='ai.html'">Discuter avec l'IA</button>
+                </div>
+
+                <div class="ui-card" style="text-align: center;">
+                    <div style="margin-bottom: 15px; color: #f59e0b;">
+                        <svg viewBox="0 0 24 24" style="width:50px; height:50px; fill:currentColor;"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+                    </div>
+                    <h3 style="margin: 10px 0;">Dictionnaire</h3>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Recherchez des définitions et des termes complexes.</p>
+                    <button class="btn-action" style="width: 100%; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="window.location.href='flashcard.html'">Ouvrir le Dictionnaire</button>
                 </div>
             </div>
         </section>
 
         <section id="profileTab" class="tab-view">
-            <div class="card-grid">
+            <div class="card-grid-profile">
                 <div class="ui-card" style="text-align: center;">
                     <div class="profile-img-container" id="mainProfilePicContainer" style="width: 110px; height: 110px; border-width: 3px;">
                         <img id="mainProfilePic" src="https://files.catbox.moe/dbcm8s.png" alt="Avatar">
@@ -500,11 +523,11 @@
                 </div>
 
                 <div id="themes-shop" class="shop-section active">
-                    <div class="card-grid" id="themesGridContainer"></div>
+                    <div class="card-grid-shop" id="themesGridContainer"></div>
                 </div>
 
                 <div id="avatars-shop" class="shop-section">
-                    <div class="card-grid" id="avatarsGridContainer"></div>
+                    <div class="card-grid-shop" id="avatarsGridContainer"></div>
                 </div>
             </div>
         </section>
@@ -561,7 +584,6 @@
         let currentQuizUser = JSON.parse(localStorage.getItem("currentQuizUser"));
         if (!currentQuizUser) { window.location.href = 'index.html'; }
 
-        // PWOBLEM SOLVI : Nou pa mete okenn valè pa defo fiks (tankou 150) nan kòd la JavaScript la
         let aliCoins = 0; 
         let totalGames = 0;
         let totalPerfectScores = 0;
@@ -641,27 +663,25 @@
             const flags = { fr: "🇫🇷", ht: "🇭🇹", us: "🇺🇸", ca: "🇨🇦" };
             document.getElementById('profCountry').textContent = flags[currentQuizUser.country] || "🌐";
             
-            // LI SOU FIRESTORE AVAN POU GEN LALÈT EGZAK KOU MOUN NAN REFRESH PAJ LA
             const docRef = doc(db, "users", currentQuizUser.uid);
             const snapshot = await getDoc(docRef);
             
             if(snapshot.exists()) {
                 const data = snapshot.data();
-                aliCoins = data.coins !== undefined ? data.coins : 0; // Si l a 0, li rete 0!
+                aliCoins = data.coins !== undefined ? data.coins : 0;
                 totalGames = data.totalGames || 0;
                 totalPerfectScores = data.totalPerfectScores || 0;
                 purchasedThemes = data.purchasedThemes || ['default'];
                 purchasedAvatars = data.purchasedAvatars || ['avatar_1'];
                 currentActiveTheme = data.activeTheme || 'default';
                 
-                // Save aktyèl la nan LocalStorage tou pou lòt paj yo
                 currentQuizUser.coins = aliCoins;
                 currentQuizUser.activeTheme = currentActiveTheme;
                 currentQuizUser.profilePic = data.profilePic || currentQuizUser.profilePic;
                 localStorage.setItem("currentQuizUser", JSON.stringify(currentQuizUser));
 
                 renderProfilePictures(currentQuizUser.profilePic);
-                applyTheme(currentActiveTheme); // background lan aplike imedyatman
+                applyTheme(currentActiveTheme); 
                 updateDashboardStats();
                 buildThemesShopUI();
                 buildAvatarsShopUI();
@@ -907,7 +927,6 @@
             }
         }
 
-        // Kouri fonksyon chajman an
         loadUserSessionUI();
     </script>
 </body>
