@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AliQuiz - IA Assistant</title>
+    <link class="ui-favicon" rel="icon" type="image/png" href="https://files.catbox.moe/dbcm8s.png">
+    <style>
+        :root {
+            --bg-dark: #0a0e1a;
+            --panel-bg: rgba(16, 24, 48, 0.95);
+            --accent-gold: #ffeaa7;
+            --accent-cyan: #00d2ff;
+            --accent-purple: #6c5ce7;
+            --text-light: #ffffff;
+            --text-muted: #a4b0be;
+            --success: #2ed573;
+            --error: #ff4757;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --glow-cyan: rgba(0, 210, 255, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(10, 14, 26, 0.85), rgba(10, 14, 26, 0.98)), 
+                        url('https://files.catbox.moe/5u3toy.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-light);
+        }
+
+        /* Top Bar Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 210, 255, 0.1);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--glow-cyan);
+        }
+
+        .chat-container {
+            flex: 1;
+            max-width: 900px;
+            width: 100%;
+            margin: 30px auto;
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        /* Chat Messages Area */
+        .chat-messages {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-height: 400px;
+            max-height: 60vh;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, var(--accent-purple), #5758bb);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.ai {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: #e0e6ed;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 15px;
+            display: none;
+        }
+
+        .dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            animation: blink 1.4s infinite both;
+        }
+        .dot:nth-child(2) { animation-delay: .2s; }
+        .dot:nth-child(3) { animation-delay: .4s; }
+
+        @keyframes blink {
+            0% { opacity: .2; }
+            20% { opacity: 1; }
+            100% { opacity: .2; }
+        }
+
+        /* Input Area */
+        .chat-input-area {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .chat-input-area textarea {
+            flex: 1;
+            background: rgba(10, 14, 26, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 15px;
+            color: white;
+            font-size: 0.95rem;
+            resize: none;
+            height: 50px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .chat-input-area textarea:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--accent-cyan), #00a8ff);
+            color: #0a0e1a;
+            border: none;
+            padding: 0 25px;
+            height: 50px;
+            border-radius: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--glow-cyan);
+        }
+
+        @media(max-width: 768px) {
+            header { padding: 15px 20px; }
+            .chat-container { margin: 10px; border-radius: 16px; }
+            .message { max-width: 85%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <a href="dashboard.html" class="back-btn">⬅ Dashboard</a>
+            <h2 style="color: var(--accent-gold); font-size: 1.3rem; letter-spacing: 1px;">ALIQUIZ IA</h2>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">
+            Modèle: <span style="color: var(--accent-cyan); font-weight: bold;">Gemini 1.5 Flash</span>
+        </div>
+    </header>
+
+    <div class="chat-container">
+        <div class="chat-messages" id="chatMessagesBox">
+            <div class="message ai">
+                Bonjour ! Mwen se Asistan Entèlijans Atifisyèl AliQuiz la. Mwen la pou m reponn kesyon ou yo, ede w etidye leson w yo, oswa ba w eksplikasyon sou nenpòt sijè. Kisa m ka fè pou ou jodi a ?
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <textarea id="chatInput" placeholder="Ekri mesaj ou a la a..."></textarea>
+            <button class="send-btn" id="sendMsgBtn">Voye</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+        // Konfigirasyon Firebase ou a
+        const firebaseConfig = {
+            apiKey: "AIzaSyCF2I4LEcMA1oJRwa7xthvSOQGSCg6lPjs",
+            authDomain: "aliquiz-509.firebaseapp.com",
+            projectId: "aliquiz-509",
+            storageBucket: "aliquiz-509.firebasestorage.app",
+            messagingSenderId: "319472495068",
+            appId: "1:319472495068:web:092e0b9efb14dae8f60719"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Tcheke si itilizatè a konekte
+        let currentQuizUser = JSON.parse(localStorage.getItem("currentQuizUser"));
+        if (!currentQuizUser) { window.location.href = 'index.html'; }
+
+        const messagesBox = document.getElementById('chatMessagesBox');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendMsgBtn');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        // Fonksyon pou afiche mesaj sou ekran an
+        function appendMessage(text, sender) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${sender}`;
+            msgDiv.innerText = text;
+            messagesBox.appendChild(msgDiv);
+            messagesBox.scrollTop = messagesBox.scrollHeight; // Scroll anba nèt
+        }
+
+        // Kòd pou voye mesaj epi parèt repons Gemini
+        async function handleSendMessage() {
+            const userText = chatInput.value.trim();
+            if (userText === "") return;
+
+            // 1. Afiche mesaj itilizatè a
+            appendMessage(userText, 'user');
+            chatInput.value = ""; // Vwade input la
+
+            // 2. Parèt animasyon k ap chaje a (Loading dots)
+            typingIndicator.style.display = "block";
+            messagesBox.scrollTop = messagesBox.scrollHeight;
+
+            try {
+                // Sove mesaj la nan Firebase tou pou achiv (Si w vle sa)
+                await addDoc(collection(db, "messages_ai"), {
+                    userId: currentQuizUser.uid,
+                    username: currentQuizUser.username || "Joueur",
+                    prompt: userText,
+                    timestamp: new Date().toISOString()
+                });
+
+                // N ap rele API Gemini an dirèk via yon URL Vercel Serverless Function 
+                // (Oswa si w mete kle a nan yon sèvè, ou chanje URL sa a pou API pa w la)
+                const response = await fetch('/api/gemini', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: userText })
+                });
+
+                const data = await response.json();
+                typingIndicator.style.display = "none";
+
+                if (data.reply) {
+                    appendMessage(data.reply, 'ai');
+                } else {
+                    appendMessage("Eskize m, mwen pa kapab jwenn repons lan kounye a. Re-eseye ankò.", 'ai');
+                }
+
+            } catch (error) {
+                typingIndicator.style.display = "none";
+                console.error("Erreur Gemini:", error);
+                appendMessage("Oups! Gen yon ti erè rezo ki rive. Verifye koneksyon ou.", 'ai');
+            }
+        }
+
+        // Lè moun nan klike sou bouton Voye
+        sendBtn.addEventListener('click', handleSendMessage);
+
+        // Lè moun nan peze Entrer sou klavye a
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
