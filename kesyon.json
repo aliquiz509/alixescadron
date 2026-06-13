@@ -1,0 +1,72 @@
+[
+  {
+    "system": "Appareil digestif",
+    "level": 1,
+    "question": "Quel organe produit la bile, essentielle à la digestion des graisses ?",
+    "options": ["Le foie", "L'estomac", "Le pancréas", "Le gros intestin"],
+    "answer": "Le foie"
+  },
+  {
+    "system": "Appareil digestif",
+    "level": 1,
+    "question": "Où commence mécaniquement et chimiquement la digestion des aliments ?",
+    "options": ["Dans la bouche", "Dans l'œsophage", "Dans l'estomac", "Dans l'intestin grêle"],
+    "answer": "Dans la bouche"
+  },
+  {
+    "system": "Appareil digestif",
+    "level": 1,
+    "question": "Quel est le rôle principal de l'intestin grêle ?",
+    "options": ["L'absorption des nutriments", "Le stockage des déchets", "La production d'acide", "La mastication"],
+    "answer": "L'absorption des nutriments"
+  },
+  {
+    "system": "Appareil digestif",
+    "level": 1,
+    "question": "Quel conduit relie le pharynx à l'estomac ?",
+    "options": ["L'œsophage", "La trachée", "L'aorte", "Le duodénum"],
+    "answer": "L'œsophage"
+  },
+  {
+    "system": "Appareil digestif",
+    "level": 1,
+    "question": "Quelle substance acide est sécrétée par l'estomac pour décomposer les aliments ?",
+    "options": ["L'acide chlorhydrique", "La salive", "La bile", "L'insuline"],
+    "answer": "L'acide chlorhydrique"
+  },
+  {
+    "system": "Appareil digestif",
+    "level": 2,
+    "question": "Comment s'appellent les contractions musculaires qui font avancer les aliments dans le tube digestif ?",
+    "options": ["Le péristaltisme", "La segmentation", "La rumination", "La déglutition"],
+    "answer": "Le péristaltisme"
+  },
+  {
+    "system": "Appareil digestif",
+    "level": 2,
+    "question": "Quelle enzyme contenue dans la salive commence à découper l'amidon ?",
+    "options": ["L'amylase", "La pepsine", "La lipase", "La trypsine"],
+    "answer": "L'amylase"
+  },
+  {
+    "system": "Appareil respiratoire",
+    "level": 1,
+    "question": "Où ont lieu les échanges gazeux (oxygène et CO2) dans les poumons ?",
+    "options": ["Dans les alvéoles", "Dans les bronches", "Dans la trachée", "Dans le pharynx"],
+    "answer": "Dans les alvéoles"
+  },
+  {
+    "system": "Appareil respiratoire",
+    "level": 1,
+    "question": "Quel est le muscle principal responsable de la respiration en se contractant vers le bas ?",
+    "options": ["Le diaphragme", "Le cœur", "Les abdos", "Les intercostaux"],
+    "answer": "Le diaphragme"
+  },
+  {
+    "system": "Appareil respiratoire",
+    "level": 1,
+    "question": "Quel gaz toxique rejetons-nous principalement lors de l'expiration ?",
+    "options": ["Le dioxyde de carbone (CO2)", "L'oxygène (O2)", "L'azote", "Le monoxyde de carbone"],
+    "answer": "Le dioxyde de carbone (CO2)"
+  }
+]
