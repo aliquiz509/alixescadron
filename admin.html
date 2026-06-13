@@ -234,6 +234,7 @@
             border-radius: 20px;
             text-align: center;
             border-top: 3px solid var(--accent-cyan);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
         .stat-card h3 { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; }
@@ -264,6 +265,14 @@
         th, td { padding: 16px; border-bottom: 1px solid var(--border-color); }
         th { color: var(--accent-gold); text-transform: uppercase; font-size: 0.8rem; background: rgba(255,255,255,0.03); }
 
+        .clickable-row {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .clickable-row:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
         .form-group { margin-bottom: 22px; display: flex; flex-direction: column; gap: 10px; }
         .form-group label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
         input, select, textarea {
@@ -278,7 +287,7 @@
         .radio-box { display: flex; align-items: center; gap: 8px; font-weight: bold; color: var(--accent-gold); cursor: pointer; }
         .radio-box input[type="radio"] { width: 18px; height: 18px; accent-color: var(--accent-cyan); }
 
-        .coins-input-box { width: 80px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.5); color: #fff; text-align: center; font-weight: bold; }
+        .coins-input-box { width: 100px; padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.5); color: #fff; text-align: center; font-weight: bold; }
 
         .btn-action {
             background: linear-gradient(135deg, var(--accent-blue), #5758bb); color: white; border: none;
@@ -290,8 +299,41 @@
         .btn-validate { background: var(--accent-cyan); color: #0a0e1a; }
         .btn-suspend { background: #ffb142; color: #0a0e1a; margin-left: 5px; }
         .btn-delete { background: var(--accent-admin); color: white; margin-left: 5px; }
+        .btn-back { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--border-color); margin-bottom: 20px; }
+        .btn-back:hover { background: rgba(255,255,255,0.2); }
 
-        .comment-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 18px; border-radius: 16px; margin-bottom: 15px; }
+        .comment-card { 
+            background: rgba(255,255,255,0.02); 
+            border: 1px solid var(--border-color); 
+            padding: 18px; 
+            border-radius: 16px; 
+            margin-bottom: 15px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .comment-card span { font-size: 0.8rem; color: var(--accent-cyan); display: block; margin-top: 5px;}
+
+        /* Bèl fòm detay pou jwè yo */
+        .player-detail-panel {
+            background: rgba(10, 14, 26, 0.8);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 16px;
+            margin-top: 20px;
+        }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .detail-item {
+            background: rgba(255,255,255,0.02);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .detail-item label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold; }
+        .detail-item p { font-size: 1.1rem; color: #fff; margin-top: 5px; font-weight: 600; }
 
         @media(max-width: 991px) {
             .menu-toggle-btn { display: block; }
@@ -369,22 +411,74 @@
         </div>
 
         <div id="users-tab" class="tab-view">
-            <h2>Gestion Finale des Comptes Utilisateurs</h2>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Pseudo / Nom</th>
-                            <th>Email</th>
-                            <th>Pays</th>
-                            <th>Solde Actuel</th>
-                            <th>Nouveau Solde</th>
-                            <th>Statut</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="usersTableBody"></tbody>
-                </table>
+            <div id="usersListView">
+                <h2>Gestion Finale des Comptes Utilisateurs</h2>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px;">Klike sou rann yon jwè pou wè tout enfòmasyon li an detay.</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pseudo / Nom</th>
+                                <th>Email</th>
+                                <th>Pays</th>
+                                <th>Solde Actuel</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="userDetailsView" style="display: none;">
+                <button class="btn-table btn-back" onclick="hidePlayerDetails()">← Retour à la liste</button>
+                <h2 id="detailPlayerTitle">Détails du Joueur</h2>
+                
+                <div class="player-detail-panel">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <label>Nom d'utilisateur / Pseudo</label>
+                            <p id="detUsername">...</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Adresse Email</label>
+                            <p id="detEmail">...</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Pays</label>
+                            <p id="detCountry" style="text-transform: uppercase;">...</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Statut du Compte</label>
+                            <p id="detStatus">...</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Rôle</label>
+                            <p id="detRole">...</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>UID Joueur</label>
+                            <p id="detUid" style="font-size: 0.85rem; color: var(--accent-cyan);">...</p>
+                        </div>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border-color); padding-top: 20px;">
+                        <h3 style="color: var(--accent-gold); margin-bottom: 15px; font-size: 1rem; text-transform: uppercase;">Actions Administratives</h3>
+                        
+                        <div class="form-group" style="max-width: 300px;">
+                            <label>Modifier le Solde AliCoins</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="number" id="detailCoinsInput" class="coins-input-box" placeholder="Coins">
+                                <button class="btn-table btn-validate" id="btnUpdateCoins">Valider</button>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 20px;">
+                            <button class="btn-table btn-suspend" id="btnSuspendPlayer">Bloquer / Activer</button>
+                            <button class="btn-table btn-delete" id="btnDeletePlayer">Supprimer le compte définitivement</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -482,6 +576,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Memwa tanporè pou kenbe lis jwè yo lokalman pou aksè rapid
+        let allPlayersData = {};
+
         function showNotification(message, type = 'success') {
             const notif = document.getElementById('customNotification');
             const notifMsg = document.getElementById('notifMessage');
@@ -520,13 +617,17 @@
             document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
             element.classList.add('active');
 
+            // Si n ap chanje onglet, asire n tounen nan lis jwè yo pa defo
+            if(tabId === 'users-tab') {
+                hidePlayerDetails();
+            }
+
             const sidebar = document.getElementById('adminSidebar');
             if(sidebar.classList.contains('open')) {
                 sidebar.classList.remove('open');
             }
         };
 
-        // PAS KACHE VERIFIKASYON AK KÒD LA TE GANYEN AN
         window.addEventListener('DOMContentLoaded', async () => {
             let currentQuizUser = JSON.parse(localStorage.getItem("currentQuizUser"));
             if (!currentQuizUser) { window.location.href = 'index.html'; return; }
@@ -553,11 +654,11 @@
             } catch (error) {
                 console.error("Erreur:", error);
                 document.getElementById('loadingOverlay').style.display = 'none';
-                loadAdminDashboardData(); // fòse chajman si gen ti pwoblèm
+                loadAdminDashboardData(); 
+                loadCommentsData();
             }
         });
 
-        // ANSYEN REKIPERASYON EGZAKTEMAN JAN L TE YE A POU L PA BAY ZEWO A
         async function loadAdminDashboardData() {
             try {
                 const usersSnapshot = await getDocs(collection(db, "users"));
@@ -566,29 +667,27 @@
                 
                 let totalCoins = 0;
                 let userCount = 0;
+                allPlayersData = {}; // Netwaye memwa tanporè a
 
                 usersSnapshot.forEach((docSnap) => {
                     const user = docSnap.data();
                     const userId = docSnap.id;
+                    
+                    // Sove done yo pou itilize nan View detay la
+                    allPlayersData[userId] = { id: userId, ...user };
+
                     userCount++;
                     totalCoins += Number(user.coins) || 0;
                     const statusLabel = user.status || 'actif';
 
+                    // Liy yo vin clickable kounye a pou louvri detay jwè a
                     usersTable.innerHTML += `
-                        <tr id="row-${userId}">
+                        <tr class="clickable-row" onclick="showPlayerDetails('${userId}')">
                             <td><strong>${user.username || 'Joueur'}</strong></td>
                             <td>${user.email || 'N/A'}</td>
                             <td><span style="text-transform: uppercase;">${user.country || 'ht'}</span></td>
-                            <td><span id="coins-val-${userId}">${user.coins || 0}</span></td>
-                            <td>
-                                <input type="number" id="input-coins-${userId}" class="coins-input-box" placeholder="Coins">
-                                <button class="btn-table btn-validate" onclick="updateCustomCoins('${userId}')">Ok</button>
-                            </td>
-                            <td><span id="status-val-${userId}" style="color:${statusLabel==='suspendu'?'var(--accent-admin)':'var(--success)'}; font-weight:bold; text-transform:uppercase;">${statusLabel}</span></td>
-                            <td>
-                                <button class="btn-table btn-suspend" onclick="toggleSuspendAccount('${userId}', '${statusLabel}')">${statusLabel==='suspendu'?'Activer':'Bloquer'}</button>
-                                <button class="btn-table btn-delete" onclick="deleteAccount('${userId}')">Supprimer</button>
-                            </td>
+                            <td><span style="color: var(--accent-cyan); font-weight: bold;">${user.coins || 0} AC</span></td>
+                            <td><span style="color:${statusLabel==='suspendu'?'var(--accent-admin)':'var(--success)'}; font-weight:bold; text-transform:uppercase;">${statusLabel}</span></td>
                         </tr>
                     `;
                 });
@@ -600,8 +699,40 @@
             }
         }
 
-        window.updateCustomCoins = async function(userId) {
-            const inputVal = document.getElementById(`input-coins-${userId}`).value.trim();
+        // FONTKSYON POU AFICHE DETAY YON JWÈ
+        window.showPlayerDetails = function(userId) {
+            const player = allPlayersData[userId];
+            if(!player) return;
+
+            document.getElementById('usersListView').style.display = 'none';
+            document.getElementById('userDetailsView').style.display = 'block';
+
+            // Mete done yo nan fòm detay la
+            document.getElementById('detailPlayerTitle').innerText = `Détails de: ${player.username || 'Joueur'}`;
+            document.getElementById('detUsername').innerText = player.username || 'N/A';
+            document.getElementById('detEmail').innerText = player.email || 'N/A';
+            document.getElementById('detCountry').innerText = player.country || 'ht';
+            document.getElementById('detStatus').innerText = (player.status || 'actif').toUpperCase();
+            document.getElementById('detRole').innerText = (player.role || 'user').toUpperCase();
+            document.getElementById('detUid').innerText = player.id;
+            
+            // Mete ansyen solde a nan input la
+            document.getElementById('detailCoinsInput').value = player.coins || 0;
+
+            // Atache evènman sou bouton yo dinamikman pou id sa a espesifikman
+            document.getElementById('btnUpdateCoins').onclick = () => updatePlayerCoins(player.id);
+            document.getElementById('btnSuspendPlayer').onclick = () => toggleSuspendPlayerAccount(player.id, player.status || 'actif');
+            document.getElementById('btnDeletePlayer').onclick = () => deletePlayerAccount(player.id);
+        };
+
+        // KACHE DETAY EPI TOUNEN NAN LIS LA
+        window.hidePlayerDetails = function() {
+            document.getElementById('userDetailsView').style.display = 'none';
+            document.getElementById('usersListView').style.display = 'block';
+        };
+
+        async function updatePlayerCoins(userId) {
+            const inputVal = document.getElementById('detailCoinsInput').value.trim();
             if(inputVal === "" || isNaN(inputVal)) {
                 showNotification("Veuillez entrer un nombre valide.", "error");
                 return;
@@ -611,37 +742,41 @@
             try {
                 await updateDoc(doc(db, "users", userId), { coins: newAmount });
                 showNotification("Solde actualisé avec succès!", "success");
-                loadAdminDashboardData();
+                await loadAdminDashboardData();
+                showPlayerDetails(userId); // Refreshe paj detay la
             } catch(e) {
                 showNotification("Erreur lors de la modification.", "error");
             }
-        };
+        }
 
-        window.toggleSuspendAccount = async function(userId, currentStatus) {
+        async function toggleSuspendPlayerAccount(userId, currentStatus) {
             const newStatus = currentStatus === 'suspendu' ? 'actif' : 'suspendu';
             if(!confirm(`Changer le statut en: ${newStatus}?`)) return;
 
             try {
                 await updateDoc(doc(db, "users", userId), { status: newStatus });
                 showNotification("Statut du compte modifié!", "success");
-                loadAdminDashboardData();
+                await loadAdminDashboardData();
+                showPlayerDetails(userId); // Refreshe paj detay la
             } catch(e) {
                 showNotification("Erreur de mise à jour.", "error");
             }
-        };
+        }
 
-        window.deleteAccount = async function(userId) {
+        async function deletePlayerAccount(userId) {
             if(!confirm("Supprimer définitivement ce compte?")) return;
 
             try {
                 await deleteDoc(doc(db, "users", userId));
-                document.getElementById(`row-${userId}`).remove();
                 showNotification("Compte supprimé définitivement.", "success");
+                await loadAdminDashboardData();
+                hidePlayerDetails(); // Tounen nan lis la depi kont lan efase
             } catch(e) {
                 showNotification("Erreur lors de la suppression.", "error");
             }
-        };
+        }
 
+        // KÒD POU SOWVE KESTYON YON AK YON
         window.saveQuestionWithSelection = async function() {
             const question = document.getElementById('quizQuestion').value.trim();
             const valA = document.getElementById('optA').value.trim();
@@ -721,24 +856,40 @@
             } catch(e) { showNotification("Erreur d'envoi.", "error"); }
         };
 
+        // KOREKSYON SOU CHAJMAN KÒMANTÈ YO POU L KA RESEVWA YO SAN PWOBLEM
         async function loadCommentsData() {
             try {
                 const commentSnap = await getDocs(collection(db, "comments"));
                 const container = document.getElementById('commentsContainer');
-                if (commentSnap.empty) return;
+                
+                if (commentSnap.empty) {
+                    container.innerHTML = `<p style="color: var(--text-muted);">Aucun feedback disponible dans la base centrale.</p>`;
+                    document.getElementById('statTotalComments').innerText = 0;
+                    return;
+                }
+                
                 container.innerHTML = "";
                 let count = 0;
+                
                 commentSnap.forEach(doc => {
                     const c = doc.data();
                     count++;
+                    
+                    // Tcheke tout varyant kle ki te ka sove nan databas la pou kòmantè a (message, comment oswa avis)
+                    const textComment = c.message || c.comment || c.avis || "Kòmantè vid";
+                    const formattedDate = c.createdAt ? new Date(c.createdAt.seconds * 1000).toLocaleDateString('fr-FR') : 'Date inconnue';
+
                     container.innerHTML += `
                         <div class="comment-card">
-                            <p><strong>@${c.username || 'Joueur'}:</strong> ${c.message || ''}</p>
+                            <p><strong>@${c.username || c.pseudo || 'Joueur'}:</strong> ${textComment}</p>
+                            <span>Posté le: ${formattedDate}</span>
                         </div>
                     `;
                 });
                 document.getElementById('statTotalComments').innerText = count;
-            } catch(e) { console.error(e); }
+            } catch(e) { 
+                console.error("Erreur chargement commentaires:", e); 
+            }
         }
 
         window.adminLogout = function() {
