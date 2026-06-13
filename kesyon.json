@@ -2,7 +2,7 @@
   {
     "system": "Appareil digestif",
     "level": 1,
-    "question": "Quelle organe produit la bile, essentielle à la digestion des graisses ?",
+    "question": "Quel organe produit la bile, essentielle à la digestion des graisses ?",
     "options": ["Le foie", "L'estomac", "Le pancréas", "Le gros intestin"],
     "answer": "Le Quelne"
   },
