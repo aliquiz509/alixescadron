@@ -218,7 +218,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* CARD GRIDS (ACCUEIL AK PROFILE RETE DINAMIK OSWA PA SÈKSYON) */
+        /* CARD GRIDS */
         .card-grid-accueil {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -231,7 +231,6 @@
             gap: 20px;
         }
 
-        /* RANJE DE 2 STRIT POU MAGAZEN AN (SHOP) KOU APARÈY LA SOU TOUT KALITE EKRAN */
         .card-grid-shop {
             display: grid !important;
             grid-template-columns: repeat(2, 1fr) !important;
@@ -256,13 +255,18 @@
         /* --- FORMS AND INPUTS --- */
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
-        .form-group input {
+        .form-group input, .form-group textarea {
             width: 100%;
             padding: 12px;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 8px;
             color: white;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
         }
         
         .btn-action {
@@ -541,16 +545,24 @@
                         <input type="text" id="setParamUser" required>
                     </div>
                     <div class="form-group">
-                        <label>URL d'une photo de profil (Ou choisissez un avatar dans le Shop)</label>
-                        <input type="text" id="setParamPic">
-                    </div>
-                    <div class="form-group">
                         <label>Nouveau mot de passe (Optionnel)</label>
                         <input type="password" id="setParamPass" minlength="8">
                     </div>
                     <button type="submit" class="btn-action" style="width: 100%;">Enregistrer les modifications</button>
                     <div id="settingsAlert" class="alert-msg"></div>
                 </form>
+
+                <div style="margin-top: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 25px;">
+                    <h3>💬 Envoyer un commentaire / feedback</h3>
+                    <form id="sendFeedbackForm" style="margin-top: 15px;">
+                        <div class="form-group">
+                            <label>Votre message pour l'administration</label>
+                            <textarea id="feedbackMessage" placeholder="Écrivez votre suggestion, problème ou commentaire ici..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-action" style="width: 100%; background: linear-gradient(135deg, #6c5ce7, #a29bfe);">Envoyer le commentaire</button>
+                        <div id="feedbackAlert" class="alert-msg"></div>
+                    </form>
+                </div>
 
                 <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 12px;">
                     <h4 style="color: var(--text-muted); font-size: 14px;">Actions sur le compte</h4>
@@ -566,7 +578,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
         import { getAuth, signOut, updatePassword, deleteUser } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-        import { getFirestore, doc, updateDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+        import { getFirestore, doc, updateDoc, getDoc, deleteDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCF2I4LEcMA1oJRwa7xthvSOQGSCg6lPjs",
@@ -658,7 +670,6 @@
             document.getElementById('profFullName').textContent = `${currentQuizUser.prenom} ${currentQuizUser.nom}`;
             document.getElementById('profUsername').textContent = `@${currentQuizUser.username}`;
             document.getElementById('setParamUser').value = currentQuizUser.username;
-            document.getElementById('setParamPic').value = currentQuizUser.profilePic || "";
             
             const flags = { fr: "🇫🇷", ht: "🇭🇹", us: "🇺🇸", ca: "🇨🇦" };
             document.getElementById('profCountry').textContent = flags[currentQuizUser.country] || "🌐";
@@ -889,13 +900,11 @@
             e.preventDefault();
             hideAllNotifications();
             const newUsername = document.getElementById('setParamUser').value;
-            const newPic = document.getElementById('setParamPic').value;
             const newPass = document.getElementById('setParamPass').value;
 
             try {
-                await updateDoc(doc(db, "users", currentQuizUser.uid), { username: newUsername, profilePic: newPic });
+                await updateDoc(doc(db, "users", currentQuizUser.uid), { username: newUsername });
                 currentQuizUser.username = newUsername;
-                currentQuizUser.profilePic = newPic;
                 localStorage.setItem("currentQuizUser", JSON.stringify(currentQuizUser));
                 loadUserSessionUI();
 
@@ -903,6 +912,33 @@
                 showCardNotification('settingsAlert', "Profil enregistré ! 💾", 'success');
             } catch(err) {
                 showCardNotification('settingsAlert', `Erreur: ${err.message}`, 'error');
+            }
+        });
+
+        // JESTION POU VOYE KÒMANTÈ BAY ADMIN NAN NAN FIRESTORE
+        document.getElementById('sendFeedbackForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            hideAllNotifications();
+            const msgInput = document.getElementById('feedbackMessage');
+            const messageText = msgInput.value.trim();
+
+            if (!messageText) return;
+
+            try {
+                // N ap ajoute dokiman an dirèkteman nan koleksyon "comments" pou admin ka wè li
+                await addDoc(collection(db, "comments"), {
+                    uid: currentQuizUser.uid,
+                    username: currentQuizUser.username,
+                    fullName: `${currentQuizUser.prenom} ${currentQuizUser.nom}`,
+                    profilePic: currentQuizUser.profilePic || "",
+                    comment: messageText,
+                    timestamp: new Date().toISOString()
+                });
+
+                showCardNotification('feedbackAlert', "Commentaire envoyé avec succès à l'administration ! 📨", 'success');
+                msgInput.value = ""; // Vile bwat la aprè l fin voye
+            } catch (err) {
+                showCardNotification('feedbackAlert', `Erreur lors de l'envoi: ${err.message}`, 'error');
             }
         });
 
